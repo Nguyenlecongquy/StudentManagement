@@ -3,8 +3,8 @@
     <form class="inner">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
-        <h2 class="heading">Đăng nhập</h2>
-        <p class="des">Đăng nhập tài khoản của bạn để tiếp tục</p>
+        <h2 class="heading">Đăng ký</h2>
+        <p class="des">Đăng ký tài khoản của bạn!</p>
       </header>
       <div class="body">
         <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" />
@@ -13,18 +13,25 @@
           typeOfInput="password"
           v-model="passwordValue"
         />
+        <FormGroup
+          label="CONFIRM PASSWORD"
+          typeOfInput="password"
+          v-model="confirmPasswordValue"
+          v-model:confirmPasswordValue="passwordValue"
+        />
         <span class="error">{{ error }}</span>
+
         <button
           class="btn"
           :class="{
             disable: !validate(),
           }"
         >
-          Đăng nhập
+          Đăng ký
         </button>
         <p class="add-infor">
-          Bạn chưa có tài khoản? Hãy
-          <router-link to="/register" class="link">Đăng ký</router-link>
+          Bạn đã có tài khoản? Hãy
+          <router-link to="/" class="link-register">Đăng nhập</router-link>
         </p>
       </div>
     </form>
@@ -32,13 +39,15 @@
 </template>
 <script>
 import FormGroup from "./FormGroup.vue";
+
 export default {
-  name: "LoginCom",
+  name: "RegisterCom",
   components: { FormGroup },
   data() {
     return {
       emailValue: "",
       passwordValue: "",
+      confirmPasswordValue: "",
       error: "",
     };
   },
@@ -76,11 +85,15 @@ header {
   align-items: center;
 }
 .heading {
+  font-size: 12px;
+  font-weight: 400;
+}
+.heading {
   font-size: 24px;
   font-weight: 500;
 }
 .des {
-  font-size: 12px;
+  font-size: 10px;
   color: #7d909e;
   font-weight: 400;
   text-align: center;
@@ -104,7 +117,7 @@ header {
 }
 .btn:hover {
   cursor: pointer;
-  background-color: var(--dark-primary-color);
+  background-color: #4765f6;
 }
 .add-infor {
   font-size: 12px;
@@ -113,12 +126,12 @@ header {
   text-align: center;
   margin-top: 24px;
 }
-.link {
+.link-register {
   color: var(--primary-color);
-  font-weight: 600;
+  font-weight: 500;
 }
 .link:hover {
-  color: var(--dark-primary-color);
+  color: #4765f6;
 }
 .error {
   display: block;

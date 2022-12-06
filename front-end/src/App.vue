@@ -1,9 +1,14 @@
-<script setup>
-import LoginComVue from "./components/LoginCom.vue";
+<script>
+export default {
+  name: "App",
+  data() {
+    return { isShowLogin: true };
+  },
+};
 </script>
 
 <template>
-  <LoginComVue />
+  <router-view />
 </template>
 
 <style scoped></style>
