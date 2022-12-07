@@ -19,6 +19,31 @@
           v-model="confirmPasswordValue"
           v-model:confirmPasswordValue="passwordValue"
         />
+        <div class="form-category-user">
+          <div class="form-category">
+            <input
+              id="teacher"
+              name="category"
+              type="radio"
+              class="form-category-control"
+              checked
+              value="true"
+              v-model="isTeacher"
+            />
+            <label for="teacher">Giáo viên</label>
+          </div>
+          <div class="form-category">
+            <input
+              id="student"
+              name="category"
+              type="radio"
+              class="form-category-control"
+              value="false"
+              v-model="isTeacher"
+            />
+            <label for="student">Học sinh</label>
+          </div>
+        </div>
         <span class="error">{{ error }}</span>
 
         <button
@@ -75,7 +100,7 @@ export default {
   width: 400px;
   background-color: white;
   margin: auto;
-  padding: 28px;
+  padding: 20px 28px;
   border-radius: 8px;
   box-shadow: 1px 1px 20px rgb(204, 199, 199);
 }
@@ -124,7 +149,7 @@ header {
   font-weight: 400;
   color: #000;
   text-align: center;
-  margin-top: 24px;
+  margin-top: 8px;
 }
 .link-register {
   color: var(--primary-color);
@@ -140,5 +165,18 @@ header {
   color: red;
   margin-bottom: 6px;
   text-align: center;
+}
+.form-category-user {
+  display: flex;
+}
+.form-category {
+  display: flex;
+  align-items: center;
+}
+.form-category + .form-category {
+  margin-left: 8px;
+}
+.form-category-control {
+  margin-right: 6px;
 }
 </style>

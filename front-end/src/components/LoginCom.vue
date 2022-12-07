@@ -13,6 +13,31 @@
           typeOfInput="password"
           v-model="passwordValue"
         />
+        <div class="form-category-user">
+          <div class="form-category">
+            <input
+              id="teacher"
+              name="category"
+              type="radio"
+              class="form-category-control"
+              checked
+              value="true"
+              v-model="isTeacher"
+            />
+            <label for="teacher">Giáo viên</label>
+          </div>
+          <div class="form-category">
+            <input
+              id="student"
+              name="category"
+              type="radio"
+              class="form-category-control"
+              value="false"
+              v-model="isTeacher"
+            />
+            <label for="student">Học sinh</label>
+          </div>
+        </div>
         <span class="error">{{ error }}</span>
         <button
           class="btn"
@@ -39,6 +64,7 @@ export default {
     return {
       emailValue: "",
       passwordValue: "",
+      isTeacher: "true",
       error: "",
     };
   },
@@ -127,5 +153,19 @@ header {
   color: red;
   margin-bottom: 6px;
   text-align: center;
+}
+
+.form-category-user {
+  display: flex;
+}
+.form-category {
+  display: flex;
+  align-items: center;
+}
+.form-category + .form-category {
+  margin-left: 8px;
+}
+.form-category-control {
+  margin-right: 6px;
 }
 </style>
