@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <form class="inner">
+    <form class="inner" method="POST" action="http://localhost:3000/login">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng nhập</h2>
@@ -39,7 +39,7 @@
           </div>
         </div>
         <span class="error">{{ error }}</span>
-        <button
+        <button type="submit"
           class="btn"
           :class="{
             disable: !validate(),
@@ -72,9 +72,9 @@ export default {
     validate() {
       var re =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      var isValid =
+      var isValid =true;
         re.test(this.emailValue) &&
-        this.passwordValue.length > 8 &&
+        this.passwordValue.length >= 8 &&
         this.passwordValue == this.confirmPasswordValue;
       return isValid;
     },
