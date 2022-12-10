@@ -9,7 +9,7 @@
 import NavBarVue from './NavBar.vue';
 
  export default {
-  name: "HomeCom",
+  name: "ScoreCom",
   components: {
     NavBarVue,
   }

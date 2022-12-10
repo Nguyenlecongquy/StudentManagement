@@ -1,16 +1,16 @@
 <script>
+
+
 export default {
-  name: "App",
- 
+    name: "App",
+
 };
 </script>
 
 <template>
-  <router-view />
+<router-view />
 </template>
 
 <style scoped>
- #app{
-  background-color: white;
- }
+
 </style>
