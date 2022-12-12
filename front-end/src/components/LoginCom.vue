@@ -1,17 +1,17 @@
 <template>
   <div class="wrapper">
-    <form class="inner" method="POST" action="http://localhost:3000/login">
+    <form class="inner" method="post" action="http://localhost:3000/login">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng nhập</h2>
         <p class="des">Đăng nhập tài khoản của bạn để tiếp tục</p>
       </header>
       <div class="body">
-        <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" />
+        <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" nameOfInput="username"/>
         <FormGroup
           label="PASSWORD"
           typeOfInput="password"
-          v-model="passwordValue"
+          v-model="passwordValue" nameOfInput="password"
         />
         <div class="form-category-user">
           <div class="form-category">
@@ -57,6 +57,7 @@
 </template>
 <script>
 import FormGroup from "./FormGroup.vue";
+import AuthServices from "../services/AuthenticationService"
 export default {
   name: "LoginCom",
   components: { FormGroup },
@@ -72,10 +73,9 @@ export default {
     validate() {
       var re =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      var isValid =true;
+      var isValid =
         re.test(this.emailValue) &&
-        this.passwordValue.length >= 8 &&
-        this.passwordValue == this.confirmPasswordValue;
+        this.passwordValue.length > 8
       return isValid;
     },
   },

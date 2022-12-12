@@ -10,6 +10,7 @@
       @input="$emit('update:modelValue', $event.target.value)"
       @blur="validate"
       @focus="error = ''"
+      :name="nameOfInput"
     />
     <span class="form-error">{{ error }}</span>
   </div>
@@ -21,6 +22,7 @@ export default {
   props: [
     "label",
     "typeOfInput",
+    "nameOfInput",
     "modelValue",
     "confirmPasswordValue",
     "isValid",
