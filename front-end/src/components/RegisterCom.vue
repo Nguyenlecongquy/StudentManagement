@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <form class="inner" method="POST" action="http://localhost:3000/register" >
+    <form class="inner" method="POST" action="http://localhost:3000/register">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng ký</h2>
@@ -8,11 +8,16 @@
       </header>
       <div class="body">
         <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" />
-        <FormGroup label="PASSWORD" typeOfInput="password" v-model="passwordValue"
+        <FormGroup
+          label="PASSWORD"
+          typeOfInput="password"
+          v-model="passwordValue"
         />
-        <FormGroup label="CONFIRM PASSWORD" typeOfInput="password" v-model="confirmPasswordValue"
+        <FormGroup
+          label="CONFIRM PASSWORD"
+          typeOfInput="password"
+          v-model="confirmPasswordValue"
           v-model:confirmPasswordValue="passwordValue"
-
         />
         <div class="form-category-user">
           <div class="form-category">
