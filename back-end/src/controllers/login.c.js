@@ -22,7 +22,7 @@ class LoginC {
          response.code = 200;
          response.status = true;
          response.result = 'resuccess';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
          response.messege = 'Đăng nhập thành công nhờ lưu password';
       } 
       else {
@@ -30,7 +30,7 @@ class LoginC {
             response.code = 400;
             response.status = false;
             response.result = 'fail';
-            response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
+            //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
             response.messege = 'Đăng nhập thất bại, username không tồn tại';
          }
          else if(check == true){
@@ -39,14 +39,14 @@ class LoginC {
             response.code = 200;
             response.status = true;
             response.result = 'success';
-            response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
+            //response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
             response.messege = 'Đăng nhập thành công, đã lưu password';
          }
          else{
             response.code = 400;
             response.status = false;
             response.result = 'fail';
-            response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
+            //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
             response.messege = 'Đăng nhập thất bại sai password';
          }
       }

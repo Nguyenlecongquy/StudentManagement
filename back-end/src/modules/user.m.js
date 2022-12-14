@@ -103,9 +103,6 @@ const pgUser= {
          uDb = await pgUser.byName_gv(un);
          iDb = await pgUser.byID_gv(id);
          iDb_notExist = await pgUser.byID_gv_notExist(id);
-         console.log("uDb",uDb);
-         console.log("iDb",iDb);
-         console.log("iDb_notExist",iDb_notExist);
          if(uDb.username == un){
             return "exist_username";
          }
@@ -120,9 +117,6 @@ const pgUser= {
          uDb = await pgUser.byName_hs(un);
          iDb = await pgUser.byID_hs(id);
          iDb_notExist = await pgUser.byID_hs_notExist(id);
-         console.log("uDb",uDb);
-         console.log("iDb",iDb);
-         console.log("iDb_notExist",iDb_notExist);
          if(uDb.username == un){
             return "exist_username";
          }
@@ -145,15 +139,15 @@ const pgUser= {
             'password': pwHashed + salt,
             'id': id
          };
-         console.log("userSave", userSave)
          var uNew;
          if(cg == 'true'){
             uNew = await pgUser.add_gv(userSave);
+            console.log("Da luu vao database", uNew);
          }
          else {
             uNew = await pgUser.add_hs(userSave);
+            console.log("Da luu vao database", uNew);
          }
-         console.log("uNew", uNew)
          return uNew;
       } catch (error) {
          return false;

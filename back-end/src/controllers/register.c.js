@@ -15,35 +15,35 @@ class RegisterC {
          response.code = 409;
          response.status = false;
          response.result = 'exist';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
          response.messege = 'Email đã được sử dụng';
       } 
       else if (uNew == "exist_id"){
          response.code = 409;
          response.status = false;
          response.result = 'exist';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
          response.messege = 'ID đã được sử dụng';
       }
       else if (uNew == "NotExist_id"){
          response.code = 409;
          response.status = false;
-         response.result = 'exist';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
+         response.result = 'NotExist';
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
          response.messege = 'ID không tồn tại';
       }
       else if(uNew == false){
          response.code = 400;
          response.status = false;
          response.result = 'fail';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
          response.messege = 'Đăng ký thất bại, lỗi databse';
       } 
       else {
          response.code = 200;
          response.status = true;
          response.result = 'success';
-         response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
+         //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
          response.messege = 'Đăng ký thành công';
          uNew.password = user.password;
          response.user = uNew;
