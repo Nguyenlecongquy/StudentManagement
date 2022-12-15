@@ -1,16 +1,16 @@
 -- Database: QLHS
 
-DROP DATABASE IF EXISTS "QLHS";
+-- DROP DATABASE IF EXISTS "QLHS";
 
-CREATE DATABASE "QLHS"
-    WITH
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'English_United States.1252'
-    LC_CTYPE = 'English_United States.1252'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-    IS_TEMPLATE = False;
+-- CREATE DATABASE "QLHS"
+--     WITH
+--     OWNER = postgres
+--     ENCODING = 'UTF8'
+--     LC_COLLATE = 'English_United States.1252'
+--     LC_CTYPE = 'English_United States.1252'
+--     TABLESPACE = pg_default
+--     CONNECTION LIMIT = -1
+--     IS_TEMPLATE = False;
 
 
 -----------------------------------------------------------------
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.giao_vien
     CONSTRAINT giao_vien_pkey PRIMARY KEY (ma_gv)
 );
 
-DROP TABLE USER_GIAOVIEN
+-- DROP TABLE USER_GIAOVIEN
 create table IF NOT EXISTS USER_GIAOVIEN(
 	MAGV CHAR(10),
 	USERNAME VARCHAR(50),
@@ -39,7 +39,6 @@ create table IF NOT EXISTS USER_GIAOVIEN(
 );
 ALTER TABLE USER_GIAOVIEN ADD CONSTRAINT FK_USR_GV FOREIGN KEY (MAGV) REFERENCES GIAO_VIEN(MA_GV);
 
-TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.giao_vien
     OWNER to postgres;
@@ -58,9 +57,10 @@ CREATE TABLE IF NOT EXISTS public.hoc_sinh
     gioi_tinh_hs character varying(3) COLLATE pg_catalog."default",
     dia_chi_hs character varying(100) COLLATE pg_catalog."default",
     CONSTRAINT hoc_sinh_pkey PRIMARY KEY (ma_hs)
-)
-DROP TABLE USER_HOCSINH;
-create table IF NOT EXISTS USER_HOCSINH(
+);
+-- DROP TABLE USER_HOCSINH;
+
+CREATE TABLE IF NOT EXISTS USER_HOCSINH(
 	MAHS CHAR(10),
 	USERNAME VARCHAR(50),
 	EMAIL VARCHAR(50),
@@ -71,7 +71,6 @@ ALTER TABLE USER_HOCSINH ADD CONSTRAINT FK_USR_HS FOREIGN KEY (MAHS) REFERENCES 
 
 
 
-TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.hoc_sinh
     OWNER to postgres;
@@ -181,6 +180,7 @@ ALTER TABLE IF EXISTS public.giao_vien
 -- Constraint: diem_hoc_sinh_fkey
 
 -- ALTER TABLE IF EXISTS public.diem DROP CONSTRAINT IF EXISTS diem_hoc_sinh_fkey;
+-- DROP table diem
 
 ALTER TABLE IF EXISTS public.diem
     ADD CONSTRAINT diem_hoc_sinh_fkey FOREIGN KEY (ma_hs)
@@ -239,6 +239,7 @@ ALTER TABLE IF EXISTS public.hoc_sinh
 -- Constraint: lop_khoa_fkey
 
 -- ALTER TABLE IF EXISTS public.lop DROP CONSTRAINT IF EXISTS lop_khoa_fkey;
+-- DROP TABLE LOP
 
 ALTER TABLE IF EXISTS public.lop
     ADD CONSTRAINT lop_khoa_fkey FOREIGN KEY (ma_khoa)

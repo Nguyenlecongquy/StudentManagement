@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <form class="inner" method="post" action="http://localhost:3000/login">
+    <form class="inner" method="post" action="http://localhost:3000/user/login">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng nhập</h2>
