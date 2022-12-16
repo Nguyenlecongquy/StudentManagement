@@ -25,6 +25,7 @@ export default {
     "nameOfInput",
     "modelValue",
     "confirmPasswordValue",
+    "valueOfPlaceholder",
     "isValid",
   ],
   emits: ["update:modelValue"],
@@ -32,11 +33,6 @@ export default {
     return {
       error: "",
     };
-  },
-  computed: {
-    valueOfPlaceholder() {
-      return "Nhập " + this.typeOfInput.toLowerCase();
-    },
   },
   methods: {
     validate() {
@@ -65,9 +61,6 @@ export default {
 .form-group {
   display: block;
 }
-.form-group + .form-group {
-  margin-top: 10px;
-}
 .form-label {
   color: #54616b;
   display: block;
@@ -88,6 +81,6 @@ export default {
   font-size: 10px;
   height: 10px;
   color: red;
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 }
 </style>

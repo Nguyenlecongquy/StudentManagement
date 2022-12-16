@@ -98,11 +98,18 @@ const pgUser= {
       const un = data.username; //username = email
       const id = data.id;
       const cg = data.category;
-      var uDb;
-      if(cg == 'true'){
+
+      // console.log(un,id,cg)
+      let uDb;
+      if(cg ){
          uDb = await pgUser.byName_gv(un);
+         console.log("uDb",uDb) //user_gv : ton tai user co username
          iDb = await pgUser.byID_gv(id);
+         console.log("iDb",iDb)// ton tai user co id ten
+
          iDb_notExist = await pgUser.byID_gv_notExist(id);
+         console.log("a",iDb_notExist)//lay giaovien
+
          if(uDb.username == un){
             return "exist_username";
          }

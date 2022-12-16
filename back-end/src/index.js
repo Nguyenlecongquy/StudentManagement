@@ -4,9 +4,16 @@ const session = require("express-session");
 const morgan = require('morgan');
 const path = require('path');
 const route = require('./routes/index');
-
+const cors = require('cors')
 
 const app = express();
+
+app.use(cors({
+   origin: "http://127.0.0.1:5173",
+   credentials: true
+}))
+
+
 app.use(express.static(path.join(__dirname,'public')));
 
 //http logger
@@ -17,6 +24,7 @@ app.use(express.urlencoded({ extended: false }))
 
 //xu li du lieu request post json
 app.use(express.json())
+
 
 // Dung session
 app.use(
