@@ -1,17 +1,23 @@
 <template>
-  <div>
-    <NavBarVue />
+  <div class="pageContent">
+    <h2>Giáo viên</h2>
   </div>
 </template>
 
 <script>
-import NavBarVue from "./NavBar.vue";
 export default {
   name: "TeacherCom",
-  components: {
-    NavBarVue,
-  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.pageContent {
+  flex: 1;
+  background-color: white;
+  width: calc(100% - 10px);
+  padding: 24px;
+  margin: 6px 8px;
+  border-radius: 8px;
+  box-shadow: 1px 1px 20px rgb(204, 199, 199);
+}
+</style>

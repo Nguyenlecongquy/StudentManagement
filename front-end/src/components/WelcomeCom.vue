@@ -1,12 +1,12 @@
 <template>
   <div class="pageContent">
-    <h2>Học sinh</h2>
+    <h2>Giới thiệu trang web</h2>
   </div>
 </template>
 
 <script>
 export default {
-  name: "StudentCom",
+  name: "WelcomeCom",
 };
 </script>
 

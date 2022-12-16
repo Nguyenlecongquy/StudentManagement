@@ -20,8 +20,12 @@
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 
+  
   --primary-color: #4f6dfd;
   --dark-primary-color: #4765f6;
+
+
+  --width-sidebar: 362px;
 }
 
 /* semantic color variables for this project */
@@ -77,4 +81,17 @@ body {
 input, button {
   outline: none;
   border: none;
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+}
+
+html::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgb(180, 176, 176);
+}
+
+html::-webkit-scrollbar-track {
+  background: rgba(235, 235, 235, 0.64);
 }

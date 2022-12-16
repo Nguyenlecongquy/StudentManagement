@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="wrapper">
     <NavBarVue />
+    <router-view />
   </div>
 </template>
 
@@ -14,4 +15,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  width: calc(100vw);
+  height: 100vh;
+  display: flex;
+}
+</style>

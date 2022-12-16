@@ -88,6 +88,7 @@ export default {
       return isValid;
     },
     submit() {
+      this.$router.push("/home");
       AuthenticationService.login({
         username: this.emailValue,
         password: this.passwordValue,
