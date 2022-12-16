@@ -6,12 +6,16 @@ export default {
 </script>
 
 <template>
-   <div class="header" >
-      <router-link to="/accountInfo" class="headerText" >Thông tin cá nhân</router-link>
+  <div class="sidebar">
+    <header>
+      <img src="../assets/images/logo.png" alt="Logo" class="logo" />
+      <h1 class="name"> HỌ VÀ TÊN</h1>
+      <router-link to="/home/accountInfo" class="headerText" >Thông tin cá nhân</router-link>
       <router-link to="/" class="headerText">Đăng xuất</router-link>
-    </div>
-  <nav>
-        <ul class="nav-link">
+    </header>
+    <section>
+      <nav>
+        <ul>
             <li><router-link to="/home" >Trang chủ</router-link></li>
             <li><router-link to="/home/class" >Lớp</router-link></li>
             <li><router-link to="/home/student" >Học sinh</router-link></li>
@@ -23,30 +27,52 @@ export default {
             <li><router-link to="/home/role" >Vai trò</router-link></li>
             <li><router-link to="/home/policy" >Điều khoản</router-link></li>
         </ul>
-    </nav>
+      </nav>
+    </section>
+  </div>
 </template>
 
 <style scoped>
-nav ul.nav-link {
-  width: 361px;
-  height: auto;
-  list-style-type: none;
-  margin:0;
-  padding:0;
-  overflow:hidden;
+.name{
+  color: black;
+  position:absolute;
+  top:  30px;
+  left: 130px;
+}
+.sidebar{
+  color: #4f6dfd;
   background-color: #4f6dfd;
-  border-radius: 12px;
+  float: left;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
   box-shadow: 1px 1px 20px rgb(204, 199, 199);
 }
+header{
+  float: inline-start;
+  align-items: center;
+  color: white;
+  background-color: white;
+  flex-direction: row;
+  ;
 
+}
+a {
+  color:white;
+  text-align: left;
+}
+.logo {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
 li {
   border-bottom: 1px solid blue ;
 }
+
 li a {
   width:361px;
   display: block;
-  color:white;
-  text-align: left;
   padding: 14px 16px;
   text-decoration: none;
 }
@@ -54,38 +80,23 @@ li a:hover{
   background-color: #4765f6;
 }
 .headerText{
-  color:white;
+    color:#4765f6;
     float: right;
-    margin: 2px;
+    margin: 6px;
 }
-.header{
-    background-color: blue;
-    height: 100px;
-    width: 200%;
-    margin: -10px;
-}
+
 ul {
   width: 361px;
-  height: auto;
+  height: 961px;
   list-style-type: none;
   margin:0;
   padding:0;
   overflow:hidden;
-  background-color: #4f6dfd;
-  border-radius: 12px;
-  box-shadow: 1px 1px 20px rgb(204, 199, 199);
+
 }
 
 li {
   border-bottom: 1px solid blue ;
-}
-li a {
-  width:361px;
-  display: block;
-  color:white;
-  text-align: left;
-  padding: 14px 16px;
-  text-decoration: none;
 }
 li a:hover{
   background-color: #4765f6;

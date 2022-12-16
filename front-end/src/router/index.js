@@ -10,10 +10,22 @@ import ScoreCom from '../components/ScoreCom.vue'
 import SubjectCom from '../components/SubjectCom.vue'
 import SummaryCom from '../components/SummaryCom.vue'
 import TeacherCom from '../components/TeacherCom.vue'
+import Login from "../components/LoginCom.vue";
+import Register from "../components/RegisterCom.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: "/register",
+      name: "Register",
+      component: Register,
+    },
+    {
+      path: "/",
+      name: "Login",
+      component: Login,
+    },
     {
       path: '/home',
       name: 'home',
