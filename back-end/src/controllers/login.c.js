@@ -1,4 +1,4 @@
-const userM = require('../modules/user.m')
+const userM = require('../models/user.m')
 const {PORT} = require('../configs/const')
 
 class LoginC {
@@ -19,35 +19,27 @@ class LoginC {
          )
          {
          console.log('Dang nhap dua vao luu password')
-         response.code = 200;
          response.status = true;
          response.result = 'resuccess';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
-         response.messege = 'Đăng nhập thành công nhờ lưu password';
+         response.message = 'Đăng nhập thành công nhờ lưu password';
       } 
       else {
          if (check == "not_exist"){
-            response.code = 400;
             response.status = false;
             response.result = 'fail';
-            //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
-            response.messege = 'Đăng nhập thất bại, username không tồn tại';
+            response.message = 'Đăng nhập thất bại, tên người dùng không tồn tại';
          }
          else if(check == true){
             req.session.username = data.username;
             req.session.password = data.password;
-            response.code = 200;
             response.status = true;
             response.result = 'success';
-            //response.url = `http://localhost:${PORT.PORT_CLIENT}/home`;
-            response.messege = 'Đăng nhập thành công, đã lưu password';
+            response.message = 'Đăng nhập thành công, đã lưu mật khẩu';
          }
          else{
-            response.code = 400;
             response.status = false;
             response.result = 'fail';
-            //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
-            response.messege = 'Đăng nhập thất bại sai password';
+            response.message = 'Đăng nhập thất bại sai mật khẩu';
          }
       }
       return res.status(response.code).json(response);

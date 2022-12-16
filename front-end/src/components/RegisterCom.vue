@@ -1,18 +1,39 @@
 <template>
   <div class="wrapper">
-    <form class="inner" method="POST" action="http://localhost:3000/user/register" >
+    <form class="inner">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng ký</h2>
         <p class="des">Đăng ký tài khoản của bạn!</p>
       </header>
       <div class="body">
-        <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" nameOfInput="username" />
-        <FormGroup label="ID" typeOfInput="ID" v-model="magv" nameOfInput="id" />
-        <FormGroup label="PASSWORD" typeOfInput="password" v-model="passwordValue" nameOfInput="password" />
-        <FormGroup label="CONFIRM PASSWORD" typeOfInput="password" v-model="confirmPasswordValue"
+        <FormGroup
+          label="EMAIL"
+          typeOfInput="email"
+          valueOfPlaceholder="Nhập email"
+          v-model="emailValue"
+          nameOfInput="username"
+        />
+        <FormGroup
+          label="ID"
+          valueOfPlaceholder="Nhập ID"
+          typeOfInput="text"
+          v-model="magv"
+          nameOfInput="id"
+        />
+        <FormGroup
+          label="MẬT KHẨU"
+          typeOfInput="password"
+          v-model="passwordValue"
+          nameOfInput="password"
+          valueOfPlaceholder="Nhập mật khẩu"
+        />
+        <FormGroup
+          label="XÁC NHẬP MẬT KHẨU"
+          typeOfInput="password"
+          v-model="confirmPasswordValue"
           v-model:confirmPasswordValue="passwordValue"
-
+          valueOfPlaceholder="Nhập lại mật khẩu"
         />
         <div class="form-category-user">
           <div class="form-category">
@@ -39,13 +60,13 @@
             <label for="student">Học sinh</label>
           </div>
         </div>
-        <span class="error">{{ error }}</span>
-
+        <span class="notify" :class="{ success: isSuccess }">{{ notify }}</span>
         <button
           class="btn"
           :class="{
             disable: !validate(),
           }"
+          @click.prevent="onSubmit"
         >
           Đăng ký
         </button>
@@ -59,6 +80,7 @@
 </template>
 <script>
 import FormGroup from "./FormGroup.vue";
+import AuthenticationService from "../services/AuthenticationService";
 
 export default {
   name: "RegisterCom",
@@ -69,7 +91,9 @@ export default {
       magv: "",
       passwordValue: "",
       confirmPasswordValue: "",
-      error: "",
+      isTeacher: true,
+      notify: "",
+      isSuccess: false,
     };
   },
   methods: {
@@ -81,6 +105,30 @@ export default {
         this.passwordValue.length >= 8 &&
         this.passwordValue == this.confirmPasswordValue;
       return isValid;
+    },
+    onSubmit() {
+      AuthenticationService.register({
+        username: this.emailValue,
+        id: this.magv,
+        password: this.passwordValue,
+        category: this.isTeacher,
+      })
+        .then(({ data }) => {
+          console.log(data)
+          this.notify = data.message;
+          if (data.status) {
+            this.isSuccess = true;
+
+            this.emailValue = "";
+            this.magv = "";
+            this.passwordValue = "";
+            this.confirmPasswordValue = "";
+            this.isTeacher = true;
+          }
+        })
+        .catch(function (e) {
+          console.log(e);
+        });
     },
   },
 };
@@ -154,13 +202,17 @@ header {
 .link:hover {
   color: #4765f6;
 }
-.error {
+.notify {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
   height: 10px;
   color: red;
-  margin-bottom: 6px;
+  margin: 2px 0 8px 0;
   text-align: center;
+}
+
+.notify.success {
+  color: green;
 }
 .form-category-user {
   display: flex;

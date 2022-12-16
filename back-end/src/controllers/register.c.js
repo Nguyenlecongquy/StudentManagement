@@ -1,4 +1,4 @@
-const userM = require('../modules/user.m')
+const userM = require('../models/user.m')
 const {PORT} = require('../configs/const')
 
 class RegisterC {
@@ -7,44 +7,40 @@ class RegisterC {
    }
    async handleRegister(req, res, next) {
       const user = req.body;
-      console.log("register infor", user)
+      // console.log("register infor", user)
       let response = {code:'200'};
       const data = {'username':user.username,'password': user.password, 'category': user.category, 'id': user.id}
       const uNew = await userM.checkRegister(data);
+      // console.log("unew",uNew)
       if (uNew == "exist_username"){
-         response.code = 409;
+         // response.code = 409;
          response.status = false;
          response.result = 'exist';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
-         response.messege = 'Email đã được sử dụng';
+         response.message = 'Email đã được sử dụng';
       } 
       else if (uNew == "exist_id"){
-         response.code = 409;
+         // response.code = 409;
          response.status = false;
          response.result = 'exist';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
-         response.messege = 'ID đã được sử dụng';
+         response.message = 'ID đã được sử dụng';
       }
       else if (uNew == "NotExist_id"){
-         response.code = 409;
+         // response.code = 409;
          response.status = false;
          response.result = 'NotExist';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
-         response.messege = 'ID không tồn tại';
+         response.message = 'ID không tồn tại';
       }
       else if(uNew == false){
-         response.code = 400;
+         // response.code = 400;
          response.status = false;
          response.result = 'fail';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/register`;
-         response.messege = 'Đăng ký thất bại, lỗi databse';
+         response.message = 'Đăng ký thất bại, lỗi cơ sở dữ liệu';
       } 
       else {
-         response.code = 200;
+         // response.code = 200;
          response.status = true;
          response.result = 'success';
-         //response.url = `http://localhost:${PORT.PORT_CLIENT}/login`;
-         response.messege = 'Đăng ký thành công';
+         response.message = 'Đăng ký thành công! Hãy đăng nhập';
          uNew.password = user.password;
          response.user = uNew;
       }

@@ -10,7 +10,4 @@ const PORT = {
   PORT_CLIENT:5173
 }
 
-
-
-
 module.exports = {DB,PORT};

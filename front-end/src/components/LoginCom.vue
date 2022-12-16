@@ -1,17 +1,25 @@
 <template>
   <div class="wrapper">
-    <form class="inner" method="post" action="http://localhost:3000/user/login">
+    <form class="inner">
       <header>
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h2 class="heading">Đăng nhập</h2>
         <p class="des">Đăng nhập tài khoản của bạn để tiếp tục</p>
       </header>
       <div class="body">
-        <FormGroup label="EMAIL" typeOfInput="email" v-model="emailValue" nameOfInput="username"/>
         <FormGroup
-          label="PASSWORD"
+          label="EMAIL"
+          typeOfInput="email"
+          v-model="emailValue"
+          nameOfInput="username"
+          valueOfPlaceholder="Nhập email"
+        />
+        <FormGroup
+          label="Mật khẩu"
           typeOfInput="password"
-          v-model="passwordValue" nameOfInput="password"
+          v-model="passwordValue"
+          nameOfInput="password"
+          valueOfPlaceholder="Nhập mật khẩu"
         />
         <div class="form-category-user">
           <div class="form-category">
@@ -39,11 +47,13 @@
           </div>
         </div>
         <span class="error">{{ error }}</span>
-        <button type="submit"
+        <button
+          type="submit"
           class="btn"
           :class="{
             disable: !validate(),
           }"
+          @click.prevent="submit"
         >
           Đăng nhập
         </button>
@@ -57,7 +67,8 @@
 </template>
 <script>
 import FormGroup from "./FormGroup.vue";
-import AuthServices from "../services/AuthenticationService"
+import AuthenticationService from "../services/AuthenticationService";
+
 export default {
   name: "LoginCom",
   components: { FormGroup },
@@ -73,10 +84,23 @@ export default {
     validate() {
       var re =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      var isValid =
-        re.test(this.emailValue) &&
-        this.passwordValue.length > 8
+      var isValid = re.test(this.emailValue) && this.passwordValue.length >= 8;
       return isValid;
+    },
+    submit() {
+      AuthenticationService.login({
+        username: this.emailValue,
+        password: this.passwordValue,
+        category: this.isTeacher,
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            this.$router.push("/home");
+          } else {
+            this.error = data.message;
+          }
+        })
+        .catch((e) => console.log(e));
     },
   },
 };
