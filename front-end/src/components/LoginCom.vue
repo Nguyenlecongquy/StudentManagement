@@ -84,7 +84,7 @@ export default {
     validate() {
       var re =
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      var isValid = re.test(this.emailValue) && this.passwordValue.length > 8;
+      var isValid = re.test(this.emailValue) && this.passwordValue.length >= 8;
       return isValid;
     },
     submit() {
@@ -92,6 +92,7 @@ export default {
       AuthenticationService.login({
         username: this.emailValue,
         password: this.passwordValue,
+        category: this.isTeacher,
       })
         .then(({ data }) => {
           if (data.status) {
