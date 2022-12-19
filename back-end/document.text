@@ -1,0 +1,27 @@
+----------------Database--------------------
+*****Vui lòng chạy lại file db.sql 
+****( đã thêm thuộc tính "ten_tat" vào bảng 'khoa'  
+******thêm 'khoi' vào bảng 'lop', bỏ 'ten_lop')
+---------------Teacher----------------------
+1. Thêm
+- post method
+- URL: http://localhost:3000/api/teacher/add
+- Tham số: id, fullName, birthDay
+2. Xóa 
+- delete method
+- URL: http://localhost:3000/api/teacher/remove
+- Tham số: id
+3. Sửa
+- Không được sửa id
+- put method
+- URL: http://localhost:3000/api/teacher/modify
+- Tham số: id, fullName, birthDay, idFaculty
+4. Tìm kiếm
+- get method
+- URL: http://localhost:3000/api/teacher/search
+- Tham số: id, fullName (có thể không có 1 trong 2 thuộc tính)
+5. Reset
+- get method
+- URL: http://localhost:3000/api/teacher/reset
+- Tham số: không có.
+---------------------khoa---------------
