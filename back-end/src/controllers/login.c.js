@@ -1,5 +1,4 @@
 const userM = require('../models/user.m')
-const {PORT} = require('../configs/const')
 
 class LoginC {
    index(req,res){
