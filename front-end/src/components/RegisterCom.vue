@@ -114,14 +114,9 @@ export default {
         category: this.isTeacher,
       })
         .then(({ data }) => {
-<<<<<<< HEAD
-          console.log(data)
-=======
->>>>>>> bfcd9abacf68a86710be0fb718eba88e04ac2dcc
           this.notify = data.message;
           if (data.status) {
             this.isSuccess = true;
-
             this.emailValue = "";
             this.magv = "";
             this.passwordValue = "";
