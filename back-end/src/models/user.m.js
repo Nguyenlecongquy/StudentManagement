@@ -99,11 +99,10 @@ const pgUser= {
       const id = data.id;
       const cg = data.category;
 
-      // console.log(un,id,cg)
       if(cg==="true" ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
-         console.log(userGV)
+         // console.log(userGV)
          if(userGV.username == un){
             return "exist_username"; //ok
          }
@@ -141,7 +140,7 @@ const pgUser= {
             'id': id
          };
          let uNew;
-         if(cg == true){
+         if(cg === "true"){
             uNew = await pgUser.addUserGV(userSave);
             console.log("Da luu vao database", uNew);
          }
