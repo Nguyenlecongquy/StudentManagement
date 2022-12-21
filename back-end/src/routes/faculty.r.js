@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const facultyC = require('../controllers/faculty.c');
+const facultyC = require('../controllers/api/faculty.c');
 
 router.get('/search',facultyC.search);
 router.get('/reset',facultyC.reset);

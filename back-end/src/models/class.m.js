@@ -3,9 +3,9 @@ const DB = require('../connect/db')
 var db;
 try {
    db = DB.connect;
-   console.log("Connect database success!")
+   console.log("Class model connect database successfully!")
 } catch (error) {
-   console.log("Connect database failure!")
+   console.log("Class model Connect database fail!")
 }
 
 const classModel = {
@@ -27,7 +27,7 @@ const classModel = {
    },
    addLopIntoDatabaseReturnLop: async (id, number, grade, facultyId) => {
       try {
-         const result = await db.one(`insert into lop(ma_lop,khoi,si_so_lop,ma_khoa) 
+         const result = await db.any(`insert into lop(ma_lop,khoi,si_so_lop,ma_khoa) 
             values($1,$2,$3,$4) returning *`,
             [id, number, grade,facultyId]);
          return result;
@@ -37,7 +37,7 @@ const classModel = {
    },
    updateLopIntoDatabase: async (id, number, grade) => {
       try {
-         const result = await db.one(`update lop 
+         const result = await db.any(`update lop 
                                  set  si_so_lop=$1, khoi=$2 
                                  where ma_lop=$3 returning *`, [number, grade, id]);
          return result;
