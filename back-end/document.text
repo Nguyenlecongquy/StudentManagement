@@ -1,27 +1,94 @@
-----------------Database--------------------
-*****Vui lòng chạy lại file db.sql 
-****( đã thêm thuộc tính "ten_tat" vào bảng 'khoa'  
-******thêm 'khoi' vào bảng 'lop', bỏ 'ten_lop')
----------------Teacher----------------------
-1. Thêm
-- post method
-- URL: http://localhost:3000/api/teacher/add
-- Tham số: id, fullName, birthDay
-2. Xóa 
-- delete method
-- URL: http://localhost:3000/api/teacher/remove
-- Tham số: id
-3. Sửa
-- Không được sửa id
-- put method
-- URL: http://localhost:3000/api/teacher/modify
-- Tham số: id, fullName, birthDay, idFaculty
-4. Tìm kiếm
-- get method
-- URL: http://localhost:3000/api/teacher/search
-- Tham số: id, fullName (có thể không có 1 trong 2 thuộc tính)
-5. Reset
-- get method
-- URL: http://localhost:3000/api/teacher/reset
-- Tham số: không có.
----------------------khoa---------------
+I. LƯU Ý: 
+   - Viết đúng theo các tham số bên dưới
+   - Cấu trúc API(kể cả thêm, xóa, sửa, tìm kiếm) return :
+      + Thành công  
+         {
+            status: true,
+            X: [{ //X là mảng teachers, classes, facultys
+               key_1: value_1,
+               key_2: value_2,
+            },
+            {
+               key_1: value_1,
+               key_2: value_2,
+            },
+            {
+               Phần tử kế tiếp
+            }]
+         }
+      + Thất bại
+         {
+            status: false,
+            X: []
+         }
+II. Database--------------------
+   - Chạy lại file db.sql
+   - Một số sửa đổi:
+      + Thêm thuộc tính "ten_tat" vào bảng 'khoa'  
+      + Thêm 'khoi' vào bảng 'lop', bỏ 'ten_lop'
+III. API Teacher----------------------
+   1. Thêm
+      - Post method
+      - URL: http://localhost:3000/api/teacher/add
+      - Tham số: id(require), fullName, birthday
+   2. Xóa 
+      - Delete method
+      - URL: http://localhost:3000/api/teacher/remove
+      - Tham số: id(require)
+   3. Sửa(không sửa khóa chính id, các tham số không thêm vào sẽ gán bằng null -> muốn giữ nguyên giá trị 
+   nào thì phải truyền tham số đó vào)
+      - Put method
+      - URL: http://localhost:3000/api/teacher/modify
+      - Tham số: id(require), fullName, birthday, idFaculty
+   4. Tìm kiếm
+      - Get method
+      - URL: http://localhost:3000/api/teacher/search
+      - Tham số: id, fullName
+   5. Reset
+      - Get method
+      - URL: http://localhost:3000/api/teacher/reset
+      - Tham số: Không
+III. API Faculty----------------------
+   1. Thêm
+      - Post method
+      - URL: http://localhost:3000/api/faculty/add
+      - Tham số: id(require),facultyName,shortFacultyName
+   2. Xóa 
+      - Delete method
+      - URL: http://localhost:3000/api/faculty/remove
+      - Tham số: id(require)
+   3. Sửa(không sửa khóa chính id, các tham số không thêm vào sẽ gán bằng null -> muốn giữ nguyên giá trị 
+   nào thì phải truyền tham số đó vào)
+      - Put method
+      - URL: http://localhost:3000/api/faculty/modify
+      - Tham số: id(require),facultyName,shortFacultyName
+   4. Tìm kiếm
+      - Get method
+      - URL: http://localhost:3000/api/faculty/search
+      - Tham số: id,facultyName,shortFacultyName
+   5. Reset
+      - Get method
+      - URL: http://localhost:3000/api/faculty/reset
+      - Tham số: Không
+IV. API Class----------------------
+   1. Thêm
+      - Post method
+      - URL: http://localhost:3000/api/class/add
+      - Tham số: id(require), number, grade, facultyId
+   2. Xóa 
+      - Delete method
+      - URL: http://localhost:3000/api/class/remove
+      - Tham số: id(require)
+   3. Sửa(không sửa khóa chính id, các tham số không thêm vào sẽ gán bằng null -> muốn giữ nguyên giá trị 
+   nào thì phải truyền tham số đó vào)
+      - Put method
+      - URL: http://localhost:3000/api/class/modify
+      - Tham số: id(require), number, grade,
+   4. Tìm kiếm
+      - Get method
+      - URL: http://localhost:3000/api/class/search
+      - Tham số: id, grade,
+   5. Reset
+      - Get method
+      - URL: http://localhost:3000/api/class/reset
+      - Tham số: Không

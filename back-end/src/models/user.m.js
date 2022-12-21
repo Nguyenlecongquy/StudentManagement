@@ -22,6 +22,7 @@ const pgUser= {
       return rs;
    },
    findUserGVByUsername: async username => {
+      console.log(username)
       try {
          const rs = await db.one('SELECT * FROM user_giaovien WHERE username=$1', [username]);
          return rs;
@@ -72,15 +73,17 @@ const pgUser= {
    checkLogin: async(data) =>{
       const un = data.username; 
       const pw = data.password;
-      const cg = data.category;
+      const cg = JSON.parse(data.category);
+      
       let userDb;
-      if(cg === "true"){
+      if(cg === true){
          userDb = await pgUser.findUserGVByUsername(un);
       }
       else {
          userDb = await pgUser.findUserHSByUsername(un);
       }
-      console.log("userDb.password", userDb)
+
+      console.log("userDb:", userDb)
       if(userDb == false){
          return "not_exist";
       }
@@ -98,8 +101,8 @@ const pgUser= {
       const un = data.username; //username = email
       const id = data.id;
       const cg = data.category;
-
-      if(cg==="true" ){
+      console.log(cg);
+      if(cg === true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
          // console.log(userGV)
@@ -140,7 +143,7 @@ const pgUser= {
             'id': id
          };
          let uNew;
-         if(cg === "true"){
+         if(cg === true){
             uNew = await pgUser.addUserGV(userSave);
             console.log("Da luu vao database", uNew);
          }

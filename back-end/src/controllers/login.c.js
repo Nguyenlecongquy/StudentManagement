@@ -11,12 +11,11 @@ class LoginC {
       const data = {'username':user.username,'password': user.password, 'category': user.category}
       console.log("data",data)
       const check = await userM.checkLogin(data);
-      console.log('req.session', req.session);
+      console.log("check:",check)
       if(req.session.username != undefined 
          && req.session.username == user.username 
          && req.session.password == user.password
-         )
-         {
+         ){
          console.log('Dang nhap dua vao luu password')
          response.status = true;
          response.result = 'resuccess';
@@ -36,6 +35,7 @@ class LoginC {
             response.message = 'Đăng nhập thành công, đã lưu mật khẩu';
          }
          else{
+            console.log('a')
             response.status = false;
             response.result = 'fail';
             response.message = 'Đăng nhập thất bại sai mật khẩu';
@@ -46,7 +46,6 @@ class LoginC {
    async handleLogout(req,res,next){
       delete req.session.username;
       delete req.session.pw;
-      res.status(200).json({result:"redirect",url:"/"});
    }
 
 }

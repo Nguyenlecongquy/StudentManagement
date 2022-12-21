@@ -6,7 +6,7 @@ class RegisterC {
    }
    async handleRegister(req, res, next) {
       const user = req.body;
-      console.log( req)
+      // console.log(user)
       let response = {code:'200'};
       const data = {'username':user.username,'password': user.password, 'category': user.category, 'id': user.id}
       const uNew = await userM.checkRegister(data);
