@@ -72,9 +72,9 @@ const pgUser= {
    checkLogin: async(data) =>{
       const un = data.username; 
       const pw = data.password;
-      const cg = data.category;
+      const cg = JSON.parse(data.category);;
       let userDb;
-      if(cg === "true"){
+      if(cg == true){
          userDb = await pgUser.findUserGVByUsername(un);
       }
       else {
@@ -99,7 +99,7 @@ const pgUser= {
       const id = data.id;
       const cg = data.category;
 
-      if(cg==="true" ){
+      if(cg == true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
          // console.log(userGV)

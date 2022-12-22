@@ -16,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.2",
     "axios": "^1.2.1",
     "vue": "^3.2.45",
+    "vue-final-modal": "^3.4.11",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

@@ -11,7 +11,7 @@
       />
       <input
         class="input"
-        v-model="searchValue.name"
+        v-model="searchValue.fullName"
         type="text"
         placeholder="Họ tên"
       />
@@ -23,7 +23,13 @@
         <h4>Thêm giáo viên</h4>
         <input
           class="input"
-          v-model="addedTeacher.name"
+          v-model="addedTeacher.id"
+          type="text"
+          placeholder="Mã GV"
+        />
+        <input
+          class="input"
+          v-model="addedTeacher.fullName"
           type="text"
           placeholder="Họ tên"
         />
@@ -31,14 +37,14 @@
           class="input"
           v-model="addedTeacher.birthday"
           type="text"
-          placeholder="Ngày sinh"
+          placeholder="Ngày sinh (01/01/2000)"
         />
-        <input
-          class="input"
-          v-model="addedTeacher.faculty"
-          type="text"
-          placeholder="Mã khoa"
-        />
+        <select class="input" v-model="addedTeacher.facultyId">
+          <option value="" disabled>Chọn mã khối</option>
+          <option v-for="facultyId in faculties" v-bind:key="facultyId">
+            {{ facultyId }}
+          </option>
+        </select>
         <ButtonVue title="Thêm" @click="add()" primary="true" />
       </div>
       <table>
@@ -48,7 +54,8 @@
         <tr>
           <th width="10%">STT</th>
           <th width="20%">Mã GV</th>
-          <th width="40%">Họ và tên</th>
+          <th width="30%">Họ và tên</th>
+          <th width="10%">Mã khoa</th>
           <th width="20%">Ngày sinh</th>
           <th width="10%">
             <button class="btn-add">
@@ -56,12 +63,16 @@
             </button>
           </th>
         </tr>
-        <tr v-for="item in list" :key="item.stt">
-          <td>{{ item.stt }}</td>
+        <tr v-for="(item, index) in list" :key="item">
+          <td>{{ index + 1 }}</td>
           <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
+          <td>{{ item.fullName }}</td>
+          <td>{{ item.facultyId }}</td>
           <td>{{ item.birthday }}</td>
           <td>
+            <button class="edit-btn" @click="showModalAndEdit(item)">
+              <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+            </button>
             <button class="remove-btn" @click="remove(item)">
               <font-awesome-icon icon="fa-solid fa-circle-minus" />
             </button>
@@ -72,121 +83,241 @@
         Không tìm thấy dữ liệu
       </p>
     </div>
+    <vue-final-modal
+      v-model="showModal"
+      classes="modal-container"
+      content-class="modal-content"
+    >
+      <span class="modal__title">Chỉnh sửa giáo viên</span>
+      <div class="modal__content">
+        <input
+          class="input"
+          v-model="editTeacher.id"
+          type="text"
+          placeholder="Mã GV"
+        />
+        <input
+          class="input"
+          v-model="editTeacher.fullName"
+          type="text"
+          placeholder="Họ tên"
+        />
+        <input
+          class="input"
+          v-model="editTeacher.birthday"
+          type="text"
+          placeholder="Ngày sinh (01/01/2000)"
+        />
+        <select class="input" v-model="editTeacher.facultyId">
+          <option value="">Chọn mã khối</option>
+          <option
+            v-for="(item, index) in faculties"
+            :key="index"
+            :selected="item == editTeacher.facultyId ? true : false"
+          >
+            {{ item }}
+          </option>
+        </select>
+      </div>
+      <div class="modal__action">
+        <ButtonVue title="Thêm" @click="edit()" primary="true" />
+        <ButtonVue title="Hủy" @click="showModal = false" />
+      </div>
+    </vue-final-modal>
   </div>
 </template>
 
 <script>
+import { VueFinalModal } from "vue-final-modal";
 import ButtonVue from "./Button.vue";
+import TeacherService from "../services/TeacherService";
+import FacultyService from "../services/FacultyService";
+
 export default {
-  name: "TeacherCom",
-  components: { ButtonVue },
+  fullName: "TeacherCom",
+  components: { ButtonVue, VueFinalModal },
   data() {
     return {
       addedTeacher: {
-        name: "",
+        id: "",
+        fullName: "",
         birthday: "",
+        facultyId: "",
       },
-      list: [
-        {
-          stt: 1,
-          id: "GV001",
-          name: "Nguyen VAn A",
-          birthday: "10/10/1999",
-        },
-        {
-          stt: 2,
-          id: "GV002",
-          name: "Nguyen VAn B",
-          birthday: "10/10/1999",
-        },
-        {
-          stt: 3,
-          id: "GV003",
-          name: "Nguyen VAn C",
-          birthday: "10/10/1999",
-        },
-      ],
-      backupList: [],
+      editTeacher: {
+        id: "",
+        fullName: "",
+        birthday: "",
+        facultyId: "",
+      },
+      showModal: false,
+      list: [],
       searchValue: {
         id: "",
-        name: "",
+        fullName: "",
       },
+      faculties: [],
     };
   },
   mounted() {
-    this.backupList = this.list.filter(() => true);
+    //API for list teachers
+    TeacherService.searchTeacher()
+      .then(({ data }) => {
+        console.log(data);
+        if (data.status) {
+          this.list = this.convertData(data.teachers);
+        }
+      })
+      .catch((e) => console.log(e));
+
+    //API for list faculties
+    FacultyService.searchFaculty()
+      .then(({ data }) => {
+        if (data.status) {
+          this.faculties = Array.from(data.faculties).map((e) => {
+            return e.ma_khoa.trim();
+          });
+        }
+      })
+      .catch((e) => console.log(e));
   },
   methods: {
+    convertData(rawData) {
+      return rawData.map((e) => {
+        return {
+          id: e.ma_gv,
+          fullName: e.ten_gv,
+          facultyId: e.ma_khoa.trim(),
+          birthday:
+            e.ngay_sinh_gv != null
+              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
+              : "",
+        };
+      });
+    },
+    convertBirthday(birthday) {
+      let tokens = birthday.split("-");
+      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
+    },
     reset() {
       this.searchValue.id = "";
-      this.searchValue.name = "";
-      this.searchValue.faculty = "";
-
+      this.searchValue.fullName = "";
+      this.searchValue.facultyId = "";
       //Gọi API để reset lại list
-      this.list = this.backupList;
+      TeacherService.searchTeacher()
+        .then(({ data }) => {
+          this.list = this.convertData(data.teachers);
+        })
+        .catch((e) => console.log(e));
     },
     search() {
       //Send API and get result
-      var result = [];
-      var searchedId = this.searchValue.id;
-      var searchedName = this.searchValue.name;
-
-      if (searchedId != "") {
-        result = this.backupList.filter((e) => {
-          return e.id.toLowerCase().includes(searchedId.toLowerCase());
-        });
-      }
-
-      if (searchedName != "") {
-        this.backupList.forEach((e) => {
-          if (e.name.toLowerCase().includes(searchedName.toLowerCase())) {
-            if (!result.includes(e)) {
-              result.push(e);
-            }
-          }
-        });
-      }
-
-      if (searchedId && searchedName) {
-        result = this.backupList.filter((e) => {
-          return (
-            e.id.toLowerCase().includes(searchedId.toLowerCase()) &&
-            e.name.toLowerCase().includes(searchedName.toLowerCase())
-          );
-        });
-      }
-      this.list = result;
+      const data = {
+        params: {
+          id: this.searchValue.id,
+          fullName: this.searchValue.fullName,
+        },
+      };
+      TeacherService.searchTeacher(data)
+        .then(({ data }) => {
+          this.list = this.convertData(data.teachers);
+        })
+        .catch((e) => console.log(e));
     },
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa giáo viên ${item.name}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa giáo viên ${item.id}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
-        this.list.forEach((e, index) => {
-          e.stt = index + 1;
-        });
-
-        //SendAPI
+        TeacherService.deleteTeacher({ data: { id: item.id } });
       }
     },
-    validateTeacher() {},
-    add() {
-      const item = {
-        stt: this.list[this.list.length - 1].stt + 1,
-        id: "GV00x",
-        name: this.addedTeacher.name,
-        birthday: this.addedTeacher.birthday,
-      };
-      let checkExistTeacher = this.backupList.some(
-        (e) => e.id.toLowerCase() == item.id.toLowerCase()
-      );
-      if (!checkExistTeacher) {
-        //update result
-        this.backupList.push(item);
-        this.list = this.backupList;
-        this.addedTeacher.name = "";
-        this.addedTeacher.birthday = "";
-        //Send API
+    validateBirthday(birthday) {
+      const tokens = birthday.split("/");
+      let daysOfMonth = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      function isLeapYear(year) {
+        let result = year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
+        return result;
       }
+      let year = parseInt(tokens[2]);
+      let month = parseInt(tokens[1]);
+      let day = parseInt(tokens[0]);
+
+      if (isLeapYear(year)) {
+        daysOfMonth[2] = 29;
+      }
+      if (year < 1900) {
+        return false;
+      }
+      if (month < 1 || month > 12) {
+        return false;
+      }
+      if (day < 1 || day > daysOfMonth[month]) {
+        return false;
+      }
+      return true;
+    },
+    add() {
+      if (
+        this.addedTeacher.fullName &&
+        this.addedTeacher.birthday &&
+        this.addedTeacher.facultyId
+      ) {
+        if (this.validateBirthday(this.addedTeacher.birthday)) {
+          const item = {
+            id: this.addedTeacher.id,
+            fullName: this.addedTeacher.fullName,
+            birthday: this.addedTeacher.birthday,
+          };
+
+          //Send API
+          TeacherService.addTeacher({
+            ...item,
+            idFaculty: this.addedTeacher.facultyId,
+          })
+            .then(({ data }) => {
+              if (data.status) {
+                //update result
+                this.list.push({
+                  ...item,
+                  facultyId: this.addedTeacher.facultyId,
+                });
+                this.addedTeacher.id = "";
+                this.addedTeacher.fullName = "";
+                this.addedTeacher.birthday = "";
+                this.addedTeacher.facultyId = "";
+              } else {
+                alert(
+                  "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
+                );
+              }
+            })
+            .catch((e) => console.log(e));
+        } else {
+          alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
+        }
+      } else {
+        alert("Vui lòng điền đẩy đủ các thông tin");
+      }
+    },
+    showModalAndEdit(item) {
+      this.showModal = true;
+      this.editTeacher = { ...item };
+    },
+    edit() {
+      //Send API
+      TeacherService.editTeacher({
+        id: this.editTeacher.id,
+        fullName: this.editTeacher.fullName,
+        idFaculty: this.editTeacher.facultyId,
+        birthday: this.editTeacher.birthday,
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            alert("Sửa thành công");
+            this.showModal = true;
+          }
+        })
+        .catch((e) => console.log(e));
     },
   },
 };
@@ -226,7 +357,9 @@ export default {
   margin-left: 12px;
   border-radius: 3px;
   font-size: 14px;
+  outline: none;
 }
+
 .input:nth-last-child(2) {
   margin-right: 12px;
 }
@@ -262,16 +395,20 @@ tr:nth-child(even) {
 tr:nth-child(odd) {
   background-color: rgb(241, 240, 240);
 }
-th:last-child,
-td:last-child {
+td:last-child,
+th:last-child {
   text-align: center;
+  line-height: 10px;
 }
+
 .btn-add,
-.remove-btn {
+.remove-btn,
+.edit-btn {
   background-color: transparent;
 }
 .btn-add:hover,
-.remove-btn:hover {
+.remove-btn:hover,
+.edit-btn:hover {
   cursor: pointer;
 }
 .btn-add svg {
@@ -281,5 +418,42 @@ td:last-child {
 .remove-btn svg {
   color: red;
   font-size: 16px;
+}
+
+::v-deep .modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+::v-deep .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90%;
+  margin: 0 1rem;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background: #fff;
+}
+.modal__title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.modal__content .input:first-child {
+  margin-left: 0;
+}
+.modal__action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 1rem 0 0;
+}
+.modal__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 </style>
