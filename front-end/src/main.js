@@ -4,6 +4,7 @@ import router from "./router";
 import "./assets/main.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { vfmPlugin } from "vue-final-modal";
 import {
   faHouse,
   faUser,
@@ -17,6 +18,7 @@ import {
   faCirclePlus,
   faCircleMinus,
   faBookOpen,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 const app = createApp(App);
 
@@ -34,7 +36,9 @@ library.add(
   faCircleQuestion,
   faCirclePlus,
   faCircleMinus,
-  faBookOpen
+  faBookOpen,
+  faPenToSquare
 );
 app.mount("#app");
+app.use(vfmPlugin);
 app.component("font-awesome-icon", FontAwesomeIcon);

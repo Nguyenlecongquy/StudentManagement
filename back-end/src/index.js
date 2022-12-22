@@ -25,7 +25,6 @@ app.use(express.urlencoded({ extended: false }))
 //xu li du lieu request post json
 app.use(express.json())
 
-
 // Dung session
 app.use(
    session({

@@ -1,18 +1,18 @@
 <template>
   <div class="pageContent">
-    <h2 class="pageContent__heading">Khối</h2>
+    <h2 class="pageContent__heading">Khoa</h2>
     <div class="content">
-      <h4 class="content__heading">Thêm khối</h4>
+      <h4 class="content__heading">Thêm khoa</h4>
       <div class="content__adding">
         <input
           class="input"
-          v-model="addedFaculty.facultyID"
+          v-model="addedFaculty.ma_khoa"
           type="text"
           placeholder="Mã khối"
         />
         <input
           class="input"
-          v-model="addedFaculty.facultyName"
+          v-model="addedFaculty.ten_khoa"
           type="text"
           placeholder="Tên khối"
         />
@@ -32,10 +32,10 @@
             </button>
           </th>
         </tr>
-        <tr v-for="item in list" :key="item.stt">
-          <td>{{ item.stt }}</td>
-          <td>{{ item.facultyID }}</td>
-          <td>{{ item.facultyName }}</td>
+        <tr v-for="(item, index) in list" :key="item.stt">
+          <td>{{ index + 1 }}</td>
+          <td>{{ item.ma_khoa }}</td>
+          <td>{{ item.ten_khoa }}</td>
           <td>
             <button class="remove-btn" @click="remove(item)">
               <font-awesome-icon icon="fa-solid fa-circle-minus" />
@@ -49,60 +49,70 @@
 
 <script>
 import ButtonVue from "./Button.vue";
+import FacultyService from "../services/FacultyService";
+
 export default {
   name: "FacultyCom",
   components: { ButtonVue },
   data() {
     return {
-      list: [
-        {
-          stt: 1,
-          facultyID: "TN",
-          facultyName: "Tự nhiên",
-        },
-        {
-          stt: 2,
-          facultyID: "XH",
-          facultyName: "Xã hội",
-        },
-      ],
+      list: [],
       backupList: [],
       addedFaculty: {
-        facultyID: "",
-        facultyName: "",
+        ma_khoa: "",
+        ten_khoa: "",
       },
     };
+  },
+  mounted() {
+    FacultyService.searchFaculty()
+      .then(({ data }) => {
+        this.list = data.faculties;
+        console.log(data);
+      })
+      .catch((e) => console.log(e));
   },
   methods: {
     addFaculty() {
       //Check if exists
       if (
-        this.addedFaculty.facultyID.length > 0 &&
-        this.addedFaculty.facultyName.length > 0
+        this.addedFaculty.ma_khoa.length > 0 &&
+        this.addedFaculty.ten_khoa.length > 0
       ) {
         let result = this.list.some(
-          (e) => e.facultyID == this.addedFaculty.facultyID
+          (e) => e.ma_khoa == this.addedFaculty.ma_khoa
         );
         if (!result) {
-          this.list.push({
-            stt: this.list[this.list.length - 1].stt + 1,
-            ...this.addedFaculty,
-          });
-          this.addedFaculty.facultyID = "";
-          this.addedFaculty.facultyName = "";
+          //Send API to add new item
+          FacultyService.addFaculty({
+            id: this.addedFaculty.ma_khoa,
+            facultyName: this.addedFaculty.ten_khoa,
+          })
+            .then(({ data }) => {
+              if (data.status) {
+                this.list.push({
+                  stt: this.list[this.list.length - 1].stt + 1,
+                  ...this.addedFaculty,
+                });
+                this.addedFaculty.ma_khoa = "";
+                this.addedFaculty.ten_khoa = "";
+              }
+            })
+            .catch((e) => console.log(e));
         } else {
           alert("Mã khối đã tồn tại");
         }
       }
     },
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa lớp ${item.facultyName}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa lớp ${item.ten_khoa}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
         this.list.forEach((e, index) => {
           e.stt = index + 1;
         });
         //SendAPI
+        FacultyService.deleteFaculty({ data: { id: item.ma_khoa } });
       }
     },
   },
