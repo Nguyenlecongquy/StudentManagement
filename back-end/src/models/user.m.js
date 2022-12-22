@@ -74,7 +74,7 @@ const pgUser= {
       const pw = data.password;
       const cg = data.category;
       let userDb;
-      if(cg === "true"){
+      if(cg === true){
          userDb = await pgUser.findUserGVByUsername(un);
       }
       else {
@@ -100,7 +100,7 @@ const pgUser= {
       const cg = data.category;
 
       // console.log(un,id,cg)
-      if(cg==="true" ){
+      if(cg=== true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
          console.log(userGV)
