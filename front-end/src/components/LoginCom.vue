@@ -76,7 +76,7 @@ export default {
     return {
       emailValue: "",
       passwordValue: "",
-      isTeacher: "true",
+      isTeacher: true,
       error: "",
     };
   },
@@ -88,7 +88,6 @@ export default {
       return isValid;
     },
     submit() {
-      this.$router.push("/home");
       AuthenticationService.login({
         username: this.emailValue,
         password: this.passwordValue,
