@@ -1,25 +1,37 @@
 const CryptoJS = require('crypto-js');
 const hashLength = 64;
+
 const DB = require('../connect/db')
-const db = DB.connect;
+var db;
+try {
+   db = DB.connect;
+   console.log("User model connect database successfully!")
+} catch (error) {
+   console.log("User model connect database fail!")
+}
+
 
 const pgUser= {
-   findAllUserGVs: async() => {
-      const rs = await db.any('SELECT * FROM user_giaovien');
-      //console.log(rs);
-      return rs;
-   },
+   fieldId:(id) => (id == undefined) ? true : "magv ='" + id + "'",
+   fieldUsername:(username) => (username == undefined) ? true : "username ='" + username + "'",
+
    addUserGV: async user => {
-      const rs = await db.one('INSERT INTO user_giaovien(magv,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
-      [user.id, user.username, user.username, user.password]);//username = email
-      // console.log("add",rs)
-      return rs;
+      try {
+         const rs = await db.one('INSERT INTO user_giaovien(magv,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
+         [user.id, user.username, user.username, user.password]);//username = email
+         return rs;
+      } catch (error) {
+         return false;
+      }
    },
    addUserHS: async user => {
-      const rs = await db.one('INSERT INTO user_hocsinh(mahs,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
-      [user.id, user.username, user.username, user.password]);//username = email
-      // console.log("add",rs)
-      return rs;
+      try {
+         const rs = await db.one('INSERT INTO user_hocsinh(mahs,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
+         [user.id, user.username, user.username, user.password]);//username = email
+         return rs;
+      } catch (error) {
+         return false;
+      }
    },
    findUserGVByUsername: async username => {
       try {
@@ -69,18 +81,20 @@ const pgUser= {
          return false;
       }
    },
+   
+
    checkLogin: async(data) =>{
       const un = data.username; 
       const pw = data.password;
       const cg = JSON.parse(data.category);;
       let userDb;
-      if(cg == true){
+      
+      if(cg === true){
          userDb = await pgUser.findUserGVByUsername(un);
       }
       else {
          userDb = await pgUser.findUserHSByUsername(un);
       }
-      console.log("userDb.password", userDb)
       if(userDb == false){
          return "not_exist";
       }
@@ -98,11 +112,9 @@ const pgUser= {
       const un = data.username; //username = email
       const id = data.id;
       const cg = data.category;
-
-      if(cg == true ){
+      if(cg === true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
-         // console.log(userGV)
          if(userGV.username == un){
             return "exist_username"; //ok
          }
@@ -114,10 +126,8 @@ const pgUser= {
          }
       }
       else {
-         console.log("vao roi")
          const userHS = await pgUser.findUserHSById(id);
          const hocSinh = await pgUser.findHSById(id);
-         // console.lof(userHS)
          if(userHS.username == un){
             return "exist_username";
          }
@@ -140,7 +150,7 @@ const pgUser= {
             'id': id
          };
          let uNew;
-         if(cg === "true"){
+         if(cg === true){
             uNew = await pgUser.addUserGV(userSave);
             console.log("Da luu vao database", uNew);
          }
