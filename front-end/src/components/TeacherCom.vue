@@ -95,6 +95,7 @@
           v-model="editTeacher.id"
           type="text"
           placeholder="Mã GV"
+          disabled
         />
         <input
           class="input"
@@ -120,7 +121,7 @@
         </select>
       </div>
       <div class="modal__action">
-        <ButtonVue title="Thêm" @click="edit()" primary="true" />
+        <ButtonVue title="Sửa" @click="edit()" primary="true" />
         <ButtonVue title="Hủy" @click="showModal = false" />
       </div>
     </vue-final-modal>
@@ -128,14 +129,13 @@
 </template>
 
 <script>
-import { VueFinalModal } from "vue-final-modal";
 import ButtonVue from "./Button.vue";
 import TeacherService from "../services/TeacherService";
 import FacultyService from "../services/FacultyService";
 
 export default {
   fullName: "TeacherCom",
-  components: { ButtonVue, VueFinalModal },
+  components: { ButtonVue },
   data() {
     return {
       addedTeacher: {
@@ -313,8 +313,15 @@ export default {
       })
         .then(({ data }) => {
           if (data.status) {
+            this.showModal = false;
             alert("Sửa thành công");
-            this.showModal = true;
+            this.list.forEach((e) => {
+              if (e.id == this.editTeacher.id) {
+                e.fullName = this.editTeacher.fullName;
+                e.birthday = this.editTeacher.birthday;
+                e.facultyId = this.editTeacher.facultyId;
+              }
+            });
           }
         })
         .catch((e) => console.log(e));

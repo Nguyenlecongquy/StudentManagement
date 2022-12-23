@@ -23,19 +23,25 @@
       <div class="content__adding">
         <input
           class="input"
-          v-model="editClass.className"
+          v-model="addedClass.className"
           type="text"
           placeholder="Lớp"
         />
         <input
           class="input"
-          v-model="editClass.amount"
+          v-model="addedClass.amount"
           type="text"
           placeholder="Sĩ số"
         />
-        <select class="input" v-model="editClass.grade">
+        <select class="input" v-model="addedClass.grade">
           <option value="" disabled>Chọn khối</option>
           <option v-for="e in listGrade" v-bind:key="e">
+            {{ e }}
+          </option>
+        </select>
+        <select class="input" v-model="addedClass.facultyId">
+          <option value="" disabled>Chọn khoa</option>
+          <option v-for="e in facultiesId" v-bind:key="e">
             {{ e }}
           </option>
         </select>
@@ -49,7 +55,8 @@
           <th width="10%">STT</th>
           <th width="20%">Lớp</th>
           <th width="40%">Sĩ số</th>
-          <th width="20%">Khối</th>
+          <th width="10%">Khối</th>
+          <th width="10%">Khối</th>
           <th width="10%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -61,6 +68,7 @@
           <td>{{ item.className }}</td>
           <td>{{ item.amount }}</td>
           <td>{{ item.grade }}</td>
+          <td>{{ item.facultyId }}</td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -80,29 +88,36 @@
       classes="modal-container"
       content-class="modal-content"
     >
-      <span class="modal__title">Chỉnh sửa giáo viên</span>
+      <span class="modal__title">Chỉnh sửa lớp</span>
       <div class="modal__content">
         <input
           class="input"
-          v-model="addedClass.className"
+          v-model="editClass.className"
           type="text"
           placeholder="Lớp"
+          disabled
         />
         <input
           class="input"
-          v-model="addedClass.amount"
+          v-model="editClass.amount"
           type="text"
           placeholder="Sĩ số"
         />
-        <select class="input" v-model="addedClass.grade">
+        <select class="input" v-model="editClass.grade">
           <option value="" disabled>Chọn khối</option>
           <option v-for="e in listGrade" v-bind:key="e">
             {{ e }}
           </option>
         </select>
+        <select class="input" v-model="editClass.facultyId">
+          <option value="" disabled>Chọn khoa</option>
+          <option v-for="e in facultiesId" v-bind:key="e">
+            {{ e }}
+          </option>
+        </select>
       </div>
       <div class="modal__action">
-        <ButtonVue title="Thêm" @click="edit()" primary="true" />
+        <ButtonVue title="Sửa" @click="edit()" primary="true" />
         <ButtonVue title="Hủy" @click="showModal = false" />
       </div>
     </vue-final-modal>
@@ -112,6 +127,7 @@
 <script>
 import ButtonVue from "./Button.vue";
 import ClassService from "../services/ClassService";
+import FacultyService from "../services/FacultyService";
 
 export default {
   name: "ClassCom",
@@ -124,16 +140,17 @@ export default {
         className: "",
       },
       listGrade: [10, 11, 12],
+      facultiesId: [],
       list: [],
       addedClass: {
         className: "",
-        faculty: "",
+        facultyId: "",
         amount: 0,
         grade: 0,
       },
       editClass: {
         className: "",
-        faculty: "",
+        facultyId: "",
         amount: 0,
         grade: 0,
       },
@@ -148,6 +165,14 @@ export default {
         }
       })
       .catch((e) => console.log(e));
+
+    FacultyService.searchFaculty()
+      .then(({ data }) => {
+        this.facultiesId = data.faculties.map((e) => {
+          return e.ma_khoa;
+        });
+      })
+      .catch((e) => console.log(e));
   },
   methods: {
     convertData(rawData) {
@@ -156,7 +181,7 @@ export default {
           className: e.ma_lop.trim(),
           amount: e.si_so_lop,
           grade: e.khoi,
-          faculty: e.ma_khoa.trim(),
+          facultyId: e.ma_khoa.trim(),
         };
       });
     },
@@ -170,10 +195,6 @@ export default {
           this.list = this.convertData(data.classes);
         })
         .catch((e) => console.log(e));
-    },
-    getData() {
-      //Call API
-      this.backupList = this.list.filter(() => true);
     },
     search() {
       const data = {
@@ -190,26 +211,31 @@ export default {
     },
     add() {
       if (
-        this.addedClass.className.length > 0 &&
-        this.addedClass.faculty.length > 0 &&
-        this.addedClass.amount > 0
+        this.addedClass.className.length &&
+        this.addedClass.facultyId &&
+        this.addedClass.amount > 0 &&
+        this.addedClass.grade > 0
       ) {
-        let isExistClass = this.backupList.some(
-          (e) =>
-            e.className.toLowerCase() == this.addedClass.className.toLowerCase()
-        );
-        if (!isExistClass) {
-          this.backupList.push({
-            stt: this.backupList[this.backupList.length - 1].stt + 1,
-            ...this.addedClass,
-          });
-          this.addedClass.faculty = "";
-          this.addedClass.className = "";
-          this.addedClass.amount = 0;
-          this.list = this.backupList;
-        } else {
-          alert("Lớp đã tồn tại");
-        }
+        ClassService.addClass({
+          id: this.addedClass.className,
+          number: this.addedClass.amount,
+          grade: this.addedClass.grade,
+          facultyId: this.addedClass.facultyId,
+        })
+          .then(({ data }) => {
+            if (data.status) {
+              this.list.push({
+                ...this.addedClass,
+              });
+              this.addedClass.className = "";
+              this.addedClass.amount = 0;
+              this.addedClass.grade = 0;
+              this.addedClass.facultyId = "";
+            } else {
+              alert("Lớp đã tồn tại");
+            }
+          })
+          .catch((e) => console.log(e));
       } else {
         alert("Vui lòng điền đẩy đủ các trường");
       }
@@ -228,15 +254,22 @@ export default {
     edit() {
       //Send API
       ClassService.editClass({
-        id: this.editTeacher.id,
-        fullName: this.editTeacher.fullName,
-        idFaculty: this.editTeacher.facultyId,
-        birthday: this.editTeacher.birthday,
+        id: this.editClass.className,
+        number: this.editClass.amount,
+        grade: this.editClass.grade,
+        idFaculty: this.editClass.facultyId,
       })
         .then(({ data }) => {
           if (data.status) {
+            this.showModal = false;
             alert("Sửa thành công");
-            this.showModal = true;
+            this.list.forEach((e) => {
+              if (e.className == this.editClass.className) {
+                e.amount = this.editClass.amount;
+                e.grade = this.editClass.grade;
+                e.facultyId = this.editClass.facultyId;
+              }
+            });
           }
         })
         .catch((e) => console.log(e));
@@ -317,7 +350,7 @@ td:last-child {
 .remove-btn {
   background-color: transparent;
 }
-.btn-add:hover,
+.edit-btn,
 .remove-btn:hover {
   cursor: pointer;
 }
