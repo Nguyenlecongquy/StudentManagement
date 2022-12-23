@@ -10,9 +10,9 @@ try {
 
 const facultyModel = {
 
-   fieldId:(id) => (id == undefined) ? true : "ma_khoa ='" + id + "'",
-   fieldFacultyName:(FacultyName) => (FacultyName == undefined) ? true : "ten_khoa = '" + FacultyName + "'",
-   fieldShortFacultyName:(ShortFacultyName) => (ShortFacultyName == undefined) ? true : "ten_tat ='" + ShortFacultyName + "'",
+   fieldId:(id) => (id == '') ? true : "ma_khoa ='" + id + "'",
+   fieldFacultyName:(FacultyName) => (FacultyName == '') ? true : "ten_khoa = '" + FacultyName + "'",
+   fieldShortFacultyName:(ShortFacultyName) => (ShortFacultyName == '') ? true : "ten_tat ='" + ShortFacultyName + "'",
 
    findKhoas: async (id, facultyName,shortFacultyName) => {
       const result = await db.any(

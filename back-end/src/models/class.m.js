@@ -10,9 +10,9 @@ try {
 
 const classModel = {
 
-   fieldId:(id) => (id == undefined) ? true : "ma_lop ='" + id + "'",
-   fieldGrade:(grade) => (grade == undefined) ? true : "khoi ='" + grade + "'",
-   fieldNumber:(number) => (number == undefined) ? true : "si_so_lop =" + number ,
+   fieldId:(id) => (id == '') ? true : "ma_lop ='" + id + "'",
+   fieldGrade:(grade) => (grade == '') ? true : "khoi ='" + grade + "'",
+   fieldNumber:(number) => (number == '') ? true : "si_so_lop =" + number ,
    findEmpty: async () => {
       return true;
    },
