@@ -117,7 +117,6 @@ export default {
           this.notify = data.message;
           if (data.status) {
             this.isSuccess = true;
-
             this.emailValue = "";
             this.magv = "";
             this.passwordValue = "";

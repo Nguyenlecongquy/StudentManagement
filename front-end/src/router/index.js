@@ -7,13 +7,13 @@ import AccountInfoCom from "../components/AccountInfoCom.vue";
 import ClassCom from "../components/ClassCom.vue";
 import MemberCom from "../components/MemberCom.vue";
 import PolicyCom from "../components/PolicyCom.vue";
-import RoleCom from "../components/RoleCom.vue";
 import StudentCom from "../components/StudentCom.vue";
 import ScoreCom from "../components/ScoreCom.vue";
 import SubjectCom from "../components/SubjectCom.vue";
 import SummaryCom from "../components/SummaryCom.vue";
 import TeacherCom from "../components/TeacherCom.vue";
 import WelcomeCom from "../components/WelcomeCom.vue";
+import FacultyCom from "../components/FacultyCom.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +44,11 @@ const router = createRouter({
           component: AccountInfoCom,
         },
         {
+          path: "/home/faculty",
+          name: "faculty",
+          component: FacultyCom,
+        },
+        {
           path: "/home/class",
           name: "class",
           component: ClassCom,
@@ -57,11 +62,6 @@ const router = createRouter({
           path: "/home/policy",
           name: "policy",
           component: PolicyCom,
-        },
-        {
-          path: "/home/role",
-          name: "role",
-          component: RoleCom,
         },
         {
           path: "/home/student",

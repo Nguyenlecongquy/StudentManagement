@@ -32,6 +32,7 @@ class TeacherC {
    async remove(req, res) {
       const response = {status:true, teachers: []};
       const teacher = req.body;
+      console.log(teacher.id);
       const result = await teacherM.removeGVfromDatabase(teacher.id);
       if(result!= [] && result!= false ) response.teachers = result;
       else response.status = false;

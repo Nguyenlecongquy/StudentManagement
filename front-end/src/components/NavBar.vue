@@ -29,7 +29,6 @@ export default {
           <li><router-link to="/home/score">Điểm</router-link></li>
           <li><router-link to="/home/summary">Điểm tổng</router-link></li>
           <li><router-link to="/home/member">Thành viên</router-link></li>
-          <li><router-link to="/home/role">Vai trò</router-link></li>
           <li><router-link to="/home/policy">Điều khoản</router-link></li>
         </ul>
       </nav>
@@ -112,5 +111,9 @@ ul {
 }
 li {
   border-bottom: 1px solid blue;
+}
+.icon {
+  display: inline-block;
+  width: 24px;
 }
 </style>

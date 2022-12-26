@@ -80,6 +80,12 @@ export default {
       error: "",
     };
   },
+  mounted() {
+    let isLogin = window.localStorage.getItem("isLogin");
+    if (isLogin == true) {
+      this.$router.push("/home");
+    }
+  },
   methods: {
     validate() {
       var re =
@@ -95,6 +101,7 @@ export default {
       })
         .then(({ data }) => {
           if (data.status) {
+            window.localStorage.setItem("isLogin", "true");
             this.$router.push("/home");
           } else {
             this.error = data.message;
