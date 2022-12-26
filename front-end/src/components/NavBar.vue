@@ -112,4 +112,8 @@ ul {
 li {
   border-bottom: 1px solid blue;
 }
+.icon {
+  display: inline-block;
+  width: 24px;
+}
 </style>

@@ -13,6 +13,7 @@ import SubjectCom from "../components/SubjectCom.vue";
 import SummaryCom from "../components/SummaryCom.vue";
 import TeacherCom from "../components/TeacherCom.vue";
 import WelcomeCom from "../components/WelcomeCom.vue";
+import FacultyCom from "../components/FacultyCom.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,11 @@ const router = createRouter({
           path: "/home/accountInfo",
           name: "accountInfo",
           component: AccountInfoCom,
+        },
+        {
+          path: "/home/faculty",
+          name: "faculty",
+          component: FacultyCom,
         },
         {
           path: "/home/class",

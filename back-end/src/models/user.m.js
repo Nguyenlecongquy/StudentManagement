@@ -86,17 +86,15 @@ const pgUser= {
    checkLogin: async(data) =>{
       const un = data.username; 
       const pw = data.password;
-      const cg = JSON.parse(data.category);
-      
+      const cg = JSON.parse(data.category);;
       let userDb;
+      
       if(cg === true){
          userDb = await pgUser.findUserGVByUsername(un);
       }
       else {
          userDb = await pgUser.findUserHSByUsername(un);
       }
-
-      console.log("userDb:", userDb)
       if(userDb == false){
          return "not_exist";
       }
@@ -114,11 +112,9 @@ const pgUser= {
       const un = data.username; //username = email
       const id = data.id;
       const cg = data.category;
-      console.log(cg);
       if(cg === true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
-         // console.log(userGV)
          if(userGV.username == un){
             return "exist_username"; //ok
          }
@@ -130,10 +126,8 @@ const pgUser= {
          }
       }
       else {
-         console.log("vao roi")
          const userHS = await pgUser.findUserHSById(id);
          const hocSinh = await pgUser.findHSById(id);
-         // console.lof(userHS)
          if(userHS.username == un){
             return "exist_username";
          }
