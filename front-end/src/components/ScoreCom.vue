@@ -75,6 +75,7 @@
         />
       </div>
       <div class="modal__action">
+        <ButtonVue title="Sửa" @click="editRegulation()" primary="true" />
         <ButtonVue title="Hủy" @click="showModalRegulation = false" />
       </div>
     </vue-final-modal>
@@ -140,6 +141,7 @@ import ButtonVue from "./Button.vue";
 import ScoreService from "../services/ScoreService";
 import ClassService from "../services/ClassService";
 import SubjectService from "../services/SubjectService";
+import RegulationService from "../services/RegulationService";
 export default {
   fullName: "ScoreCom",
   components: { ButtonVue },
@@ -332,7 +334,20 @@ export default {
         })
         .catch((e) => console.log(e));
     },
-    
+    editRegulation() {
+      //Send API
+      RegulationService.editPassScore({
+        passScore: this.passScore,
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            this.showModal = false;
+            alert("Sửa thành công");
+           
+          }
+        })
+        .catch((e) => console.log(e));
+    },
   },
 };
 </script>

@@ -61,8 +61,11 @@
           placeholder="Địa chỉ"
         />
         <ButtonVue title="Thêm" @click="add()" primary="true" />
-        
+       
       </div>
+       <div class="content">
+        <ButtonVue title="Tuổi hợp lệ" primary="true" @click="showModalRegulation=true" />
+       </div>
       <table>
         <caption>
           Danh sách học sinh
@@ -103,6 +106,32 @@
         Không tìm thấy dữ liệu
       </p>
     </div>
+    <vue-final-modal
+      v-model="showModalRegulation"
+      classes="modal-container"
+      content-class="modal-content"
+    >
+      <span class="modal__title">Tuổi hợp lệ</span>
+      <div class="modal__content">
+        <input
+          class="input"
+          v-model="minAge"
+          type="number"
+          placeholder="Tối thiểu"
+        />
+        <input
+          class="input"
+          v-model="maxAge"
+          type="number"
+          placeholder="Tối đa"
+        />
+      </div>
+      <div class="modal__action">
+        <ButtonVue title="Sửa" @click="editRegulation()" primary="true" />
+        <ButtonVue title="Hủy" @click="showModalRegulation = false" />
+      </div>
+      
+    </vue-final-modal>
     <vue-final-modal
       v-model="showModal"
       classes="modal-container"
@@ -164,7 +193,7 @@
 import ButtonVue from "./Button.vue";
 import StudentService from "../services/StudentService";
 import ClassService from "../services/ClassService";
-
+import RegulationService from "../services/RegulationService";
 export default {
   fullName: "StudentCom",
   components: { ButtonVue },
@@ -187,6 +216,9 @@ export default {
         address:"",
       },
       showModal: false,
+      showModalRegulation: false,
+      minAge: 15,
+      maxAge: 20,
       list: [
         {
           id: "HS1",
@@ -333,7 +365,17 @@ export default {
       }
       return true;
     },
-   
+    calculateAge(date) 
+    {
+      const now = new Date();
+      const diff = Math.abs(now - date );
+      const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365)); 
+      return age
+    },
+    validateAge(birthday) {
+      if ( this.calculateAge(birthday)>=this.minAge && this.calculateAge(birthday)<=this.maxAge) {return true;}
+      return false;
+    },
     add() {
       if (
         this.addedStudent.fullName &&
@@ -343,7 +385,7 @@ export default {
         this.addedStudent.address 
         
       ) {
-        if (this.validateBirthday(this.addedStudent.birthday)) {
+        if (this.validateBirthday(this.addedStudent.birthday && this.validateAge(this.addedStudent.birthday))) {
           const item = {
             id: this.addedStudent.id,
             fullName: this.addedStudent.fullName,
@@ -412,6 +454,25 @@ export default {
     showModalAndEdit(item) {
       this.showModal=true;
       this.editStudent = {...item};
+    },
+    showRegulationAndEdit() {
+      this.showModalRegulation=true;
+      
+    },
+    editRegulation() {
+      //Send API
+      RegulationService.editValidAge({
+        minAge: this.minAge,
+        maxAge: this.maxAge,
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            this.showModal = false;
+            alert("Sửa thành công");
+           
+          }
+        })
+        .catch((e) => console.log(e));
     },
   },
 };
