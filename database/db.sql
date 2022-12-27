@@ -1,17 +1,19 @@
 -- Database: QLHS
 
 -- DROP DATABASE IF EXISTS "QLHS";
-
 -- CREATE DATABASE "QLHS"
---     WITH
---     OWNER = postgres
---     ENCODING = 'UTF8'
---     LC_COLLATE = 'English_United States.1252'
---     LC_CTYPE = 'English_United States.1252'
---     TABLESPACE = pg_default
---     CONNECTION LIMIT = -1
---     IS_TEMPLATE = False;
 
+-----------------------------------------------------------------
+-- Thứ tự Drop Drop các bảng
+drop table if exists giang_day;
+drop table if exists diem;
+drop table if exists mon_hoc;
+drop table if exists user_giaovien;
+drop table if exists user_hocsinh;
+drop table if exists giao_vien;
+drop table if exists hoc_sinh;
+drop table if exists lop;
+drop table if exists khoa;
 
 -----------------------------------------------------------------
 
@@ -19,13 +21,13 @@
 
 -- DROP TABLE IF EXISTS public.giao_vien;
 
-CREATE TABLE IF NOT EXISTS public.giao_vien
+CREATE TABLE IF NOT EXISTS giao_vien
 (
-    ma_gv character(10) COLLATE pg_catalog."default" NOT NULL,
-    ten_gv character varying(50) COLLATE pg_catalog."default",
+    ma_gv character(10) NOT NULL,
+    ten_gv character varying(50),
     ngay_sinh_gv date,
-    chuc_danh_gv character varying(50) COLLATE pg_catalog."default",
-    ma_khoa character(10) COLLATE pg_catalog."default",
+    chuc_danh_gv character varying(50),
+    ma_khoa character(10),
     CONSTRAINT giao_vien_pkey PRIMARY KEY (ma_gv)
 );
 
@@ -39,26 +41,19 @@ create table IF NOT EXISTS USER_GIAOVIEN(
 );
 ALTER TABLE USER_GIAOVIEN ADD CONSTRAINT FK_USR_GV FOREIGN KEY (MAGV) REFERENCES GIAO_VIEN(MA_GV);
 
-
-ALTER TABLE IF EXISTS public.giao_vien
-    OWNER to postgres;
-
 ------------------------------------------------------------
 -- Table: public.hoc_sinh
 
--- DROP TABLE IF EXISTS public.hoc_sinh;
-
-CREATE TABLE IF NOT EXISTS public.hoc_sinh
+CREATE TABLE IF NOT EXISTS hoc_sinh
 (
-    ma_hs character(10) COLLATE pg_catalog."default" NOT NULL,
-    ten_hs character varying(50) COLLATE pg_catalog."default",
-    ma_lop character(10) COLLATE pg_catalog."default",
+    ma_hs character(10)  NOT NULL,
+    ten_hs character varying(50),
+    ma_lop character(10) ,
     ngay_sinh_hs date,
-    gioi_tinh_hs character varying(3) COLLATE pg_catalog."default",
-    dia_chi_hs character varying(100) COLLATE pg_catalog."default",
+    gioi_tinh_hs character varying(3),
+    dia_chi_hs character varying(100),
     CONSTRAINT hoc_sinh_pkey PRIMARY KEY (ma_hs)
 );
--- DROP TABLE USER_HOCSINH;
 
 CREATE TABLE IF NOT EXISTS USER_HOCSINH(
 	MAHS CHAR(10),
@@ -71,9 +66,6 @@ ALTER TABLE USER_HOCSINH ADD CONSTRAINT FK_USR_HS FOREIGN KEY (MAHS) REFERENCES 
 
 
 
-
-ALTER TABLE IF EXISTS public.hoc_sinh
-    OWNER to postgres;
 ------------------------------------------------------------
 -- Table: public.khoa
 
@@ -81,171 +73,106 @@ ALTER TABLE IF EXISTS public.hoc_sinh
 
 CREATE TABLE IF NOT EXISTS public.khoa
 (
-    ma_khoa character(10) COLLATE pg_catalog."default" NOT NULL,
-    ten_khoa character varying(50) COLLATE pg_catalog."default",
+    ma_khoa character(10) NOT NULL,
+    ten_tat char(10),
+    ten_khoa character varying(50) ,
     CONSTRAINT khoa_pkey PRIMARY KEY (ma_khoa)
-)
+);
 
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.khoa
-    OWNER to postgres;
 
 -------------------------------------------------------------
 -- Table: public.diem
 
--- DROP TABLE IF EXISTS public.diem;
-
 CREATE TABLE IF NOT EXISTS public.diem
 (
-    ma_hs character(10) COLLATE pg_catalog."default" NOT NULL,
-    ma_mh character(10) COLLATE pg_catalog."default" NOT NULL,
+    ma_hs character(10) NOT NULL,
+    ma_mh character(10) NOT NULL,
     diem_15 real,
     diem_1t real,
     diem_gk real,
     diem_ck real,
     diem_tk real,
     CONSTRAINT diem_pkey PRIMARY KEY (ma_hs, ma_mh)
-)
+);
 
-TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.diem
-    OWNER to postgres;
-	
 --------------------------------------------------------------
 -- Table: public.giang_day
 
--- DROP TABLE IF EXISTS public.giang_day;
-
-CREATE TABLE IF NOT EXISTS public.giang_day
+CREATE TABLE IF NOT EXISTS giang_day
 (
-    ma_gv character(10) COLLATE pg_catalog."default" NOT NULL,
-    ma_mh character(10) COLLATE pg_catalog."default" NOT NULL,
-    ma_lop character(10) COLLATE pg_catalog."default" NOT NULL,
+    ma_gv character(10)  NOT NULL,
+    ma_mh character(10)  NOT NULL,
+    ma_lop character(10) NOT NULL,
     CONSTRAINT giang_day_pkey PRIMARY KEY (ma_gv, ma_mh, ma_lop)
-)
+);
 
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.giang_day
-    OWNER to postgres;
 ---------------------------------------------------------------
 -- Table: public.lop
 
--- DROP TABLE IF EXISTS public.lop;
-
 CREATE TABLE IF NOT EXISTS public.lop
 (
-    ma_lop character(10) COLLATE pg_catalog."default" NOT NULL,
-    ten_lop character varying(10) COLLATE pg_catalog."default",
+    ma_lop character(10)  NOT NULL,
     si_so_lop integer,
-    ma_khoa character(10) COLLATE pg_catalog."default",
+	khoi varchar(10),
+    ma_khoa character(10),
     CONSTRAINT lop_pkey PRIMARY KEY (ma_lop)
-)
+);
 
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.lop
-    OWNER to postgres;
 --------------------------------------------------------------
 -- Table: public.mon_hoc
 
--- DROP TABLE IF EXISTS public.mon_hoc;
-
 CREATE TABLE IF NOT EXISTS public.mon_hoc
 (
-    ma_mh character(10) COLLATE pg_catalog."default" NOT NULL,
-    ten_mh character varying(50) COLLATE pg_catalog."default",
+    ma_mh character(10)  NOT NULL,
+    ten_mh character varying(50),
     CONSTRAINT mon_hoc_pkey PRIMARY KEY (ma_mh)
-)
+);
 
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.mon_hoc
-    OWNER to postgres;
 
 -------------------------------------------------------------
 -- Constraint: giao_vien_khoa_fkey
 
--- ALTER TABLE IF EXISTS public.giao_vien DROP CONSTRAINT IF EXISTS giao_vien_khoa_fkey;
-
 ALTER TABLE IF EXISTS public.giao_vien
     ADD CONSTRAINT giao_vien_khoa_fkey FOREIGN KEY (ma_khoa)
-    REFERENCES public.khoa (ma_khoa) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.khoa (ma_khoa) ;
 
 
 -- Constraint: diem_hoc_sinh_fkey
 
--- ALTER TABLE IF EXISTS public.diem DROP CONSTRAINT IF EXISTS diem_hoc_sinh_fkey;
--- DROP table diem
-
 ALTER TABLE IF EXISTS public.diem
     ADD CONSTRAINT diem_hoc_sinh_fkey FOREIGN KEY (ma_hs)
-    REFERENCES public.hoc_sinh (ma_hs) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.hoc_sinh (ma_hs);
 
 -- Constraint: diem_mon_hoc_fkey
-
--- ALTER TABLE IF EXISTS public.diem DROP CONSTRAINT IF EXISTS diem_mon_hoc_fkey;
-
 ALTER TABLE IF EXISTS public.diem
     ADD CONSTRAINT diem_mon_hoc_fkey FOREIGN KEY (ma_mh)
-    REFERENCES public.mon_hoc (ma_mh) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.mon_hoc (ma_mh);
+	
 -- Constraint: giang_day_giao_vien_fkey
-
--- ALTER TABLE IF EXISTS public.giang_day DROP CONSTRAINT IF EXISTS giang_day_giao_vien_fkey;
-
 ALTER TABLE IF EXISTS public.giang_day
     ADD CONSTRAINT giang_day_giao_vien_fkey FOREIGN KEY (ma_gv)
-    REFERENCES public.giao_vien (ma_gv) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.giao_vien (ma_gv);
+	
 -- Constraint: giang_day_lop_fkey
-
--- ALTER TABLE IF EXISTS public.giang_day DROP CONSTRAINT IF EXISTS giang_day_lop_fkey;
-
 ALTER TABLE IF EXISTS public.giang_day
     ADD CONSTRAINT giang_day_lop_fkey FOREIGN KEY (ma_lop)
-    REFERENCES public.lop (ma_lop) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.lop (ma_lop);
 
 -- Constraint: giang_day_mon_hoc_fkey
-
--- ALTER TABLE IF EXISTS public.giang_day DROP CONSTRAINT IF EXISTS giang_day_mon_hoc_fkey;
-
 ALTER TABLE IF EXISTS public.giang_day
     ADD CONSTRAINT giang_day_mon_hoc_fkey FOREIGN KEY (ma_mh)
-    REFERENCES public.mon_hoc (ma_mh) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.mon_hoc (ma_mh);
 
 -- Constraint: hoc_sinh_lop_fkey
-
--- ALTER TABLE IF EXISTS public.hoc_sinh DROP CONSTRAINT IF EXISTS hoc_sinh_lop_fkey;
-
 ALTER TABLE IF EXISTS public.hoc_sinh
     ADD CONSTRAINT hoc_sinh_lop_fkey FOREIGN KEY (ma_lop)
-    REFERENCES public.lop (ma_lop) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.lop (ma_lop);
 
 -- Constraint: lop_khoa_fkey
-
--- ALTER TABLE IF EXISTS public.lop DROP CONSTRAINT IF EXISTS lop_khoa_fkey;
--- DROP TABLE LOP
-
 ALTER TABLE IF EXISTS public.lop
     ADD CONSTRAINT lop_khoa_fkey FOREIGN KEY (ma_khoa)
-    REFERENCES public.khoa (ma_khoa) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
+    REFERENCES public.khoa (ma_khoa);
 	
 	
 -- VALUES KHOA
@@ -267,4 +194,7 @@ INSERT INTO HOC_SINH(MA_HS,TEN_HS) VALUES
 ('HS20120555','NGUYEN XUAN QUAN'),
 ('HS20120627','HOANG VINH');
 
+insert into lop(ma_lop,khoi,si_so_lop,ma_khoa)
+values('10A1','10',40,'KHTN'),('10A2','10',45,'KHXH'),
+('11A1','11',41,'KHTN'),('11A2','11',42,'KHXH');
 

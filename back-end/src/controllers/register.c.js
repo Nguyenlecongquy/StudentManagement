@@ -1,5 +1,4 @@
 const userM = require('../models/user.m')
-const {PORT} = require('../configs/const')
 
 class RegisterC {
    index(req, res) {
@@ -7,7 +6,7 @@ class RegisterC {
    }
    async handleRegister(req, res, next) {
       const user = req.body;
-      // console.log("register infor", user)
+      // console.log(user)
       let response = {code:'200'};
       const data = {'username':user.username,'password': user.password, 'category': user.category, 'id': user.id}
       const uNew = await userM.checkRegister(data);
