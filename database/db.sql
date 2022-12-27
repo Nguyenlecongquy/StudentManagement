@@ -87,12 +87,13 @@ CREATE TABLE IF NOT EXISTS public.diem
 (
     ma_hs character(10) NOT NULL,
     ma_mh character(10) NOT NULL,
+    hoc_ki text NOT NULL,
     diem_15 real,
     diem_1t real,
     diem_gk real,
     diem_ck real,
     diem_tk real,
-    CONSTRAINT diem_pkey PRIMARY KEY (ma_hs, ma_mh)
+    CONSTRAINT diem_pkey PRIMARY KEY (ma_hs, ma_mh, hoc_ki)
 );
 
 
@@ -126,6 +127,7 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
 (
     ma_mh character(10)  NOT NULL,
     ten_mh character varying(50),
+    ma_khoa character(10),
     CONSTRAINT mon_hoc_pkey PRIMARY KEY (ma_mh)
 );
 
@@ -137,6 +139,11 @@ ALTER TABLE IF EXISTS public.giao_vien
     ADD CONSTRAINT giao_vien_khoa_fkey FOREIGN KEY (ma_khoa)
     REFERENCES public.khoa (ma_khoa) ;
 
+-- Constraint: mon_hoc_khoa_fkey
+
+ALTER TABLE IF EXISTS public.mon_hoc
+    ADD CONSTRAINT mon_hoc_khoa_fkey FOREIGN KEY (ma_khoa)
+    REFERENCES public.khoa (ma_khoa) ;
 
 -- Constraint: diem_hoc_sinh_fkey
 
