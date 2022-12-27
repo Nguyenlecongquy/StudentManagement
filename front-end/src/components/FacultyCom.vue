@@ -8,24 +8,24 @@
           class="input"
           v-model="addedFaculty.ma_khoa"
           type="text"
-          placeholder="Mã khối"
+          placeholder="Mã khoa"
         />
         <input
           class="input"
           v-model="addedFaculty.ten_khoa"
           type="text"
-          placeholder="Tên khối"
+          placeholder="Tên khoa"
         />
         <ButtonVue title="Thêm" @click="addFaculty()" primary="true" />
       </div>
       <table>
         <caption>
-          Danh sách khối
+          Danh sách khoa
         </caption>
         <tr>
           <th width="10%">STT</th>
-          <th width="20%">Mã khối</th>
-          <th width="50%">Tên khối</th>
+          <th width="20%">Mã khoa</th>
+          <th width="50%">Tên khoa</th>
           <th width="20%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -100,7 +100,7 @@ export default {
             })
             .catch((e) => console.log(e));
         } else {
-          alert("Mã khối đã tồn tại");
+          alert("Mã khoa đã tồn tại");
         }
       }
     },

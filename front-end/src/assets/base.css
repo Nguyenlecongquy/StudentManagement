@@ -95,3 +95,10 @@ html::-webkit-scrollbar-thumb {
 html::-webkit-scrollbar-track {
   background: rgba(235, 235, 235, 0.64);
 }
+
+.ml-12 {
+  margin-left: 12px;
+}
+.r-12 {
+  margin-right: 12px;
+}

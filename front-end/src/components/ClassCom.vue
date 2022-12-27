@@ -15,7 +15,12 @@
           {{ e }}
         </option>
       </select>
-      <ButtonVue title="Reset" @click="reset()" />
+      <ButtonVue class="ml-12" title="Reset" @click="reset()" />
+      <ButtonVue
+        title="Thay đổi quy định lớp"
+        primary="true"
+        @click="showModalRegulation = true"
+      />
     </div>
 
     <div class="content">
@@ -121,6 +126,38 @@
         <ButtonVue title="Hủy" @click="showModal = false" />
       </div>
     </vue-final-modal>
+
+    <vue-final-modal
+      v-model="showModalRegulation"
+      classes="modal-container"
+      content-class="modal-content"
+    >
+      <span class="modal__title">Thay đổi quy định về lớp</span>
+      <div class="modal__content">
+        <FormGroup
+          label="Số lượng lớp khối 10"
+          typeOfInput="number"
+          v-model="editedRegulation.amountOfGrade10"
+          valueOfPlaceholder="Số lượng"
+        />
+        <FormGroup
+          label="Số lượng lớp khối 11"
+          typeOfInput="number"
+          v-model="editedRegulation.amountOfGrade11"
+          valueOfPlaceholder="Số lượng"
+        />
+        <FormGroup
+          label="Số lượng lớp khối 12"
+          typeOfInput="number"
+          v-model="editedRegulation.amountOfGrade12"
+          valueOfPlaceholder="Số lượng"
+        />
+      </div>
+      <div class="modal__action">
+        <ButtonVue title="Sửa" @click="editRegulation()" primary="true" />
+        <ButtonVue title="Hủy" @click="cancelEditRegulation()" />
+      </div>
+    </vue-final-modal>
   </div>
 </template>
 
@@ -128,13 +165,15 @@
 import ButtonVue from "./Button.vue";
 import ClassService from "../services/ClassService";
 import FacultyService from "../services/FacultyService";
+import FormGroup from "./FormGroup.vue";
 
 export default {
   name: "ClassCom",
-  components: { ButtonVue },
+  components: { ButtonVue, FormGroup },
   data() {
     return {
       showModal: false,
+      showModalRegulation: false,
       searchValue: {
         grade: "",
         className: "",
@@ -146,7 +185,7 @@ export default {
         className: "",
         facultyId: "",
         amount: 0,
-        grade: 0,
+        grade: 10,
       },
       editClass: {
         className: "",
@@ -154,9 +193,20 @@ export default {
         amount: 0,
         grade: 0,
       },
+      regulation: {
+        amountOfGrade10: 4,
+        amountOfGrade11: 3,
+        amountOfGrade12: 2,
+      },
+      editedRegulation: {
+        amountOfGrade10: 4,
+        amountOfGrade11: 3,
+        amountOfGrade12: 2,
+      },
     };
   },
   mounted() {
+    //Call API for list class
     ClassService.searchClass()
       .then(({ data }) => {
         if (data.status) {
@@ -166,6 +216,7 @@ export default {
       })
       .catch((e) => console.log(e));
 
+    //Call API for list faculty
     FacultyService.searchFaculty()
       .then(({ data }) => {
         this.facultiesId = data.faculties.map((e) => {
@@ -173,6 +224,8 @@ export default {
         });
       })
       .catch((e) => console.log(e));
+
+    //Call API for regulation
   },
   methods: {
     convertData(rawData) {
@@ -209,12 +262,49 @@ export default {
         })
         .catch((e) => console.log(e));
     },
+    validate(className, amount, grade, facultyId) {
+      let result = true;
+      if (className && facultyId && amount > 0 && grade > 0) {
+        if (parseInt(className.slice(0, 2)) == parseInt(grade)) {
+          //Check if number of class is already enough
+          let numberOfCurrentClassInGrade = 0;
+          let currentGrade = parseInt(grade);
+          this.list.forEach((e) => {
+            if (parseInt(e.grade) == currentGrade) {
+              numberOfCurrentClassInGrade += 1;
+            }
+          });
+          if (currentGrade == 10) {
+            if (
+              numberOfCurrentClassInGrade <
+              this.regulation[`amountOfGrade${currentGrade}`]
+            ) {
+              result = true;
+            } else {
+              alert(
+                `Bạn sẽ không thể thêm / chỉnh sửa lớp này vì số lượng lớp trong khối ${currentGrade} đã đủ`
+              );
+              result = false;
+            }
+          }
+        } else {
+          alert("Tên lớp phải chứa khối. Ví dụ 10A1 thuộc khối 10");
+          result = false;
+        }
+      } else {
+        alert("Vui lòng điền đẩy đủ các trường");
+        result = false;
+      }
+      return result;
+    },
     add() {
       if (
-        this.addedClass.className.length &&
-        this.addedClass.facultyId &&
-        this.addedClass.amount > 0 &&
-        this.addedClass.grade > 0
+        this.validate(
+          this.addedClass.className,
+          this.addedClass.facultyId,
+          this.addedClass.amount,
+          this.addedClass.grade
+        )
       ) {
         ClassService.addClass({
           id: this.addedClass.className,
@@ -236,8 +326,6 @@ export default {
             }
           })
           .catch((e) => console.log(e));
-      } else {
-        alert("Vui lòng điền đẩy đủ các trường");
       }
     },
     remove(item) {
@@ -252,27 +340,45 @@ export default {
       this.editClass = { ...item };
     },
     edit() {
-      //Send API
-      ClassService.editClass({
-        id: this.editClass.className,
-        number: this.editClass.amount,
-        grade: this.editClass.grade,
-        idFaculty: this.editClass.facultyId,
-      })
-        .then(({ data }) => {
-          if (data.status) {
-            this.showModal = false;
-            alert("Sửa thành công");
-            this.list.forEach((e) => {
-              if (e.className == this.editClass.className) {
-                e.amount = this.editClass.amount;
-                e.grade = this.editClass.grade;
-                e.facultyId = this.editClass.facultyId;
-              }
-            });
-          }
+      if (
+        this.validate(
+          this.editClass.className,
+          this.editClass.facultyId,
+          this.editClass.amount,
+          this.editClass.grade
+        )
+      ) {
+        ClassService.editClass({
+          id: this.editClass.className,
+          number: this.editClass.amount,
+          grade: this.editClass.grade,
+          idFaculty: this.editClass.facultyId,
         })
-        .catch((e) => console.log(e));
+          .then(({ data }) => {
+            if (data.status) {
+              this.showModal = false;
+              alert("Sửa thành công");
+              this.list.forEach((e) => {
+                if (e.className == this.editClass.className) {
+                  e.amount = this.editClass.amount;
+                  e.grade = this.editClass.grade;
+                  e.facultyId = this.editClass.facultyId;
+                }
+              });
+            }
+          })
+          .catch((e) => console.log(e));
+      }
+    },
+    editRegulation() {
+      this.regulation = { ...this.editedRegulation };
+      //Call API for updating
+    },
+    cancelEditRegulation() {
+      //Reset regulation
+      this.editedRegulation = { ...this.regulation };
+      //close modal
+      this.showModalRegulation = false;
     },
   },
 };

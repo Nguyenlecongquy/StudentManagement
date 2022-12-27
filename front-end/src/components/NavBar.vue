@@ -22,6 +22,7 @@ export default {
       <nav>
         <ul>
           <li><router-link to="/home/intro">Trang chủ</router-link></li>
+          <li><router-link to="/home/faculty">Khoa</router-link></li>
           <li><router-link to="/home/class">Lớp</router-link></li>
           <li><router-link to="/home/student">Học sinh</router-link></li>
           <li><router-link to="/home/teacher">Giáo viên</router-link></li>

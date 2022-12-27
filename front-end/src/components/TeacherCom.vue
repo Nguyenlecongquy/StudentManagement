@@ -36,7 +36,8 @@
         <input
           class="input"
           v-model="addedTeacher.birthday"
-          type="text"
+          type="date"
+          data-date
           placeholder="Ngày sinh (01/01/2000)"
         />
         <select class="input" v-model="addedTeacher.facultyId">
@@ -106,7 +107,7 @@
         <input
           class="input"
           v-model="editTeacher.birthday"
-          type="text"
+          type="date"
           placeholder="Ngày sinh (01/01/2000)"
         />
         <select class="input" v-model="editTeacher.facultyId">
@@ -197,7 +198,7 @@ export default {
     },
     convertBirthday(birthday) {
       let tokens = birthday.split("-");
-      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
+      return `${tokens[2]}-${tokens[1]}-${tokens[0]}`;
     },
     reset() {
       this.searchValue.id = "";
@@ -231,31 +232,6 @@ export default {
         TeacherService.deleteTeacher({ data: { id: item.id } });
       }
     },
-    validateBirthday(birthday) {
-      const tokens = birthday.split("/");
-      let daysOfMonth = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-      function isLeapYear(year) {
-        let result = year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
-        return result;
-      }
-      let year = parseInt(tokens[2]);
-      let month = parseInt(tokens[1]);
-      let day = parseInt(tokens[0]);
-
-      if (isLeapYear(year)) {
-        daysOfMonth[2] = 29;
-      }
-      if (year < 1900) {
-        return false;
-      }
-      if (month < 1 || month > 12) {
-        return false;
-      }
-      if (day < 1 || day > daysOfMonth[month]) {
-        return false;
-      }
-      return true;
-    },
     add() {
       if (
         this.addedTeacher.fullName &&
@@ -266,7 +242,7 @@ export default {
           const item = {
             id: this.addedTeacher.id,
             fullName: this.addedTeacher.fullName,
-            birthday: this.addedTeacher.birthday,
+            birthday: this.convertBirthday(this.addedTeacher.birthday),
           };
 
           //Send API
@@ -309,7 +285,7 @@ export default {
         id: this.editTeacher.id,
         fullName: this.editTeacher.fullName,
         idFaculty: this.editTeacher.facultyId,
-        birthday: this.editTeacher.birthday,
+        birthday: this.convertBirthday(this.editTeacher.birthday),
       })
         .then(({ data }) => {
           if (data.status) {
