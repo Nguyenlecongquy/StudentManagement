@@ -1,28 +1,39 @@
 const CryptoJS = require('crypto-js');
 const hashLength = 64;
+
 const DB = require('../connect/db')
-const db = DB.connect;
+var db;
+try {
+   db = DB.connect;
+   console.log("User model connect database successfully!")
+} catch (error) {
+   console.log("User model connect database fail!")
+}
+
 
 const pgUser= {
-   findAllUserGVs: async() => {
-      const rs = await db.any('SELECT * FROM user_giaovien');
-      //console.log(rs);
-      return rs;
-   },
+   fieldId:(id) => (id == undefined) ? true : "magv ='" + id + "'",
+   fieldUsername:(username) => (username == undefined) ? true : "username ='" + username + "'",
+
    addUserGV: async user => {
-      const rs = await db.one('INSERT INTO user_giaovien(magv,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
-      [user.id, user.username, user.username, user.password]);//username = email
-      // console.log("add",rs)
-      return rs;
+      try {
+         const rs = await db.one('INSERT INTO user_giaovien(magv,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
+         [user.id, user.username, user.username, user.password]);//username = email
+         return rs;
+      } catch (error) {
+         return false;
+      }
    },
    addUserHS: async user => {
-      const rs = await db.one('INSERT INTO user_hocsinh(mahs,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
-      [user.id, user.username, user.username, user.password]);//username = email
-      // console.log("add",rs)
-      return rs;
+      try {
+         const rs = await db.one('INSERT INTO user_hocsinh(mahs,username,email,password) VALUES($1,$2,$3,$4) RETURNING *',
+         [user.id, user.username, user.username, user.password]);//username = email
+         return rs;
+      } catch (error) {
+         return false;
+      }
    },
    findUserGVByUsername: async username => {
-      console.log(username)
       try {
          const rs = await db.one('SELECT * FROM user_giaovien WHERE username=$1', [username]);
          return rs;
@@ -70,6 +81,8 @@ const pgUser= {
          return false;
       }
    },
+   
+
    checkLogin: async(data) =>{
       const un = data.username; 
       const pw = data.password;

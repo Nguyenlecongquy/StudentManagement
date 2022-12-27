@@ -76,7 +76,7 @@ export default {
     return {
       emailValue: "",
       passwordValue: "",
-      isTeacher: "true",
+      isTeacher: true,
       error: "",
     };
   },
