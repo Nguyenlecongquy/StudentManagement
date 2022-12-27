@@ -114,8 +114,9 @@ const pgUser= {
       const un = data.username; //username = email
       const id = data.id;
       const cg = data.category;
-      console.log(cg);
-      if(cg === true ){
+
+      // console.log(un,id,cg)
+      if(cg=== true ){
          const userGV = await pgUser.findUserGVById(id);
          const giaoVien = await pgUser.findGVById(id);
          // console.log(userGV)

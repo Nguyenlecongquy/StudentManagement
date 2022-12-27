@@ -87,12 +87,13 @@ CREATE TABLE IF NOT EXISTS public.diem
 (
     ma_hs character(10) NOT NULL,
     ma_mh character(10) NOT NULL,
+    hoc_ki text NOT NULL,
     diem_15 real,
     diem_1t real,
     diem_gk real,
     diem_ck real,
     diem_tk real,
-    CONSTRAINT diem_pkey PRIMARY KEY (ma_hs, ma_mh)
+    CONSTRAINT diem_pkey PRIMARY KEY (ma_hs, ma_mh, hoc_ki)
 );
 
 
@@ -113,6 +114,7 @@ CREATE TABLE IF NOT EXISTS giang_day
 CREATE TABLE IF NOT EXISTS public.lop
 (
     ma_lop character(10)  NOT NULL,
+    ten_lop text,
     si_so_lop integer,
 	khoi varchar(10),
     ma_khoa character(10),
@@ -126,6 +128,7 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
 (
     ma_mh character(10)  NOT NULL,
     ten_mh character varying(50),
+    ma_khoa character(10),
     CONSTRAINT mon_hoc_pkey PRIMARY KEY (ma_mh)
 );
 
@@ -137,6 +140,11 @@ ALTER TABLE IF EXISTS public.giao_vien
     ADD CONSTRAINT giao_vien_khoa_fkey FOREIGN KEY (ma_khoa)
     REFERENCES public.khoa (ma_khoa) ;
 
+-- Constraint: mon_hoc_khoa_fkey
+
+ALTER TABLE IF EXISTS public.mon_hoc
+    ADD CONSTRAINT mon_hoc_khoa_fkey FOREIGN KEY (ma_khoa)
+    REFERENCES public.khoa (ma_khoa) ;
 
 -- Constraint: diem_hoc_sinh_fkey
 
@@ -187,14 +195,29 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 ('GV00001113','NGUYEN THI TUYET MAI','KHTN'),
 ('GV00001114','TRAN MINH TOAN','KHXH');
 
+--value lop
+
+insert into lop(ma_lop,ten_lop,khoi,si_so_lop,ma_khoa)
+values('LOP0001111','10A1','10',40,'KHTN'),('LOP0001112','10A2','10',45,'KHXH'),
+('LOP0001113','11A1','11',41,'KHTN'),('LOP0001114','11A2','11',42,'KHXH');
+
+
 -- Values HOC_SINH
-INSERT INTO HOC_SINH(MA_HS,TEN_HS) VALUES
-('HS20120563','NGUYEN LE CONG QUY'),
-('HS20120603','TRAN MINH TRI'),
-('HS20120555','NGUYEN XUAN QUAN'),
-('HS20120627','HOANG VINH');
+INSERT INTO HOC_SINH(MA_HS,TEN_HS,MA_LOP) VALUES
+('HS20120563','Nguyen Le Cong Quy','LOP0001111'),
+('HS20120603','Tran Minh Tri','LOP0001111'),
+('HS20120555','Nguyen Xuan Quan','LOP0001111'),
+('HS20120627','Hoang Vinh','LOP0001111');
 
-insert into lop(ma_lop,khoi,si_so_lop,ma_khoa)
-values('10A1','10',40,'KHTN'),('10A2','10',45,'KHXH'),
-('11A1','11',41,'KHTN'),('11A2','11',42,'KHXH');
+--value mon
 
+insert into mon_hoc(ma_mh,ten_mh,ma_khoa)
+values('MH00001111','Toan','KHTN');
+
+--value diem
+
+insert into diem(ma_hs,ma_mh,hoc_ki,diem_15,diem_1t,diem_gk,diem_ck,diem_tk)
+values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
+('HS20120555','MH00001111', 'HK1',7,7,7,7,7),
+('HS20120627','MH00001111', 'HK1',5,5,5,5,5),
+('HS20120563','MH00001111', 'HK1',3,3,3,3,3);
