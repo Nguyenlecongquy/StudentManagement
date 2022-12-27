@@ -9,8 +9,8 @@ try {
 }
 
 const teacherModel = {
-   fieldId:(id) => (id == undefined) ? true : "ma_gv ='" + id + "'",
-   fieldFullName:(fullName) => (fullName == undefined) ? true : "ten_gv ='" + fullName + "'",
+   fieldId:(id) => (id == '') ? true : "ma_gv ='" + id + "'",
+   fieldFullName:(fullName) => (fullName == '') ? true : "ten_gv like '%" + fullName + "%'",
 
    findGVs: async (id, fullName) => {
       const result = await db.any(
