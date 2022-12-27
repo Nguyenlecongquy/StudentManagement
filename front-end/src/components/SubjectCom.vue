@@ -85,10 +85,9 @@
 
 <script>
 import ButtonVue from "./Button.vue";
-/*
-import TeacherService from "../services/TeacherService";
-import FacultyService from "../services/FacultyService";
-*/
+
+import SubjectService from "../services/SubjectService";
+
 export default {
   fullName: "SubjectCom",
   components: { ButtonVue },
@@ -123,109 +122,61 @@ export default {
       },
     };
   },
-  /*
+  
   mounted() {
     
-    //API for list teachers
-    TeacherService.searchTeacher()
+    //API for list subjects
+    SubjectService.searchSubject()
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
-          this.list = this.convertData(data.teachers);
-        }
-      })
-      .catch((e) => console.log(e));
-    //API for list classes
-    FacultyService.searchFaculty()
-      .then(({ data }) => {
-        if (data.status) {
-          this.classes = Array.from(data.classes).map((e) => {
-            return e.ma_khoa.trim();
-          });
+          this.list = this.convertData(data.subjects);
         }
       })
       .catch((e) => console.log(e));
   },
-  */
+  
   methods: {
-    /*
+    
     convertData(rawData) {
       return rawData.map((e) => {
         return {
-          id: e.ma_gv,
-          fullName: e.ten_gv,
-          classID: e.ma_khoa.trim(),
-          birthday:
-            e.ngay_sinh_gv != null
-              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
-              : "",
+          subjectId: e.ma_mh,
+          subjectName: e.ten_mh,
         };
       });
     },
-    convertBirthday(birthday) {
-      let tokens = birthday.split("-");
-      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
-    },
-    reset() {
-      this.searchValue.id = "";
-      this.searchValue.fullName = "";
-      this.searchValue.classID = "";
-      //Gọi API để reset lại list
-      TeacherService.searchTeacher()
-        .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
-        })
-        .catch((e) => console.log(e));
-    },
-    search() {
-      //Send API and get result
-      const data = {
-        params: {
-          id: this.searchValue.id,
-          fullName: this.searchValue.fullName,
-        },
-      };
-      TeacherService.searchTeacher(data)
-        .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
-        })
-        .catch((e) => console.log(e));
-    },
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa giáo viên ${item.id}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa môn ${item.subjectId}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
-        TeacherService.deleteTeacher({ data: { id: item.id } });
+        SubjectService.deleteSubject({ data: { subjectId: item.subjectId } });
       }
     },
     add() {
       if (
-        this.addedSubject.fullName &&
-        this.addedSubject.birthday &&
-        this.addedSubject.classID
+        this.addedSubject.subjectId &&
+        this.addedSubject.subjectId 
       ) {
-        if (this.validateBirthday(this.addedSubject.birthday)) {
+        if (true) {
           const item = {
-            id: this.addedSubject.id,
-            fullName: this.addedSubject.fullName,
-            birthday: this.addedSubject.birthday,
+            subjectId: this.addedSubject.subjectId,
+            subjectName: this.addedSubject.subjectName,
           };
           //Send API
-          TeacherService.addTeacher({
+          SubjectService.addSubject({
             ...item,
-            idFaculty: this.addedSubject.classID,
+            
           })
             .then(({ data }) => {
               if (data.status) {
                 //update result
                 this.list.push({
                   ...item,
-                  classID: this.addedSubject.classID,
+                  subjectId: this.addedSubject.subjectId,
                 });
-                this.addedSubject.id = "";
-                this.addedSubject.fullName = "";
-                this.addedSubject.birthday = "";
-                this.addedSubject.classID = "";
+                this.addedSubject.subjectId = "";
+                this.addedSubject.subjectName = "";
               } else {
                 alert(
                   "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
@@ -240,38 +191,32 @@ export default {
         alert("Vui lòng điền đẩy đủ các thông tin");
       }
     },
-    */
+    
     showModalAndEdit(item) {
       this.showModal = true;
       this.editSubject = { ...item };
     },
-    /*
+    
     edit() {
       //Send API
-      TeacherService.editSubject({
-        id: this.editSubject.id,
-        fullName: this.editSubject.fullName,
-        idFaculty: this.editSubject.classID,
-        birthday: this.editSubject.birthday,
+      SubjectService.editSubject({
+        subjectId: this.editSubject.subjectId,
+        subjectName: this.editSubject.subjectName,       
       })
         .then(({ data }) => {
           if (data.status) {
             this.showModal = false;
             alert("Sửa thành công");
             this.list.forEach((e) => {
-              if (e.id == this.editSubject.id) {
-                e.fullName = this.editSubject.fullName;
-                e.birthday = this.editSubject.birthday;
-                e.classID = this.editSubject.classID;
+              if (e.subjectId == this.editSubject.subjectId) {
+                e.subjectName = this.editSubject.subjectName;
               }
             });
           }
         })
         .catch((e) => console.log(e));
     },
-    */
   },
-  
 };
 </script>
 

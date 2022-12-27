@@ -33,7 +33,7 @@
         <tr v-for="(item, index) in list" :key="item">
           <td>{{ index + 1 }}</td>
           <td>{{ item.classID }}</td>
-          <td>{{ item.classNumber }}</td>
+          <td>{{ item.amount }}</td>
           <td>{{ item.passNumber }}</td>
           <td>{{ item.passPercent }}</td>
         </tr>
@@ -47,33 +47,32 @@
 
 <script>
 import ButtonVue from "./Button.vue";
-/*
-import TeacherService from "../services/TeacherService";
-import FacultyService from "../services/FacultyService";
-*/
+
+import SubjectService from "../services/SubjectService";
+import SummaryService from "../services/SummaryService";
+
 export default {
   fullName: "SummaryCom",
   components: { ButtonVue },
   data() {
     return {
       
-      showModal: false,
       list: [
         {
           classID: "9A",
-          classNumber: 40,
+          amount: 40,
           passNumber: 40,
           passPercent: "100%",
         },
         {
           classID: "10A",     
-          classNumber: 40,
+          amount: 40,
           passNumber: 40,
           passPercent: "100%",
         },
         {
           classID: "11A",      
-          classNumber: 40,
+          amount: 40,
           passNumber: 40,
           passPercent: "100%",
         },
@@ -100,74 +99,70 @@ export default {
       ]
     };
   },
-  /*
+  
   mounted() {
     
     //API for list teachers
-    TeacherService.searchTeacher()
+    SummaryService.searchSummary()
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.summary);
         }
       })
       .catch((e) => console.log(e));
     //API for list classes
-    FacultyService.searchFaculty()
+    SubjectService.searchSubject()
       .then(({ data }) => {
         if (data.status) {
-          this.classes = Array.from(data.classes).map((e) => {
-            return e.ma_khoa.trim();
+          this.subjects = Array.from(data.subjects).map((e) => {
+            return e.ma_mh;
           });
         }
       })
       .catch((e) => console.log(e));
   },
+  
   methods: {
     convertData(rawData) {
       return rawData.map((e) => {
         return {
-          classID: e.ma_gv,
-          fullName: e.ten_gv,
-          classID: e.ma_khoa.trim(),
-          birthday:
-            e.ngay_sinh_gv != null
-              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
-              : "",
+          classID: e.ma_lop,
+          amount: e.si_so_lop,
+          passNumber: e.so_hs_dat,
+          passPercent: e.phan_tram_dat,
         };
       });
     },
-    */
+    
     reset() {
       this.searchValue.subjectName = "";
       this.searchValue.semester = "";
       //Gọi API để reset lại list
-      /*
-      TeacherService.searchTeacher()
+      
+      SummaryService.searchSummary()
         .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.summaries);
         })
         .catch((e) => console.log(e));
-      */
+      
     },
-    /*
+    
     search() {
       //Send API and get result
       const data = {
         params: {
-          classID: this.searchValue.classID,
-          fullName: this.searchValue.fullName,
+          subjectName: this.searchValue.subjectName,
+          semester: this.searchValue.semester,
         },
       };
-      TeacherService.searchTeacher(data)
+      SummaryService.searchSummary(data)
         .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.summaries);
         })
         .catch((e) => console.log(e));
     },
-    
-    */
-   
+  },
 };
 </script>
 

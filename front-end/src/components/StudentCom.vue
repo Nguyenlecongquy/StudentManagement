@@ -16,8 +16,7 @@
         type="text"
         placeholder="Họ tên"
       />
-      <!--- --->
-      
+
       <ButtonVue title="Reset" @click="reset()" />
     </div>
     <div class="content">
@@ -35,6 +34,12 @@
           type="text"
           placeholder="Họ tên"
         />
+        <select class="input" v-model="addedStudent.classID">
+          <option value="" disabled>Chọn lớp</option>
+          <option v-for="classID in classes" v-bind:key="classID">
+            {{ classID }}
+          </option>
+        </select>
         <input
           class="input"
           v-model="addedStudent.birthday"
@@ -42,13 +47,13 @@
           placeholder="Ngày sinh (01/01/2000)"
         />
       
-        <select class="input" v-model="addedStudent.classID">
-          <option value="" disabled>Chọn lớp</option>
-          <option v-for="classID in classes" v-bind:key="classID">
-            {{ classID }}
-          </option>
-          
+        <select class="input" v-model="addedStudent.gender">
+          <option value="" disabled>Giới tính</option>
+          <option>Nam</option>
+          <option>Nữ</option>
+          <option>Khác</option>
         </select>
+        
         <input
           class="input"
           v-model="addedStudent.address"
@@ -65,10 +70,11 @@
         <tr>
           <th width="5%">STT</th>
           <th width="10%">Mã HS</th>
-          <th width="30%">Họ và tên</th>
+          <th width="25%">Họ và tên</th>
           <th width="5%">Lớp</th>
           <th width="10%">Ngày sinh</th>
-          <th width="30%">Địa chỉ</th>
+          <th width="10%">Giới tính</th>       
+          <th width="25%">Địa chỉ</th>
           <th width="10%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -81,12 +87,13 @@
           <td>{{ item.fullName }}</td>
           <td>{{ item.classID }}</td>
           <td>{{ item.birthday }}</td>
+          <td>{{ item.gender }}</td>
           <td>{{ item.address }}</td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
             </button>
-            <button class="remove-btn" >
+            <button class="remove-btn" @click="remove(item)" >
               <font-awesome-icon icon="fa-solid fa-circle-minus" />
             </button>
           </td>
@@ -122,6 +129,12 @@
           type="text"
           placeholder="Ngày sinh (01/01/2000)"
         />
+        <select class="input" v-model="editStudent.gender">
+          <option value="" disabled>Giới tính</option>
+          <option>Nam</option>
+          <option>Nữ</option>
+          <option>Khác</option>
+        </select>
         <select class="input" v-model="editStudent.classID">
           <option value="">Chọn lớp</option>
           <option
@@ -149,12 +162,11 @@
 
 <script>
 import ButtonVue from "./Button.vue";
-/*
-import TeacherService from "../services/TeacherService";
-import FacultyService from "../services/FacultyService";
-*/
+import StudentService from "../services/StudentService";
+import ClassService from "../services/ClassService";
+
 export default {
-  fullName: "TeacherCom",
+  fullName: "StudentCom",
   components: { ButtonVue },
   data() {
     return {
@@ -162,6 +174,7 @@ export default {
         id: "",
         fullName: "",
         birthday: "",
+        gender:"",
         classID: "",
         address:"",
       },
@@ -169,6 +182,7 @@ export default {
         id: "",
         fullName: "",
         birthday: "",
+        gender:"",
         classID: "",
         address:"",
       },
@@ -178,6 +192,7 @@ export default {
           id: "HS1",
           fullName: "VINH",
           birthday: "10/10/2000",
+          gender:"Nam",
           classID: "11A",
           address:"HCM",
         },
@@ -185,6 +200,7 @@ export default {
           id: "HS2",
           fullName: "A",
           birthday: "10/10/2000",
+          gender:"Nữ",
           classID: "12A",
           address:"HN",
         },
@@ -192,6 +208,7 @@ export default {
           id: "HS3",
           fullName: "B",
           birthday: "10/10/2000",
+          gender:"Khác",
           classID: "9A",
           address:"HCM",
         },
@@ -199,7 +216,7 @@ export default {
       searchValue: {
         id: "",
         fullName: "",
-      },
+      },     
       classes: [
         "9A",
         "10A",
@@ -208,60 +225,67 @@ export default {
       ],
     };
   },
-  /*
+  
   mounted() {
     
-    //API for list teachers
-    TeacherService.searchTeacher()
+    //API for list students
+    StudentService.searchStudent()
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.students);
         }
       })
       .catch((e) => console.log(e));
     //API for list classes
-    FacultyService.searchFaculty()
+    ClassService.searchClass()
       .then(({ data }) => {
         if (data.status) {
           this.classes = Array.from(data.classes).map((e) => {
-            return e.ma_khoa.trim();
+            return e.ma_lop.trim();
           });
         }
       })
       .catch((e) => console.log(e));
   },
-  */
+  
   methods: {
-    /*
     convertData(rawData) {
       return rawData.map((e) => {
         return {
-          id: e.ma_gv,
-          fullName: e.ten_gv,
-          classID: e.ma_khoa.trim(),
+          id: e.ma_hs,
+          fullName: e.ten_hs,
+          classID: e.ma_lop.trim(),        
           birthday:
-            e.ngay_sinh_gv != null
-              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
+            e.ngay_sinh_hs != null
+              ? this.convertBirthday(e.ngay_sinh_hs.slice(0, 10))
               : "",
+          gender: e.gioi_tinh_hs,
+          address: e.dia_chi_hs,
         };
       });
     },
+    
     convertBirthday(birthday) {
       let tokens = birthday.split("-");
       return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
     },
+    
     reset() {
       this.searchValue.id = "";
       this.searchValue.fullName = "";
       this.searchValue.classID = "";
+      this.searchValue.birthday = "";
+      this.searchValue.gender = "";
+      this.searchValue.address = "";
       //Gọi API để reset lại list
-      TeacherService.searchTeacher()
+      StudentService.searchStudent()
         .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.students);
         })
         .catch((e) => console.log(e));
     },
+    
     search() {
       //Send API and get result
       const data = {
@@ -270,17 +294,18 @@ export default {
           fullName: this.searchValue.fullName,
         },
       };
-      TeacherService.searchTeacher(data)
+      StudentService.searchStudent(data)
         .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.students);
         })
         .catch((e) => console.log(e));
     },
+    
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa giáo viên ${item.id}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa học sinh ${item.id}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
-        TeacherService.deleteTeacher({ data: { id: item.id } });
+        StudentService.deleteStudent({ data: { id: item.id } });
       }
     },
     
@@ -312,8 +337,11 @@ export default {
     add() {
       if (
         this.addedStudent.fullName &&
+        this.addedStudent.classID &&
         this.addedStudent.birthday &&
-        this.addedStudent.classID
+        this.addedStudent.gender &&
+        this.addedStudent.address 
+        
       ) {
         if (this.validateBirthday(this.addedStudent.birthday)) {
           const item = {
@@ -322,9 +350,9 @@ export default {
             birthday: this.addedStudent.birthday,
           };
           //Send API
-          TeacherService.addTeacher({
+          StudentService.addStudent({
             ...item,
-            idFaculty: this.addedStudent.classID,
+            idClass: this.addedStudent.classID,
           })
             .then(({ data }) => {
               if (data.status) {
@@ -337,6 +365,8 @@ export default {
                 this.addedStudent.fullName = "";
                 this.addedStudent.birthday = "";
                 this.addedStudent.classID = "";
+                this.addedStudent.gender = "";
+                this.addedStudent.address = "";
               } else {
                 alert(
                   "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
@@ -352,14 +382,15 @@ export default {
       }
     },
     
-    
     edit() {
       //Send API
-      TeacherService.editStudent({
+      StudentService.editStudent({
         id: this.editStudent.id,
         fullName: this.editStudent.fullName,
-        idFaculty: this.editStudent.classID,
+        classID: this.editStudent.classID,
         birthday: this.editStudent.birthday,
+        gender: this.editStudent.gender,
+        address: this.editStudent.address,
       })
         .then(({ data }) => {
           if (data.status) {
@@ -369,14 +400,15 @@ export default {
               if (e.id == this.editStudent.id) {
                 e.fullName = this.editStudent.fullName;
                 e.birthday = this.editStudent.birthday;
+                e.gender = this.editStudent.gender;
                 e.classID = this.editStudent.classID;
+                e.address = this.editStudent.address;
               }
             });
           }
         })
         .catch((e) => console.log(e));
     },
-    */
     showModalAndEdit(item) {
       this.showModal=true;
       this.editStudent = {...item};
@@ -418,7 +450,7 @@ export default {
   margin-left: 12px;
   border-radius: 3px;
   font-size: 14px;
-  width: 140px;
+  width: 110px;
   outline: none;
 }
 .input:nth-last-child(2) {

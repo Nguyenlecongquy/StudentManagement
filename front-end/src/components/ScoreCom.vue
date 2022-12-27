@@ -22,10 +22,11 @@
             {{ semester }}
           </option>
       </select>
-      <!--- --->
+      
       <ButtonVue title="Reset" @click="reset()" />
     </div>
     <div class="content">
+      <ButtonVue title="Điểm qua môn" primary="true" @click="showModalRegulation=true" />
       <table>
         <caption>
           Danh sách học sinh
@@ -36,16 +37,18 @@
           <th width="30%">Họ và tên</th>
           <th width="10%">15'</th>
           <th width="10%">1 tiết</th>
-          <th width="10%">Học kỳ</th>
+          <th width="10%">Giữa kỳ</th>
+          <th width="10%">Cuối kỳ</th>
           <th width="10%"></th>
         </tr>
         <tr v-for="(item, index) in list" :key="item">
           <td>{{ index + 1 }}</td>
           <td>{{ item.id }}</td>
           <td>{{ item.fullName }}</td>
-          <td>{{ item.score1 }}</td>
-          <td>{{ item.score2 }}</td>
-          <td>{{ item.score3 }}</td>
+          <td>{{ item.score_15 }}</td>
+          <td>{{ item.score_1t }}</td>
+          <td>{{ item.score_gk }}</td>
+          <td>{{ item.score_ck }}</td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -57,6 +60,24 @@
         Không tìm thấy dữ liệu
       </p>
     </div>
+    <vue-final-modal
+      v-model="showModalRegulation"
+      classes="modal-container"
+      content-class="modal-content"
+    >
+      <span class="modal__title">Điểm qua môn</span>
+      <div class="modal__content">
+        <input
+          class="input"
+          v-model="passScore"
+          type="number"
+          placeholder="Điểm qua môn"
+        />
+      </div>
+      <div class="modal__action">
+        <ButtonVue title="Hủy" @click="showModalRegulation = false" />
+      </div>
+    </vue-final-modal>
     <vue-final-modal
       v-model="showModal"
       classes="modal-container"
@@ -80,21 +101,27 @@
         />
         <input
           class="input"
-          v-model="editScore.score1"
+          v-model="editScore.score_15"
           type="text"
           placeholder="15'"
         />
         <input
           class="input"
-          v-model="editScore.score2"
+          v-model="editScore.score_1t"
           type="text"
           placeholder="1 tiết"
         />
         <input
           class="input"
-          v-model="editScore.score3"
+          v-model="editScore.score_gk"
           type="text"
-          placeholder="Học kỳ"
+          placeholder="Giữa kỳ"
+        />
+        <input
+          class="input"
+          v-model="editScore.score_ck"
+          type="text"
+          placeholder="Cuối kỳ"
         />
         
       </div>
@@ -109,50 +136,57 @@
 
 <script>
 import ButtonVue from "./Button.vue";
-/*
-import TeacherService from "../services/TeacherService";
-import FacultyService from "../services/FacultyService";
-*/
+
+import ScoreService from "../services/ScoreService";
+import ClassService from "../services/ClassService";
+import SubjectService from "../services/SubjectService";
 export default {
   fullName: "ScoreCom",
   components: { ButtonVue },
   data() {
     return {
-      
+      passScore: 5,
       editScore: {
         id: "",
         fullName: "",
-        score1: "",
-        score2: "",
-        score3: "",
+        score_15: "",
+        score_1t: "",
+        score_gk: "",
       },
+      showModalRegulation: false,
       showModal: false,
       list: [
         {
+          classID:"9A",
           id: "HS2",
           fullName: "A",
-          score1: 5,
-          score2: 7,
-          score3: 0,
+          score_15: 5,
+          score_1t: 7,
+          score_gk: 0,
+          score_ck: 8,
         },
         {
+          classID:"9A",
           id: "HS3",
           fullName: "O",
-          score1: 0,
-          score2: 6,
-          score3: 5,
+          score_15: 0,
+          score_1t: 6,
+          score_gk: 5,
+          score_ck: 8,
         },
         {
+          classID:"9A",
           id: "HS4",
           fullName: "C",
-          score1: 6,
-          score2: 7,
-          score3: 8,
+          score_15: 6,
+          score_1t: 7,
+          score_gk: 8,
+          score_ck: 8,
         },
       ],
       searchValue: {
-        classID: "",
-        subjectName: "",
+        classID: "9A",
+        subjectName: "MATH",
         semester:"",
       },
       classes: [
@@ -162,10 +196,10 @@ export default {
         "12A",
       ],
       subjects: [
-        "Toán",
-        "Văn",
+        "MATH1",
+        "PHYS2",
         "Thể dục",
-        "Hóa học",
+        "LITE3",
       ],
       semesters:[
         "Học kỳ 1",
@@ -173,75 +207,90 @@ export default {
       ]
     };
   },
-  /*
+  
   mounted() {
     
     //API for list teachers
-    TeacherService.searchTeacher()
+    const data = {
+        params: {
+          classID: this.searchValue.classID,
+          subjectId: this.searchValue.subjectId,
+          semester: this.searchValue.semester,
+        },
+      };
+    ScoreService.searchScore(data)
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.scores);
         }
       })
       .catch((e) => console.log(e));
     //API for list classes
-    FacultyService.searchFaculty()
+    ClassService.searchClass()
       .then(({ data }) => {
         if (data.status) {
           this.classes = Array.from(data.classes).map((e) => {
-            return e.ma_khoa.trim();
+            return e.ma_lop.trim();
+          });
+        }
+      })
+      .catch((e) => console.log(e));
+
+    SubjectService.searchSubject()
+      .then(({ data }) => {
+        if (data.status) {
+          this.subjects = Array.from(data.subjects).map((e) => {
+            return e.ma_mh.trim();
           });
         }
       })
       .catch((e) => console.log(e));
   },
-  */
+
   methods: {
-    /*
     convertData(rawData) {
       return rawData.map((e) => {
         return {
-          id: e.ma_gv,
-          fullName: e.ten_gv,
-          classID: e.ma_khoa.trim(),
-          birthday:
-            e.ngay_sinh_gv != null
-              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
-              : "",
+          id: e.ma_hs,
+          fullName: e.ten_hs,
+          score_15: e.diem_15,
+          score_1t: e.diem_1t,
+          score_gk: e.diem_gk,
+          score_ck: e.diem_ck,
         };
       });
     },
-    */
+    
     reset() {
       this.searchValue.classID = "";
       this.searchValue.subjectName = "";
       this.searchValue.semester = "";
       //Gọi API để reset lại list
-      /*
-      TeacherService.searchTeacher()
+      
+      ScoreService.searchScore()
         .then(({ data }) => {
           this.list = this.convertData(data.teachers);
         })
-        .catch((e) => console.log(e));
-        */
+        .catch((e) => console.log(e));       
     },
-    /*
+    
     search() {
       //Send API and get result
       const data = {
         params: {
-          id: this.searchValue.id,
-          fullName: this.searchValue.fullName,
+          classID: this.searchValue.classID,
+          subjectName: this.searchValue.subjectName,
+          semester: this.searchValue.semester,
         },
       };
-      TeacherService.searchTeacher(data)
+      ScoreService.searchScore(data)
         .then(({ data }) => {
-          this.list = this.convertData(data.teachers);
+          this.list = this.convertData(data.scores);
         })
         .catch((e) => console.log(e));
     },
-    */
+    
     validateScore(score) {
       
       if (score < 0 || score > 10) {
@@ -249,19 +298,23 @@ export default {
       }
       return true;
     },
+  
     showModalAndEdit(item) {
       this.showModal = true;
       this.editScore = { ...item };
     },
-    /*
+    
     edit() {
       //Send API
       
-      TeacherService.editScore({
+      ScoreService.editScore({
+        classID:this.editScore.classID,
         id: this.editScore.id,
         fullName: this.editScore.fullName,
-        idFaculty: this.editScore.classID,
-        birthday: this.editScore.birthday,
+        score_15: this.editScore.score_15,
+        score_1t: this.editScore.score_1t,
+        score_gk: this.editScore.score_gk,
+        score_ck: this.editScore.score_ck,
       })
         .then(({ data }) => {
           if (data.status) {
@@ -269,16 +322,17 @@ export default {
             alert("Sửa thành công");
             this.list.forEach((e) => {
               if (e.id == this.editScore.id) {
-                e.fullName = this.editScore.fullName;
-                e.birthday = this.editScore.birthday;
-                e.classID = this.editScore.classID;
+                e.score_15 = this.editScore.score_15;
+                e.score_1t = this.editScore.score_1t;
+                e.score_gk = this.editScore.score_gk;
+                e.score_ck = this.editScore.score_ck;
               }
             });
           }
         })
         .catch((e) => console.log(e));
     },
-    */
+    
   },
 };
 </script>
