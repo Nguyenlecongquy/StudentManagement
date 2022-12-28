@@ -71,19 +71,18 @@ III. API Faculty----------------------
       - URL: http://localhost:3000/api/faculty/reset
       - Tham số: Không
 IV. API Class----------------------
-   1. Thêm
+   1. Thêm()
       - Post method
       - URL: http://localhost:3000/api/class/add
-      - Tham số: id(require), number, grade, facultyId
+      - Tham số: id(require), number, grade, facultyId(require)
    2. Xóa 
       - Delete method
       - URL: http://localhost:3000/api/class/remove
       - Tham số: id(require)
-   3. Sửa(không sửa khóa chính id, các tham số không thêm vào sẽ gán bằng null -> muốn giữ nguyên giá trị 
-   nào thì phải truyền tham số đó vào)
+   3. Sửa(luôn truyền tất cả tham số dưới đây)
       - Put method
       - URL: http://localhost:3000/api/class/modify
-      - Tham số: id(require), number, grade,
+      - Tham số: idOld(require), idNew(require), number(require), grade(require), facultyId(require) (trong đó, nếu không thay đổi mã lớp, thì truyền idNew=idOld)
    4. Tìm kiếm
       - Get method
       - URL: http://localhost:3000/api/class/search

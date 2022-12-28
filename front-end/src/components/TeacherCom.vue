@@ -54,10 +54,49 @@
         </caption>
         <tr>
           <th width="10%">STT</th>
-          <th width="20%">Mã GV</th>
-          <th width="30%">Họ và tên</th>
-          <th width="10%">Mã khoa</th>
-          <th width="20%">Ngày sinh</th>
+          <th width="20%">
+            Mã GV
+            <button @click="sortByGivenName('id')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortByASCId == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortByASCId == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="30%">
+            Họ và tên
+            <button @click="sortByGivenName('fullName')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortByASCFullName == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortByASCFullName == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="15%">
+            Mã khoa
+            <button @click="sortByGivenName('facultyId')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortByASCFacultyId == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortByASCFacultyId == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="12%">Ngày sinh</th>
           <th width="10%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -158,6 +197,11 @@ export default {
         fullName: "",
       },
       faculties: [],
+      sortBy: {
+        sortByASCId: true,
+        sortByASCFullName: undefined,
+        sortByASCFacultyId: undefined,
+      },
     };
   },
   mounted() {
@@ -171,6 +215,11 @@ export default {
       .then(({ data }) => {
         if (data.status) {
           this.list = this.convertData(data.teachers);
+          this.list = this.list.sort(function (a, b) {
+            if (a["id"] < b["id"]) return -1;
+            if (a["id"] > b["id"]) return 1;
+            return 0;
+          });
         }
       })
       .catch((e) => console.log(e));
@@ -193,6 +242,38 @@ export default {
       .catch((e) => console.log(e));
   },
   methods: {
+    sortByGivenName(item) {
+      let ASC;
+      if (item == "id") {
+        this.sortBy.sortByASCId = !this.sortBy.sortByASCId;
+        ASC = this.sortBy.sortByASCId;
+      } else if (item == "fullName") {
+        if (this.sortBy.sortByASCFullName == undefined) {
+          this.sortBy.sortByASCFullName = false;
+        }
+        this.sortBy.sortByASCFullName = !this.sortBy.sortByASCFullName;
+        ASC = this.sortBy.sortByASCFullName;
+      } else if (item == "facultyId") {
+        if (this.sortBy.sortByASCFacultyId == undefined) {
+          this.sortBy.sortByASCFacultyId = false;
+        }
+        this.sortBy.sortByASCFacultyId = !this.sortBy.sortByASCFacultyId;
+        ASC = this.sortBy.sortByASCFacultyId;
+      }
+      if (ASC) {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return -1;
+          if (a[item] > b[item]) return 1;
+          return 0;
+        });
+      } else {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return 1;
+          if (a[item] > b[item]) return -1;
+          return 0;
+        });
+      }
+    },
     convertData(rawData) {
       return rawData.map((e) => {
         let birthdayDate;
@@ -406,17 +487,8 @@ th:last-child {
   line-height: 10px;
 }
 
-.btn-add,
-.remove-btn,
-.edit-btn {
-  background-color: transparent;
-}
-.btn-add:hover,
-.remove-btn:hover,
-.edit-btn:hover {
-  cursor: pointer;
-}
-.btn-add svg {
+.btn-add svg,
+.sort-btn svg {
   color: green;
   font-size: 16px;
 }

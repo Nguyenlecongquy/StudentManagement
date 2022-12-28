@@ -82,7 +82,13 @@ input, button {
   outline: none;
   border: none;
 }
+button {
+  background-color: transparent;
+}
 
+button:hover {
+  cursor: pointer;
+}
 html::-webkit-scrollbar {
   width: 8px;
 }
