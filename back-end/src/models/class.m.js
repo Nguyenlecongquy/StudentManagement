@@ -29,7 +29,7 @@ const classModel = {
       try {
          const result = await db.any(`insert into lop(ma_lop,khoi,si_so_lop,ma_khoa) 
             values($1,$2,$3,$4) returning *`,
-            [id, number, grade,facultyId]);
+            [id, grade, number,facultyId]);
          return result;
       } catch (error) {
          return false;

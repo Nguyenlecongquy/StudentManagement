@@ -5,7 +5,7 @@
       <ButtonVue title="Tìm kiếm" primary="true" @click="search()" />         
       <select class="input" v-model="searchValue.subjectName">
         <option value="" disabled>Môn học</option>
-        <option v-for="subjectName in subjects" v-bind:key="subjectName">
+        <option v-for="subjectName in subjectsList" v-bind:key="subjectName">
           {{ subjectName }}
         </option>
       </select>
@@ -35,7 +35,7 @@
           <td>{{ item.classID }}</td>
           <td>{{ item.amount }}</td>
           <td>{{ item.passNumber }}</td>
-          <td>{{ item.passPercent }}</td>
+          <td>{{ item.passPercent}}%</td>
         </tr>
       </table>
       <p v-if="list.length == 0" style="text-align: center; margin-top: 10px">
@@ -58,44 +58,21 @@ export default {
     return {
       
       list: [
-        {
-          classID: "9A",
-          amount: 40,
-          passNumber: 40,
-          passPercent: "100%",
-        },
-        {
-          classID: "10A",     
-          amount: 40,
-          passNumber: 40,
-          passPercent: "100%",
-        },
-        {
-          classID: "11A",      
-          amount: 40,
-          passNumber: 40,
-          passPercent: "100%",
-        },
+      
       ],
       searchValue: {
         subjectName: "",
         semester:"",
       },
-      classes: [
-        "9A",
-        "10A",
-        "11A",
-        "12A",
+      classesList: [
+       
       ],
-      subjects: [
-        "Toán",
-        "Văn",
-        "Thể dục",
-        "Hóa học",
+      subjectsList: [
+        
       ],
       semesters:[
-        "Học kỳ 1",
-        "Học kỳ 2",
+        "HK1",
+        "HK2",
       ]
     };
   },
@@ -107,7 +84,7 @@ export default {
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
-          this.list = this.convertData(data.summary);
+          this.list = this.convertData(data.summarys);
         }
       })
       .catch((e) => console.log(e));
@@ -115,7 +92,7 @@ export default {
     SubjectService.searchSubject()
       .then(({ data }) => {
         if (data.status) {
-          this.subjects = Array.from(data.subjects).map((e) => {
+          this.subjectsList = Array.from(data.subjects).map((e) => {
             return e.ma_mh;
           });
         }
@@ -127,10 +104,10 @@ export default {
     convertData(rawData) {
       return rawData.map((e) => {
         return {
-          classID: e.ma_lop,
-          amount: e.si_so_lop,
-          passNumber: e.so_hs_dat,
-          passPercent: e.phan_tram_dat,
+          classID: e.lop,
+          amount: e.siSo,
+          passNumber: e.soLuongDat,
+          passPercent: e.tiLe,
         };
       });
     },
@@ -152,13 +129,13 @@ export default {
       //Send API and get result
       const data = {
         params: {
-          subjectName: this.searchValue.subjectName,
+          subjectId: this.searchValue.subjectName,
           semester: this.searchValue.semester,
         },
       };
       SummaryService.searchSummary(data)
         .then(({ data }) => {
-          this.list = this.convertData(data.summaries);
+          this.list = this.convertData(data.summarys);
         })
         .catch((e) => console.log(e));
     },

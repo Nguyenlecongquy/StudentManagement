@@ -16,8 +16,8 @@
         type="text"
         placeholder="Họ tên"
       />
-
       <ButtonVue title="Reset" @click="reset()" />
+      <ButtonVue title="Tuổi hợp lệ" primary="true" @click="showModalRegulation=true" />      
     </div>
     <div class="content">
       <div class="search">
@@ -36,14 +36,15 @@
         />
         <select class="input" v-model="addedStudent.classID">
           <option value="" disabled>Chọn lớp</option>
-          <option v-for="classID in classes" v-bind:key="classID">
+          <option v-for="classID in classesList" v-bind:key="classID">
             {{ classID }}
           </option>
         </select>
         <input
           class="input"
           v-model="addedStudent.birthday"
-          type="text"
+          type="date"
+          data-date
           placeholder="Ngày sinh (01/01/2000)"
         />
       
@@ -60,24 +61,51 @@
           type="text"
           placeholder="Địa chỉ"
         />
-        <ButtonVue title="Thêm" @click="add()" primary="true" />
-       
+        <div class="search">
+          <ButtonVue title="Thêm" @click="add()" primary="true" />
+        </div>
+        
+    
       </div>
-       <div class="content">
-        <ButtonVue title="Tuổi hợp lệ" primary="true" @click="showModalRegulation=true" />
-       </div>
+      
       <table>
         <caption>
           Danh sách học sinh
         </caption>
         <tr>
-          <th width="5%">STT</th>
-          <th width="10%">Mã HS</th>
+          <th width="5%">STT
+            
+          </th>
+          <th width="10%">Mã HS
+            <button @click="sortByGivenName('id')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCClassName == true"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCClassName == false"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
           <th width="25%">Họ và tên</th>
-          <th width="5%">Lớp</th>
-          <th width="10%">Ngày sinh</th>
+          <th width="5%">Lớp
+            <button @click="sortByGivenName('className')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCClassName == true"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCClassName == false"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="12%">Ngày sinh</th>
           <th width="10%">Giới tính</th>       
-          <th width="25%">Địa chỉ</th>
+          <th width="23%">Địa chỉ</th>
           <th width="10%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -155,7 +183,8 @@
         <input
           class="input"
           v-model="editStudent.birthday"
-          type="text"
+          type="date"
+          data-date
           placeholder="Ngày sinh (01/01/2000)"
         />
         <select class="input" v-model="editStudent.gender">
@@ -167,7 +196,7 @@
         <select class="input" v-model="editStudent.classID">
           <option value="">Chọn lớp</option>
           <option
-            v-for="(item, index) in classes"
+            v-for="(item, index) in classesList"
             :key="index"
             :selected="item == editStudent.classID ? true : false"
           >
@@ -220,41 +249,18 @@ export default {
       minAge: 15,
       maxAge: 20,
       list: [
-        {
-          id: "HS1",
-          fullName: "VINH",
-          birthday: "10/10/2000",
-          gender:"Nam",
-          classID: "11A",
-          address:"HCM",
-        },
-        {
-          id: "HS2",
-          fullName: "A",
-          birthday: "10/10/2000",
-          gender:"Nữ",
-          classID: "12A",
-          address:"HN",
-        },
-        {
-          id: "HS3",
-          fullName: "B",
-          birthday: "10/10/2000",
-          gender:"Khác",
-          classID: "9A",
-          address:"HCM",
-        },
+       
       ],
       searchValue: {
         id: "",
         fullName: "",
       },     
-      classes: [
-        "9A",
-        "10A",
-        "11A",
-        "12A",
-      ],
+      classesList: [
+    ],
+    sortBy: {
+        sortedByASCClassName: true,
+        sortedByASCStudentId: undefined,
+      },
     };
   },
   
@@ -262,18 +268,21 @@ export default {
     
     //API for list students
     StudentService.searchStudent()
-      .then(({ data }) => {
-        console.log(data);
-        if (data.status) {
+        .then(({ data }) => {
           this.list = this.convertData(data.students);
-        }
-      })
-      .catch((e) => console.log(e));
+        })
+    .catch((e) => console.log(e));
+      
     //API for list classes
-    ClassService.searchClass()
+    ClassService.searchClass({
+      params: {
+        id: "",
+        grade: "",
+      },
+    })
       .then(({ data }) => {
         if (data.status) {
-          this.classes = Array.from(data.classes).map((e) => {
+          this.classesList = Array.from(data.classes).map((e) => {
             return e.ma_lop.trim();
           });
         }
@@ -282,26 +291,63 @@ export default {
   },
   
   methods: {
+    sortByGivenName(item) {
+      let ASC;
+      if (item == "className") {
+        ASC = !this.sortBy.sortedByASCClassName;
+        this.sortBy.sortedByASCClassName = !this.sortBy.sortedByASCClassName;
+      } else if (item == "id") {
+        if (this.sortBy.sortedByASCStudentId == undefined) {
+          this.sortBy.sortedByASCStudentId = false;
+        }
+        ASC = !this.sortBy.sortedByASCStudentId;
+        this.sortBy.sortedByASCStudentId = !this.sortBy.sortedByASCStudentId;
+      } 
+      if (ASC) {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return -1;
+          if (a[item] > b[item]) return 1;
+          return 0;
+        });
+      } else {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return 1;
+          if (a[item] > b[item]) return -1;
+          return 0;
+        });
+      }
+    },
     convertData(rawData) {
       return rawData.map((e) => {
+        let birthdayDate;
+        let birthday;
+        if (e.ngay_sinh_hs != null) {
+          birthdayDate = new Date(e.ngay_sinh_hs);
+          let date =
+            birthdayDate.getDate() > 9
+              ? birthdayDate.getDate()
+              : `0${birthdayDate.getDate()}`;
+          let month =
+            birthdayDate.getMonth() + 1 > 9
+              ? birthdayDate.getMonth() + 1
+              : `0${birthdayDate.getMonth() + 1}`;
+          let year = birthdayDate.getFullYear();
+          birthday = `${date}/${month}/${year}`;
+        } else {
+          birthday = "";
+        }
         return {
           id: e.ma_hs,
           fullName: e.ten_hs,
           classID: e.ma_lop.trim(),        
-          birthday:
-            e.ngay_sinh_hs != null
-              ? this.convertBirthday(e.ngay_sinh_hs.slice(0, 10))
-              : "",
+          birthday,
           gender: e.gioi_tinh_hs,
           address: e.dia_chi_hs,
         };
       });
     },
     
-    convertBirthday(birthday) {
-      let tokens = birthday.split("-");
-      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
-    },
+  
     
     reset() {
       this.searchValue.id = "";
@@ -385,22 +431,29 @@ export default {
         this.addedStudent.address 
         
       ) {
-        if (this.validateBirthday(this.addedStudent.birthday && this.validateAge(this.addedStudent.birthday))) {
+        if (this.validateBirthday(this.addedStudent.birthday )) {
           const item = {
             id: this.addedStudent.id,
             fullName: this.addedStudent.fullName,
-            birthday: this.addedStudent.birthday,
+            sex: this.addedStudent.gender,
+            birthDay: this.addedStudent.birthday,
+            address: this.addedStudent.address,
+            idClass: this.addedStudent.classID,
           };
           //Send API
           StudentService.addStudent({
             ...item,
-            idClass: this.addedStudent.classID,
+
           })
             .then(({ data }) => {
               if (data.status) {
                 //update result
                 this.list.push({
-                  ...item,
+                  id: this.addedStudent.id,
+                  fullName: this.addedStudent.fullName,
+                  gender: this.addedStudent.gender,
+                  birthday: this.addedStudent.birthday,
+                  address: this.addedStudent.address,
                   classID: this.addedStudent.classID,
                 });
                 this.addedStudent.id = "";
@@ -429,9 +482,9 @@ export default {
       StudentService.editStudent({
         id: this.editStudent.id,
         fullName: this.editStudent.fullName,
-        classID: this.editStudent.classID,
-        birthday: this.editStudent.birthday,
-        gender: this.editStudent.gender,
+        sex: this.editStudent.gender,
+        birthDay: this.editStudent.birthday,
+        idClass: this.editStudent.classID,
         address: this.editStudent.address,
       })
         .then(({ data }) => {
@@ -511,7 +564,7 @@ export default {
   margin-left: 12px;
   border-radius: 3px;
   font-size: 14px;
-  width: 110px;
+  width: 128px;
   outline: none;
 }
 .input:nth-last-child(2) {
@@ -571,7 +624,10 @@ th:last-child {
   color: red;
   font-size: 16px;
 }
-
+.sort-btn svg {
+  color: green;
+  font-size: 16px;
+}
 .modal__title {
   font-size: 1.3rem;
   font-weight: 600;

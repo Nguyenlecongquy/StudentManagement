@@ -12,6 +12,13 @@ export default {
   components: {
     NavBarVue,
   },
+
+  mounted() {
+    let isLogin = window.localStorage.getItem("isLogin");
+    if (isLogin != "true") {
+      this.$router.push("/");
+    }
+  },
 };
 </script>
 

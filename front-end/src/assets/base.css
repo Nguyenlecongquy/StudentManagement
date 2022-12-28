@@ -1,6 +1,6 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
-  --vt-c-white: #ffffff;
+  --white-color: #ffffff;
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
@@ -94,4 +94,11 @@ html::-webkit-scrollbar-thumb {
 
 html::-webkit-scrollbar-track {
   background: rgba(235, 235, 235, 0.64);
+}
+
+.ml-12 {
+  margin-left: 12px;
+}
+.r-12 {
+  margin-right: 12px;
 }

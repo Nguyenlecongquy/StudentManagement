@@ -19,6 +19,13 @@
           type="text"
           placeholder="Tên môn học"
         />
+      
+        <select class="input" v-model="addedSubject.facultyId">
+          <option value="" disabled>Chọn khoa</option>
+          <option v-for="e in facultiesList" v-bind:key="e">
+            {{ e }}
+          </option>
+        </select>
         <ButtonVue title="Thêm" @click="add()" primary="true" />
       </div>
       <table>
@@ -27,8 +34,9 @@
         </caption>
         <tr>
           <th width="10%">STT</th>
-          <th width="30%">Mã môn học</th>
-          <th width="40%">Tên môn học</th>
+          <th width="20%">Mã môn học</th>
+          <th width="30%">Tên môn học</th>
+          <th width="20%">Mã khoa</th>
           <th width="20%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -39,6 +47,7 @@
           <td>{{ index + 1 }}</td>
           <td>{{ item.subjectId }}</td>
           <td>{{ item.subjectName }}</td>
+          <td>{{ item.facultyId }}</td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -63,6 +72,7 @@
         <input
           class="input"
           v-model="editSubject.subjectId"
+          disabled
           type="text"
           placeholder="Mã môn học"      
         />
@@ -72,6 +82,12 @@
           type="text"
           placeholder="Tên môn học"
         />
+        <select class="input" v-model="editSubject.facultyId">
+          <option value="" disabled>Chọn khoa</option>
+          <option v-for="e in facultiesList" v-bind:key="e">
+            {{ e }}
+          </option>
+        </select>
       </div>
       <div class="modal__action">
         <ButtonVue title="Sửa" @click="edit()" primary="true" />
@@ -87,7 +103,7 @@
 import ButtonVue from "./Button.vue";
 
 import SubjectService from "../services/SubjectService";
-
+import FacultyService from "../services/FacultyService";
 export default {
   fullName: "SubjectCom",
   components: { ButtonVue },
@@ -103,23 +119,15 @@ export default {
       },
       showModal: false,
       list: [
-        {
-          subjectId: "MATH1",
-          subjectName: "Toán",         
-        },
-        {
-          subjectId: "PHYS2",
-          subjectName: "Thể dục",
-        },
-        {
-          subjectId: "LITE3",
-          subjectName: "Văn",
-        },
+        
       ],
       searchValue: {
         subjectId: "",
         subjectName: "",
       },
+      facultiesList: [
+
+      ],
     };
   },
   
@@ -127,13 +135,26 @@ export default {
     
     //API for list subjects
     SubjectService.searchSubject()
-      .then(({ data }) => {
-        console.log(data);
+      .then(({ data }) => {  
         if (data.status) {
           this.list = this.convertData(data.subjects);
         }
       })
       .catch((e) => console.log(e));
+    FacultyService.searchFaculty({
+      params: {
+        id: "",
+        facultyName: "",
+        shortFacultyName: "",
+      },
+    })
+      .then(({ data }) => {
+        this.facultiesList = data.faculties.map((e) => {
+          return e.ma_khoa.trim();
+        });
+      })
+      .catch((e) => console.log(e));
+
   },
   
   methods: {
@@ -143,6 +164,7 @@ export default {
         return {
           subjectId: e.ma_mh,
           subjectName: e.ten_mh,
+          facultyId: e.ma_khoa,
         };
       });
     },
@@ -150,18 +172,20 @@ export default {
       let result = confirm(`Bạn chắc chắn muốn xóa môn ${item.subjectId}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
-        SubjectService.deleteSubject({ data: { subjectId: item.subjectId } });
+        SubjectService.deleteSubject({ data: { id: item.subjectId } });
       }
     },
     add() {
       if (
         this.addedSubject.subjectId &&
-        this.addedSubject.subjectId 
+        this.addedSubject.subjectName &&
+        this.addedSubject.facultyId
       ) {
         if (true) {
           const item = {
-            subjectId: this.addedSubject.subjectId,
+            id: this.addedSubject.subjectId,
             subjectName: this.addedSubject.subjectName,
+            idFaculty: this.addedSubject.facultyId,
           };
           //Send API
           SubjectService.addSubject({
@@ -172,11 +196,13 @@ export default {
               if (data.status) {
                 //update result
                 this.list.push({
-                  ...item,
                   subjectId: this.addedSubject.subjectId,
+                  subjectName: this.addedSubject.subjectName,
+                  facultyId: this.addedSubject.facultyId,
                 });
                 this.addedSubject.subjectId = "";
                 this.addedSubject.subjectName = "";
+                this.addedSubject.facultyId = "";
               } else {
                 alert(
                   "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
@@ -191,7 +217,12 @@ export default {
         alert("Vui lòng điền đẩy đủ các thông tin");
       }
     },
-    
+    reset() {
+      this.addedSubject.subjectId = "";
+      this.addedSubject.subjectName = "";
+      this.addedSubject.facultyId = "";
+  
+    },
     showModalAndEdit(item) {
       this.showModal = true;
       this.editSubject = { ...item };
@@ -200,8 +231,9 @@ export default {
     edit() {
       //Send API
       SubjectService.editSubject({
-        subjectId: this.editSubject.subjectId,
-        subjectName: this.editSubject.subjectName,       
+        id: this.editSubject.subjectId,
+        subjectName: this.editSubject.subjectName,    
+        idFaculty: this.editSubject.facultyId,    
       })
         .then(({ data }) => {
           if (data.status) {
@@ -210,6 +242,7 @@ export default {
             this.list.forEach((e) => {
               if (e.subjectId == this.editSubject.subjectId) {
                 e.subjectName = this.editSubject.subjectName;
+                e.facultyId = this.editSubject.facultyId;
               }
             });
           }

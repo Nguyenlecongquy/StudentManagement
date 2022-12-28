@@ -6,6 +6,6 @@ export default {
     return Api.get("api/summary/search", data);
   },
   reset() {
-    return Api.get("api/subject/reset");
+    return Api.get("api/summary/reset");
   },
 };
