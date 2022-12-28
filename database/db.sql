@@ -134,7 +134,6 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
 );
 
 --Table qui_dinh
-drop table if exists qui_dinh;
 CREATE TABLE IF NOT EXISTS QUI_DINH(
 	id int  not null,
 	tuoi_toi_da int,

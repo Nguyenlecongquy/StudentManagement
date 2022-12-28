@@ -25,14 +25,7 @@ const roleModel = {
          return false;
       }
    },
-   // findRoleNumberClassOfGrades: async () => {
-   //    try {
-   //       const result = await db.one('select so_luong_lop_10,so_luong_lop_11, so_luong_lop_12 from qui_dinh where id = 1');
-   //       return result;
-   //    } catch (error) {
-   //       return false;
-   //    }
-   // },
+
    findRoleNumberClassOfGrade: async (grade) => {
       try {
          const result = await db.one(`select so_luong_lop_${grade} from qui_dinh where id = 1`);
