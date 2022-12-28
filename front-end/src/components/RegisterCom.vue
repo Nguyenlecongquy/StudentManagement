@@ -114,6 +114,7 @@ export default {
         category: this.isTeacher,
       })
         .then(({ data }) => {
+          console.log(data)
           this.notify = data.message;
           if (data.status) {
             this.isSuccess = true;
