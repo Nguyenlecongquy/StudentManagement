@@ -1,0 +1,60 @@
+I. THAY ĐỔI các tham số của api Class   
+   1. Thêm
+      - Post method
+      - URL: http://localhost:3000/api/class/add
+      - Tham số: id(require), number, grade, facultyId(require)
+   2. Sửa(luôn truyền tất cả tham số dưới đây)
+      - Put method
+      - URL: http://localhost:3000/api/class/modify
+      - Tham số: idOld(require), idNew(require), number(require), grade(require), facultyId(require) (trong đó, nếu không thay đổi mã lớp, thì truyền idNew=idOld)
+   3. Thay đổi để khi tìm kiếm lớp 10 thì ra kết quả tương tự khối 10
+      - Không đổi code front-end
+II. CẤU TRÚC TRẢ VỀ
+   + CHÚ Ý: Api role trả về duy nhất 1 object(không phải mảng object)
+   + Thành công  
+      {
+         status: true,
+         roles: {
+            key:value // chỉ 1 key_value
+            //nhiều key_value nếu dùng hàm all(không dùng nếu thấy rối) 
+         }
+      }
+   + Thất bại
+      {
+         status: false,
+         roles: {}
+      }
+II. Api Role 
+   1. Database(chạy lại file db.sql)
+      - Bảng chỉ có 1 row với id=1
+      - Các trường còn lại có tác dụng lưu trữ(không xem là row)
+      
+   2. Tìm kiếm tất cả role(KHÔNG DÙNG NẾU THẤY RỐI) -> trả về tất cả role(nếu muốn lấy dữ liệu 1 lần)
+      - Get method
+      - URL: http://localhost:3000/api/role/search
+      - Tham số: Không
+
+   3. Tìm kiếm role sỉ số lớp
+      - Get method
+      - URL: http://localhost:3000/api/role/search/class/numberStudent
+      - Tham số: Không
+
+   4. Tìm kiếm role số lượng lớp trong khối
+      - Get method
+      - URL: http://localhost:3000/api/role/search/grade/numberClass
+      - Tham số: grade(require)
+
+   5. Đếm số lượng lớp trong khối
+      - Get method
+      - URL: http://localhost:3000/api/role/search/grade/countClass
+      - Tham số: grade(require)
+   
+   6. Update role sỉ số lớp (nếu truyền maxNumber='' -> mặc định trả về maxNumber=40)
+      - Put method
+      - URL: http://localhost:3000/api/role/modify/class/numberStudent
+      - Tham số: maxNumber(require) 
+
+   7. Update role SỐ LƯỢNG lớp trong khối
+      - Put method
+      - URL: http://localhost:3000/api/role/modify/grade/numberClass
+      - Tham số:grade(require), numberClass(require) 
