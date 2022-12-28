@@ -10,9 +10,9 @@ try {
 
 const classModel = {
 
-   fieldId:(id) => (id == '') ? true : "ma_lop ='" + id + "'",
-   fieldGrade:(grade) => (grade == '') ? true : "khoi ='" + grade + "'",
-   fieldNumber:(number) => (number == '') ? true : "si_so_lop =" + number ,
+   fieldId: (id) => (id == '') ? true : "ma_lop ='" + id + "'",
+   fieldGrade: (grade) => (grade == '') ? true : "khoi ='" + grade + "'",
+   fieldNumber: (number) => (number == '') ? true : "si_so_lop =" + number,
    findEmpty: async () => {
       return true;
    },
@@ -20,27 +20,40 @@ const classModel = {
    findLops: async (id, grade) => {
       const result = await db.any(
          `select * from lop 
-         where ${classModel.fieldId(id)} 
-         and ${classModel.fieldGrade(grade)};`);
+         where (ma_lop like '%${id}%' and ${classModel.fieldGrade(grade)}) or
+         (
+            ${classModel.fieldId(id)} 
+            and ${classModel.fieldGrade(grade)}
+         )`);
       return result;
 
    },
    addLopIntoDatabaseReturnLop: async (id, number, grade, facultyId) => {
+         
       try {
-         const result = await db.any(`insert into lop(ma_lop,khoi,si_so_lop,ma_khoa) 
+         const result = await db.any(`insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
             values($1,$2,$3,$4) returning *`,
-            [id, number, grade,facultyId]);
+            [id, number, grade, facultyId]);
          return result;
       } catch (error) {
+         console.log('loi')
          return false;
       }
    },
-   updateLopIntoDatabase: async (id, number, grade) => {
+   updateLopIntoDatabase: async (idOld, idNew, number, grade, facultyId) => {
       try {
-         const result = await db.any(`update lop 
-                                 set  si_so_lop=$1, khoi=$2 
-                                 where ma_lop=$3 returning *`, [number, grade, id]);
-         return result;
+         if (idNew != '') {
+            await classModel.removeLopFromDatabase(idOld);
+            const result=await classModel.addLopIntoDatabaseReturnLop(idNew, number, grade, facultyId);
+            return result;
+         }
+         else {
+            console.log(grade)
+            const result = await db.any(`update lop 
+               set  si_so_lop=$1, khoi=$2 
+               where ma_lop=$3 returning *`, [number, grade, idOld]);
+            return result;
+         }
       } catch (error) {
          return false;
       }
