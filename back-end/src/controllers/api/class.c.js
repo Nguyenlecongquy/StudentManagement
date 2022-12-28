@@ -5,7 +5,15 @@ class ClassC {
       const response = {status:true, classes: [] };
       const lop = req.query;
       const result= await classM.findLops(lop.id, lop.grade);
-      if(result!= [] && result!= false ) response.classes = result;
+      if(result!= [] && result!= false ) response.classes = result.sort(function(a, b){
+         if (a.ma_lop < b.ma_lop) {
+            return -1;
+          }
+          if (a.ma_lop > b.ma_lop) {
+            return 1;
+          }
+          return 0;
+      });
       else response.status =false; // khi không thấy id (không bao giờ xảy ra)
       res.status(200).json(response);
    }

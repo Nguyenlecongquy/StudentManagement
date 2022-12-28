@@ -15,7 +15,7 @@ export default {
 
   mounted() {
     let isLogin = window.localStorage.getItem("isLogin");
-    if (isLogin == "false") {
+    if (isLogin != "true") {
       this.$router.push("/");
     }
   },

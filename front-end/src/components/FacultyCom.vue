@@ -6,13 +6,13 @@
       <div class="content__adding">
         <input
           class="input"
-          v-model="addedFaculty.ma_khoa"
+          v-model="addedFaculty.facultyId"
           type="text"
           placeholder="Mã khoa"
         />
         <input
           class="input"
-          v-model="addedFaculty.ten_khoa"
+          v-model="addedFaculty.facultyName"
           type="text"
           placeholder="Tên khoa"
         />
@@ -34,8 +34,8 @@
         </tr>
         <tr v-for="(item, index) in list" :key="item.stt">
           <td>{{ index + 1 }}</td>
-          <td>{{ item.ma_khoa }}</td>
-          <td>{{ item.ten_khoa }}</td>
+          <td>{{ item.facultyId }}</td>
+          <td>{{ item.facultyName }}</td>
           <td>
             <button class="remove-btn" @click="remove(item)">
               <font-awesome-icon icon="fa-solid fa-circle-minus" />
@@ -59,34 +59,44 @@ export default {
       list: [],
       backupList: [],
       addedFaculty: {
-        ma_khoa: "",
-        ten_khoa: "",
+        facultyId: "",
+        facultyName: "",
       },
     };
   },
   mounted() {
-    FacultyService.searchFaculty()
+    FacultyService.searchFaculty({
+      params: {
+        id: "",
+        facultyName: "",
+        shortFacultyName: "",
+      },
+    })
       .then(({ data }) => {
-        this.list = data.faculties;
-        console.log(data);
+        this.list = this.convertData(data.faculties);
       })
       .catch((e) => console.log(e));
   },
   methods: {
+    convertData(rawData) {
+      return rawData.map((e) => {
+        return {
+          facultyId: e.ma_khoa,
+          facultyName: e.ten_khoa,
+        };
+      });
+    },
     addFaculty() {
       //Check if exists
-      if (
-        this.addedFaculty.ma_khoa.length > 0 &&
-        this.addedFaculty.ten_khoa.length > 0
-      ) {
+      if (this.addedFaculty.facultyId && this.addedFaculty.facultyName) {
         let result = this.list.some(
-          (e) => e.ma_khoa == this.addedFaculty.ma_khoa
+          (e) => e.facultyId == this.addedFaculty.facultyId
         );
         if (!result) {
           //Send API to add new item
           FacultyService.addFaculty({
-            id: this.addedFaculty.ma_khoa,
-            facultyName: this.addedFaculty.ten_khoa,
+            id: this.addedFaculty.facultyId,
+            facultyName: this.addedFaculty.facultyName,
           })
             .then(({ data }) => {
               if (data.status) {
@@ -94,8 +104,8 @@ export default {
                   stt: this.list[this.list.length - 1].stt + 1,
                   ...this.addedFaculty,
                 });
-                this.addedFaculty.ma_khoa = "";
-                this.addedFaculty.ten_khoa = "";
+                this.addedFaculty.facultyId = "";
+                this.addedFaculty.facultyName = "";
               }
             })
             .catch((e) => console.log(e));
@@ -105,14 +115,11 @@ export default {
       }
     },
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa lớp ${item.ten_khoa}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa lớp ${item.facultyName}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
-        this.list.forEach((e, index) => {
-          e.stt = index + 1;
-        });
         //SendAPI
-        FacultyService.deleteFaculty({ data: { id: item.ma_khoa } });
+        FacultyService.deleteFaculty({ data: { id: item.facultyId } });
       }
     },
   },
@@ -193,7 +200,6 @@ td:last-child {
 .remove-btn {
   background-color: transparent;
 }
-.btn-add:hover,
 .remove-btn:hover {
   cursor: pointer;
 }

@@ -19,6 +19,9 @@ import {
   faCircleMinus,
   faBookOpen,
   faPenToSquare,
+  faArrowDownAZ,
+  faArrowDownZA,
+  faArrowsUpDown,
 } from "@fortawesome/free-solid-svg-icons";
 const app = createApp(App);
 
@@ -37,7 +40,10 @@ library.add(
   faCirclePlus,
   faCircleMinus,
   faBookOpen,
-  faPenToSquare
+  faPenToSquare,
+  faArrowDownAZ,
+  faArrowDownZA,
+  faArrowsUpDown
 );
 app.mount("#app");
 app.use(vfmPlugin);

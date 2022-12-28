@@ -162,9 +162,13 @@ export default {
   },
   mounted() {
     //API for list teachers
-    TeacherService.searchTeacher()
+    TeacherService.searchTeacher({
+      params: {
+        id: "",
+        fullName: "",
+      },
+    })
       .then(({ data }) => {
-        console.log(data);
         if (data.status) {
           this.list = this.convertData(data.teachers);
         }
@@ -172,7 +176,13 @@ export default {
       .catch((e) => console.log(e));
 
     //API for list faculties
-    FacultyService.searchFaculty()
+    FacultyService.searchFaculty({
+      params: {
+        id: "",
+        facultyName: "",
+        shortFacultyName: "",
+      },
+    })
       .then(({ data }) => {
         if (data.status) {
           this.faculties = Array.from(data.faculties).map((e) => {
@@ -185,27 +195,46 @@ export default {
   methods: {
     convertData(rawData) {
       return rawData.map((e) => {
+        let birthdayDate;
+        let birthday;
+        if (e.ngay_sinh_gv != null) {
+          birthdayDate = new Date(e.ngay_sinh_gv);
+          let date =
+            birthdayDate.getDate() > 9
+              ? birthdayDate.getDate()
+              : `0${birthdayDate.getDate()}`;
+          let month =
+            birthdayDate.getMonth() + 1 > 9
+              ? birthdayDate.getMonth() + 1
+              : `0${birthdayDate.getMonth() + 1}`;
+          let year = birthdayDate.getFullYear();
+          birthday = `${date}/${month}/${year}`;
+        } else {
+          birthday = "";
+        }
         return {
           id: e.ma_gv,
           fullName: e.ten_gv,
           facultyId: e.ma_khoa.trim(),
-          birthday:
-            e.ngay_sinh_gv != null
-              ? this.convertBirthday(e.ngay_sinh_gv.slice(0, 10))
-              : "",
+          birthday,
         };
       });
     },
     convertBirthday(birthday) {
       let tokens = birthday.split("-");
-      return `${tokens[2]}-${tokens[1]}-${tokens[0]}`;
+      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
     },
     reset() {
       this.searchValue.id = "";
       this.searchValue.fullName = "";
       this.searchValue.facultyId = "";
       //Gọi API để reset lại list
-      TeacherService.searchTeacher()
+      TeacherService.searchTeacher({
+        params: {
+          id: "",
+          fullName: "",
+        },
+      })
         .then(({ data }) => {
           this.list = this.convertData(data.teachers);
         })
@@ -238,39 +267,32 @@ export default {
         this.addedTeacher.birthday &&
         this.addedTeacher.facultyId
       ) {
-        if (this.validateBirthday(this.addedTeacher.birthday)) {
-          const item = {
-            id: this.addedTeacher.id,
-            fullName: this.addedTeacher.fullName,
-            birthday: this.convertBirthday(this.addedTeacher.birthday),
-          };
+        const item = {
+          id: this.addedTeacher.id,
+          fullName: this.addedTeacher.fullName,
+          birthday: this.addedTeacher.birthday,
+        };
 
-          //Send API
-          TeacherService.addTeacher({
-            ...item,
-            idFaculty: this.addedTeacher.facultyId,
+        //Send API
+        TeacherService.addTeacher({
+          ...item,
+          idFaculty: this.addedTeacher.facultyId,
+        })
+          .then(({ data }) => {
+            if (data.status) {
+              //update result
+              this.list = [...this.list, ...this.convertData(data.teachers)];
+              this.addedTeacher.id = "";
+              this.addedTeacher.fullName = "";
+              this.addedTeacher.birthday = "";
+              this.addedTeacher.facultyId = "";
+            } else {
+              alert(
+                "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
+              );
+            }
           })
-            .then(({ data }) => {
-              if (data.status) {
-                //update result
-                this.list.push({
-                  ...item,
-                  facultyId: this.addedTeacher.facultyId,
-                });
-                this.addedTeacher.id = "";
-                this.addedTeacher.fullName = "";
-                this.addedTeacher.birthday = "";
-                this.addedTeacher.facultyId = "";
-              } else {
-                alert(
-                  "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
-                );
-              }
-            })
-            .catch((e) => console.log(e));
-        } else {
-          alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
-        }
+          .catch((e) => console.log(e));
       } else {
         alert("Vui lòng điền đẩy đủ các thông tin");
       }
@@ -285,7 +307,7 @@ export default {
         id: this.editTeacher.id,
         fullName: this.editTeacher.fullName,
         idFaculty: this.editTeacher.facultyId,
-        birthday: this.convertBirthday(this.editTeacher.birthday),
+        birthday: this.editTeacher.birthday,
       })
         .then(({ data }) => {
           if (data.status) {
@@ -294,7 +316,7 @@ export default {
             this.list.forEach((e) => {
               if (e.id == this.editTeacher.id) {
                 e.fullName = this.editTeacher.fullName;
-                e.birthday = this.editTeacher.birthday;
+                e.birthday = this.convertBirthday(this.editTeacher.birthday);
                 e.facultyId = this.editTeacher.facultyId;
               }
             });
