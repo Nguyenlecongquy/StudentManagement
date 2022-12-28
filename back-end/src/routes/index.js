@@ -6,8 +6,10 @@ const subjectR = require('./subject.r')
 const studentR = require('./student.r')
 const scoreR = require('./score.r')
 const summaryR = require('./summary.r')
-function route(app) {
+const roleR = require('./role.r')
 
+
+function route(app) {
    app.use(`/user`,userR);
    app.use('/api/teacher',teacherR)
    app.use('/api/faculty',facultyR)
@@ -16,6 +18,8 @@ function route(app) {
    app.use('/api/student',studentR)
    app.use('/api/score',scoreR)
    app.use('/api/summary',summaryR)
+   app.use('/api/role',roleR)
+
 }
 
 module.exports = route;

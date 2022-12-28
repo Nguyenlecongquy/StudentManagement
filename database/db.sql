@@ -14,6 +14,7 @@ drop table if exists giao_vien;
 drop table if exists hoc_sinh;
 drop table if exists lop;
 drop table if exists khoa;
+drop table if exists qui_dinh;
 
 -----------------------------------------------------------------
 
@@ -115,6 +116,7 @@ CREATE TABLE IF NOT EXISTS public.lop
 (
     ma_lop character(10)  NOT NULL,
     ten_lop text,
+    ten_lop text,
     si_so_lop integer,
 	khoi varchar(10),
     ma_khoa character(10),
@@ -129,9 +131,25 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
     ma_mh character(10)  NOT NULL,
     ten_mh character varying(50),
     ma_khoa character(10),
+    ma_khoa character(10),
     CONSTRAINT mon_hoc_pkey PRIMARY KEY (ma_mh)
 );
 
+--Table qui_dinh
+
+CREATE TABLE IF NOT EXISTS QUI_DINH(
+	id int  not null,
+	tuoi_toi_da int,
+	tuoi_toi_thieu int,
+	si_so_toi_da int,
+	diem_chuan_dat_mon float,
+	so_luong_mon_hoc int,
+	CONSTRAINT quidinh_pkey PRIMARY KEY (id)
+	
+);
+insert into qui_dinh(id,tuoi_toi_da,tuoi_toi_thieu,si_so_toi_da,
+diem_chuan_dat_mon,so_luong_mon_hoc)
+values(1,20,15,40,5.0,9);
 
 -------------------------------------------------------------
 -- Constraint: giao_vien_khoa_fkey
@@ -209,12 +227,32 @@ INSERT INTO HOC_SINH(MA_HS,TEN_HS,MA_LOP) VALUES
 ('HS20120555','Nguyen Xuan Quan','LOP0001111'),
 ('HS20120627','Hoang Vinh','LOP0001111');
 
+
 --value mon
 
 insert into mon_hoc(ma_mh,ten_mh,ma_khoa)
 values('MH00001111','Toan','KHTN');
 
 --value diem
+
+insert into diem(ma_hs,ma_mh,hoc_ki,diem_15,diem_1t,diem_gk,diem_ck,diem_tk)
+values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
+('HS20120555','MH00001111', 'HK1',7,7,7,7,7),
+('HS20120627','MH00001111', 'HK1',5,5,5,5,5),
+('HS20120563','MH00001111', 'HK1',3,3,3,3,3);
+
+
+INSERT INTO HOC_SINH(MA_HS,TEN_HS,MA_LOP) VALUES
+('HS20120563','Nguyen Le Cong Quy','LOP0001111'),
+('HS20120603','Tran Minh Tri','LOP0001111'),
+('HS20120555','Nguyen Xuan Quan','LOP0001111'),
+('HS20120627','Hoang Vinh','LOP0001111');
+
+--value mon
+
+insert into mon_hoc(ma_mh,ten_mh,ma_khoa)
+values('MH00001111','Toan','KHTN');
+
 
 insert into diem(ma_hs,ma_mh,hoc_ki,diem_15,diem_1t,diem_gk,diem_ck,diem_tk)
 values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
