@@ -62,11 +62,11 @@
             Lớp
             <button @click="sortByGivenName('className')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCClassName == true"
+                v-if="sortBy.sortedByASCClassName == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCClassName == false"
+                v-else-if="sortBy.sortedByASCClassName == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
@@ -76,11 +76,11 @@
             Sĩ số
             <button @click="sortByGivenName('amount')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCAmount == true"
+                v-if="sortBy.sortedByASCAmount == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCAmount == false"
+                v-else-if="sortBy.sortedByASCAmount == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
@@ -90,11 +90,11 @@
             Khối
             <button @click="sortByGivenName('grade')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCGrade == true"
+                v-if="sortBy.sortedByASCGrade == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCGrade == false"
+                v-else-if="sortBy.sortedByASCGrade == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
@@ -104,11 +104,11 @@
             Khoa
             <button @click="sortByGivenName('facultyId')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCFacultyId == true"
+                v-if="sortBy.sortedByASCFacultyId == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCFacultyId == false"
+                v-else-if="sortBy.sortedByASCFacultyId == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
@@ -306,20 +306,20 @@ export default {
         if (this.sortBy.sortedByASCAmount == undefined) {
           this.sortBy.sortedByASCAmount = false;
         }
-        ASC = !this.sortBy.sortedByASCAmount;
         this.sortBy.sortedByASCAmount = !this.sortBy.sortedByASCAmount;
+        ASC = this.sortBy.sortedByASCAmount;
       } else if (item == "grade") {
         if (this.sortBy.sortedByASCGrade == undefined) {
           this.sortBy.sortedByASCGrade = false;
         }
-        ASC = !this.sortBy.sortedByASCGrade;
         this.sortBy.sortedByASCGrade = !this.sortBy.sortedByASCGrade;
+        ASC = this.sortBy.sortedByASCGrade;
       } else if (item == "facultyId") {
         if (this.sortBy.sortedByASCFacultyId == undefined) {
           this.sortBy.sortedByASCFacultyId = false;
         }
-        ASC = !this.sortBy.sortedByASCFacultyId;
         this.sortBy.sortedByASCFacultyId = !this.sortBy.sortedByASCFacultyId;
+        ASC = this.sortBy.sortedByASCFacultyId;
       }
       if (ASC) {
         this.list = this.list.sort(function (a, b) {
@@ -585,15 +585,7 @@ th:last-child,
 td:last-child {
   text-align: center;
 }
-.btn-add,
-.remove-btn {
-  background-color: transparent;
-}
-.edit-btn:hover,
-.remove-btn:hover,
-.sort-btn:hover {
-  cursor: pointer;
-}
+
 .btn-add svg,
 .sort-btn svg {
   color: green;
