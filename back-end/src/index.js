@@ -53,15 +53,5 @@ app.use((err, req, res, next) => {
 	res.status(statusCode).send(err.message);
 });
 
-const abc = require('./models/score.m');
-const de = require('./models/student.m');
-const cs = require('./models/summary.m');
-var a = abc.findScores('LOP0001111', 'MH00001111', 'HK1').then((a) => {
-	console.log('a', a);
-});
-var b = cs.findSummary('LOP0001111', 'MH00001111', 'HK1', 5).then((b) => {
-	console.log('b', b);
-});
-
 const port = 3000;
 app.listen(port, () => console.log(`Server listening at http://localhost:${port}`));
