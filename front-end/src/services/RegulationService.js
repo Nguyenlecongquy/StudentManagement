@@ -1,8 +1,7 @@
 import Api from "./Api";
 
 export default {
-  
-  searchValidAge() {
+  searchValidAge(data) {
     return Api.get("api/summary/search", data);
   },
   editValidAge(data) {

@@ -4,12 +4,12 @@
     <div class="search">
       <ButtonVue title="Tìm kiếm" primary="true" @click="search()" />
       <select class="input" v-model="searchValue.classID">
-        <option value="" disabled> Chọn lớp </option>
+        <option value="" disabled>Chọn lớp</option>
         <option v-for="classID in classesList" v-bind:key="classID">
           {{ classID }}
         </option>
       </select>
-    
+
       <select class="input" v-model="searchValue.subjectName">
         <option value="" disabled>Môn học</option>
         <option v-for="subjectName in subjectsList" v-bind:key="subjectName">
@@ -17,71 +17,73 @@
         </option>
       </select>
       <select class="input" v-model="searchValue.semester">
-          <option value="" disabled>Học kỳ</option>
-          <option v-for="semester in semesters" v-bind:key="semester">
-            {{ semester }}
-          </option>
+        <option value="" disabled>Học kỳ</option>
+        <option v-for="semester in semesters" v-bind:key="semester">
+          {{ semester }}
+        </option>
       </select>
-      
+
       <ButtonVue title="Reset" @click="reset()" />
     </div>
     <div class="search">
-        <h4>Nhập điểm</h4>
-        
-      
-        <input
-          class="input"
-          v-model="addedScore.id"
-          type="text"
-          placeholder="Mã HS"
-        />
-        <input
-          class="input"
-          v-model="addedScore.subjectName"
-          type="text"
-          placeholder="Môn"
-        />
-        <select class="input" v-model="addedScore.semester">
-          <option value="" disabled>Học kỳ</option>
-          <option v-for="semester in semesters" v-bind:key="semester">
-            {{ semester }}
-          </option>
-        </select>
-        <input
-          class="input"
-          v-model="addedScore.score_15"
-          type="text"
-          placeholder="15'"
-        />
-        <input
-          class="input"
-          v-model="addedScore.score_1t"
-          type="text"
-          placeholder="1 tiết"
-        />
-        <input
-          class="input"
-          v-model="addedScore.score_gk"
-          type="text"
-          placeholder="Giữa kì"
-        />
-        <input
-          class="input"
-          v-model="addedScore.score_ck"
-          type="text"
-          placeholder="Cuối kỳ"
-        />
-        <input
-          class="input"
-          v-model="addedScore.score_tk"
-          type="text"
-          placeholder="Tổng kết"
-        />
-        <ButtonVue title="Thêm" @click="add()" primary="true" />
-    
-      </div>
+      <h4>Nhập điểm</h4>
+
+      <input
+        class="input"
+        v-model="addedScore.id"
+        type="text"
+        placeholder="Mã HS"
+      />
+      <input
+        class="input"
+        v-model="addedScore.subjectName"
+        type="text"
+        placeholder="Môn"
+      />
+      <select class="input" v-model="addedScore.semester">
+        <option value="" disabled>Học kỳ</option>
+        <option v-for="semester in semesters" v-bind:key="semester">
+          {{ semester }}
+        </option>
+      </select>
+      <input
+        class="input"
+        v-model="addedScore.score_15"
+        type="text"
+        placeholder="15'"
+      />
+      <input
+        class="input"
+        v-model="addedScore.score_1t"
+        type="text"
+        placeholder="1 tiết"
+      />
+      <input
+        class="input"
+        v-model="addedScore.score_gk"
+        type="text"
+        placeholder="Giữa kì"
+      />
+      <input
+        class="input"
+        v-model="addedScore.score_ck"
+        type="text"
+        placeholder="Cuối kỳ"
+      />
+      <input
+        class="input"
+        v-model="addedScore.score_tk"
+        type="text"
+        placeholder="Tổng kết"
+      />
+      <ButtonVue title="Thêm" @click="add()" primary="true" />
+    </div>
     <div class="content">
-      <ButtonVue title="Điểm qua môn" primary="true" @click="showModalRegulation=true" />
+      <ButtonVue
+        title="Điểm qua môn"
+        primary="true"
+        @click="showModalRegulation = true"
+      />
       <table>
         <caption>
           Danh sách học sinh
@@ -99,7 +101,7 @@
         <tr v-for="(item, index) in list" :key="item">
           <td>{{ index + 1 }}</td>
           <td>{{ item.id }}</td>
-      
+
           <td>{{ item.score_15 }}</td>
           <td>{{ item.score_1t }}</td>
           <td>{{ item.score_gk }}</td>
@@ -157,7 +159,7 @@
           disabled
         />
       </div>
-      
+
       <div class="modal__content">
         <input
           class="input"
@@ -197,7 +199,6 @@
           disabled
           placeholder="Tổng kết"
         />
-        
       </div>
       <div class="modal__action">
         <ButtonVue title="Sửa" @click="edit()" primary="true" />
@@ -205,32 +206,31 @@
       </div>
     </vue-final-modal>
   </div>
-  
 </template>
 
 <script>
 import ButtonVue from "./Button.vue";
-
 import ScoreService from "../services/ScoreService";
 import ClassService from "../services/ClassService";
 import SubjectService from "../services/SubjectService";
 import RegulationService from "../services/RegulationService";
+
 export default {
   fullName: "ScoreCom",
   components: { ButtonVue },
   data() {
     return {
-      currentTable:{
-        classID:"",
-        semester:"",
-        subjectName:"",
+      currentTable: {
+        classID: "",
+        semester: "",
+        subjectName: "",
       },
       passScore: 5,
       editScore: {
         id: "",
-        
-        subjectName:"",
-        semester:"",
+
+        subjectName: "",
+        semester: "",
         score_15: "",
         score_1t: "",
         score_gk: "",
@@ -239,9 +239,9 @@ export default {
       },
       addedScore: {
         id: "",
-        
-        subjectName:"",
-        semester:"",
+
+        subjectName: "",
+        semester: "",
         score_15: "",
         score_1t: "",
         score_gk: "",
@@ -250,31 +250,21 @@ export default {
       },
       showModalRegulation: false,
       showModal: false,
-      list: [
-        
-      ],
+      list: [],
       searchValue: {
         classID: "",
         subjectName: "",
-        semester:"",
+        semester: "",
       },
-      classesList: [
-       
-      ],
-      subjectsList: [
-       
-      ],
-      semesters:[
-        "HK1",
-        "HK2",
-      ]
+      classesList: [],
+      subjectsList: [],
+      semesters: ["HK1", "HK2"],
     };
   },
-  
+
   mounted() {
-    
     //API for list teachers
-    
+
     ScoreService.searchScore({
       params: {
         className: "",
@@ -312,8 +302,6 @@ export default {
         }
       })
       .catch((e) => console.log(e));
-
-    
   },
 
   methods: {
@@ -321,7 +309,7 @@ export default {
       return rawData.map((e) => {
         return {
           id: e.id,
-          subjectName:e.subjectName,
+          subjectName: e.subjectName,
           score_15: e.mark_15,
           score_1t: e.mark_1t,
           score_gk: e.mark_gk,
@@ -330,20 +318,20 @@ export default {
         };
       });
     },
-    
+
     reset() {
       this.searchValue.classID = "";
       this.searchValue.subjectName = "";
       this.searchValue.semester = "";
       //Gọi API để reset lại list
-      
+
       ScoreService.searchScore()
         .then(({ data }) => {
           this.list = this.convertData(data.scores);
         })
-        .catch((e) => console.log(e));       
+        .catch((e) => console.log(e));
     },
-    
+
     search() {
       //Send API and get result
       const data = {
@@ -358,11 +346,9 @@ export default {
           this.list = this.convertData(data.scores);
         })
         .catch((e) => console.log(e));
-        
     },
-    
+
     validateScore(score) {
-      
       if (score < 0 || score > 10) {
         return false;
       }
@@ -377,10 +363,9 @@ export default {
         this.addedScore.score_1t &&
         this.addedScore.score_gk &&
         this.addedScore.score_ck &&
-        this.addedScore.score_tk 
-        
+        this.addedScore.score_tk
       ) {
-        if (true ) {
+        if (true) {
           const item = {
             idStudent: this.addedScore.id,
             idSubject: this.addedScore.subjectName,
@@ -394,7 +379,6 @@ export default {
           //Send API
           ScoreService.addScore({
             ...item,
-
           })
             .then(({ data }) => {
               if (data.status) {
@@ -409,14 +393,14 @@ export default {
                   score_ck: this.addedScore.score_ck,
                   score_tk: this.addedScore.score_tk,
                 });
-                this.addedScore.id="";
-                this.addedScore.subjectName="";
-                this.addedScore.semester="";
-                this.addedScore.score_15="";
-                this.addedScore.score_1t="";
-                this.addedScore.score_gk="";
-                this.addedScore.score_ck="";
-                this.addedScore.score_tk="";
+                this.addedScore.id = "";
+                this.addedScore.subjectName = "";
+                this.addedScore.semester = "";
+                this.addedScore.score_15 = "";
+                this.addedScore.score_1t = "";
+                this.addedScore.score_gk = "";
+                this.addedScore.score_ck = "";
+                this.addedScore.score_tk = "";
               } else {
                 alert(
                   "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
@@ -434,13 +418,13 @@ export default {
     showModalAndEdit(item) {
       this.showModal = true;
       this.editScore = { ...item };
-      this.editScore.semester=this.searchValue.semester;
-      this.editScore.subjectName=this.searchValue.subjectName;
+      this.editScore.semester = this.searchValue.semester;
+      this.editScore.subjectName = this.searchValue.subjectName;
     },
-    
-    edit(subjectName,semester) {
+
+    edit(subjectName, semester) {
       //Send API
-      
+
       ScoreService.editScore({
         idStudent: this.editScore.id,
         idSubject: this.editScore.subjectName,
@@ -456,7 +440,7 @@ export default {
             this.showModal = false;
             alert("Sửa thành công");
             this.list.forEach((e) => {
-              if (e.id == this.editScore.id) {        
+              if (e.id == this.editScore.id) {
                 e.score_15 = this.editScore.score_15;
                 e.score_1t = this.editScore.score_1t;
                 e.score_gk = this.editScore.score_gk;
@@ -477,7 +461,6 @@ export default {
           if (data.status) {
             this.showModal = false;
             alert("Sửa thành công");
-           
           }
         })
         .catch((e) => console.log(e));
@@ -579,12 +562,12 @@ th:last-child {
   color: red;
   font-size: 16px;
 }
-:deep(.modal-container)  {
+:deep(.modal-container) {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-:deep(.modal-content)  {
+:deep(.modal-content) {
   position: relative;
   display: flex;
   flex-direction: column;

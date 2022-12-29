@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS public.lop
     ma_lop character(10)  NOT NULL,
     ten_lop text,
     si_so_lop integer,
-	khoi varchar(10),
+	khoi int,
     ma_khoa character(10),
     CONSTRAINT lop_pkey PRIMARY KEY (ma_lop)
 );
@@ -134,7 +134,6 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
 );
 
 --Table qui_dinh
-
 CREATE TABLE IF NOT EXISTS QUI_DINH(
 	id int  not null,
 	tuoi_toi_da int,
@@ -142,12 +141,16 @@ CREATE TABLE IF NOT EXISTS QUI_DINH(
 	si_so_toi_da int,
 	diem_chuan_dat_mon float,
 	so_luong_mon_hoc int,
+	so_luong_lop_10 int,
+	so_luong_lop_11 int,
+	so_luong_lop_12 int,
 	CONSTRAINT quidinh_pkey PRIMARY KEY (id)
 	
 );
 insert into qui_dinh(id,tuoi_toi_da,tuoi_toi_thieu,si_so_toi_da,
-diem_chuan_dat_mon,so_luong_mon_hoc)
-values(1,20,15,40,5.0,9);
+diem_chuan_dat_mon,so_luong_mon_hoc,so_luong_lop_10,so_luong_lop_11,
+					so_luong_lop_12)
+values(1,20,15,40,5.0,9,4,3,2);
 
 -------------------------------------------------------------
 -- Constraint: giao_vien_khoa_fkey
