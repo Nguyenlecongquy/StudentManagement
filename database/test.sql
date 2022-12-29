@@ -23,3 +23,4 @@ delete from lop;
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
 values('10A1',40,10,'KHTN'),('10A2',41,10,'KHXH'),
 ('11A1',40,11,'KHTN'),('12A2',41,12,'KHXH');
+
