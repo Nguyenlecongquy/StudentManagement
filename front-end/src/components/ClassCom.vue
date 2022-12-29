@@ -152,7 +152,6 @@
           v-model="editClass.className"
           type="text"
           placeholder="Lớp"
-          disabled
         />
         <input
           class="input"
@@ -239,6 +238,7 @@ export default {
         amount: 0,
         grade: 10,
       },
+      oldClass: "",
       editClass: {
         className: "",
         facultyId: "",
@@ -469,6 +469,7 @@ export default {
     },
     showModalAndEdit(item) {
       this.showModal = true;
+      this.oldClass = item.className;
       this.editClass = { ...item };
     },
     edit() {
@@ -481,7 +482,8 @@ export default {
         )
       ) {
         ClassService.editClass({
-          id: this.editClass.className,
+          idOld: this.oldClass,
+          idNew: this.editClass.className,
           number: this.editClass.amount,
           grade: this.editClass.grade,
           idFaculty: this.editClass.facultyId,
@@ -491,7 +493,8 @@ export default {
               this.showModal = false;
               alert("Sửa thành công");
               this.list.forEach((e) => {
-                if (e.className == this.editClass.className) {
+                if (e.className == this.oldClass) {
+                  e.className = this.editClass.className;
                   e.amount = this.editClass.amount;
                   e.grade = this.editClass.grade;
                   e.facultyId = this.editClass.facultyId;
