@@ -105,6 +105,9 @@ html::-webkit-scrollbar-track {
 .ml-12 {
   margin-left: 12px;
 }
+.mt-12 {
+  margin-top: 12px;
+}
 .r-12 {
   margin-right: 12px;
 }

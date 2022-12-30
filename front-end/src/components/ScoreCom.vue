@@ -59,24 +59,24 @@
         placeholder="1 tiết"
       />
       <input
-        class="input"
+        class="input mt-12"
         v-model="addedScore.score_gk"
         type="text"
         placeholder="Giữa kì"
       />
       <input
-        class="input"
+        class="input mt-12"
         v-model="addedScore.score_ck"
         type="text"
         placeholder="Cuối kỳ"
       />
       <input
-        class="input"
+        class="input mt-12"
         v-model="addedScore.score_tk"
         type="text"
         placeholder="Tổng kết"
       />
-      <ButtonVue title="Thêm" @click="add()" primary="true" />
+      <ButtonVue title="Thêm" class="mt-12"  @click="add()" primary="true" />
     </div>
     <div class="content">
       <ButtonVue
@@ -267,8 +267,8 @@ export default {
 
     ScoreService.searchScore({
       params: {
-        className: "",
-        subjectName: "",
+        classId: "",
+        subjectId: "",
         semester: "",
       },
     })
@@ -309,7 +309,7 @@ export default {
       return rawData.map((e) => {
         return {
           id: e.id,
-          subjectName: e.subjectName,
+          subjectName: e.subjectId,
           score_15: e.mark_15,
           score_1t: e.mark_1t,
           score_gk: e.mark_gk,
@@ -336,8 +336,8 @@ export default {
       //Send API and get result
       const data = {
         params: {
-          className: this.searchValue.classID,
-          subjectName: this.searchValue.subjectName,
+          classId: this.searchValue.classID,
+          subjectId: this.searchValue.subjectName,
           semester: this.searchValue.semester,
         },
       };

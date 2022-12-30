@@ -8,9 +8,10 @@ try {
 }
 
 const scoreModel = {
-	fieldClassId: (classId) => (classId == undefined ? true : "hs.ma_lop = '" + classId + "'"),
+	fieldClassId: (classId) => (classId == '' ? true : "hs.ma_lop = '" + classId + "'"),
 	fieldSubjectId: (subjectId) =>
-		subjectId == undefined ? true : "d.ma_mh = '" + subjectId + "'",
+		(subjectId == '' ? true : "d.ma_mh = '" + subjectId + "'"),
+	fieldSemester: (semester) => (semester == '' ? true : "d.hoc_ki = '" + semester + "'"),
 	findScores: async (classId, subjectId, semester) => {
 		const result = await db.any(
 			`SELECT hs.ma_hs as id, hs.ten_hs as student, d.diem_15 as mark_15, d.diem_1t as mark_1t, d.diem_gk as mark_gk,
@@ -18,10 +19,11 @@ const scoreModel = {
          FROM diem d JOIN hoc_sinh hs ON d.ma_hs = hs.ma_hs
          WHERE ${scoreModel.fieldClassId(classId)}
          AND ${scoreModel.fieldSubjectId(subjectId)}
-         AND d.hoc_ki = $1 ;`,
-			[semester]
+         AND ${scoreModel.fieldSemester(semester)} ;`,			
 		);
+		console.log(result);
 		return result;
+		
 	},
 	addScoresIntoDatabaseReturnScores: async (
 		idStudent,

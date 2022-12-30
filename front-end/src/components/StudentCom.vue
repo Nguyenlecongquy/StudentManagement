@@ -267,7 +267,12 @@ export default {
   mounted() {
     
     //API for list students
-    StudentService.searchStudent()
+    StudentService.searchStudent({
+      params: {
+        id: "",
+        fullName: "",      
+      },
+  })
         .then(({ data }) => {
           this.list = this.convertData(data.students);
         })
@@ -319,6 +324,7 @@ export default {
     },
     convertData(rawData) {
       return rawData.map((e) => {
+        console.log(e);
         let birthdayDate;
         let birthday;
         if (e.ngay_sinh_hs != null) {
@@ -339,7 +345,7 @@ export default {
         return {
           id: e.ma_hs,
           fullName: e.ten_hs,
-          classID: e.ma_lop.trim(),        
+          classID: e.ma_lop,        
           birthday,
           gender: e.gioi_tinh_hs,
           address: e.dia_chi_hs,
