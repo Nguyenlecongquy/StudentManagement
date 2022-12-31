@@ -83,7 +83,7 @@ export default {
   mounted() {
     let isLogin = window.localStorage.getItem("isLogin");
     if (isLogin == true) {
-      this.$router.push("/home");
+      this.$router.push("/home/intro");
     }
   },
   methods: {

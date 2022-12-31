@@ -29,7 +29,7 @@
       <h4>Nhập điểm</h4>
 
       <input
-        class="input"
+        class="input ml-0"
         v-model="addedScore.id"
         type="text"
         placeholder="Mã HS"
@@ -59,7 +59,7 @@
         placeholder="1 tiết"
       />
       <input
-        class="input mt-12"
+        class="input mt-12 ml-0"
         v-model="addedScore.score_gk"
         type="text"
         placeholder="Giữa kì"
@@ -76,14 +76,19 @@
         type="text"
         placeholder="Tổng kết"
       />
-      <ButtonVue title="Thêm" class="mt-12"  @click="add()" primary="true" />
-    </div>
-    <div class="content">
+      <ButtonVue
+        title="Thêm"
+        class="mt-12 ml-12"
+        @click="add()"
+        primary="true"
+      />
       <ButtonVue
         title="Điểm qua môn"
         primary="true"
         @click="showModalRegulation = true"
       />
+    </div>
+    <div class="content">
       <table>
         <caption>
           Danh sách học sinh

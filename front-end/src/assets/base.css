@@ -105,9 +105,21 @@ html::-webkit-scrollbar-track {
 .ml-12 {
   margin-left: 12px;
 }
+
+.ml-0 {
+  margin-left: 0px !important;
+}
 .mt-12 {
   margin-top: 12px;
 }
-.r-12 {
+.mb-12 {
+  margin-bottom: 12px;
+}
+.mr-12 {
   margin-right: 12px;
+}
+
+
+h2 {
+  font-size: 26px;
 }

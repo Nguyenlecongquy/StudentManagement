@@ -6,7 +6,6 @@ import HomeCom from "../components/HomeCom.vue";
 import AccountInfoCom from "../components/AccountInfoCom.vue";
 import ClassCom from "../components/ClassCom.vue";
 import MemberCom from "../components/MemberCom.vue";
-import PolicyCom from "../components/PolicyCom.vue";
 import StudentCom from "../components/StudentCom.vue";
 import ScoreCom from "../components/ScoreCom.vue";
 import SubjectCom from "../components/SubjectCom.vue";
@@ -34,7 +33,12 @@ const router = createRouter({
       component: HomeCom,
       children: [
         {
-          path: "/home/intro",
+          path: "/",
+          name: "WelcomeCom",
+          component: WelcomeCom,
+        },
+        {
+          path: "/home/:slug(.*)*",
           name: "WelcomeCom",
           component: WelcomeCom,
         },
@@ -59,11 +63,6 @@ const router = createRouter({
           component: MemberCom,
         },
         {
-          path: "/home/policy",
-          name: "policy",
-          component: PolicyCom,
-        },
-        {
           path: "/home/student",
           name: "student",
           component: StudentCom,
@@ -72,11 +71,6 @@ const router = createRouter({
           path: "/home/subject",
           name: "subject",
           component: SubjectCom,
-        },
-        {
-          path: "/home/teacher",
-          name: "summary",
-          component: SummaryCom,
         },
         {
           path: "/home/teacher",
