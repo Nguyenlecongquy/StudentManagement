@@ -7,7 +7,7 @@ export default {
 <template>
   <div class="sidebar">
     <header>
-      <div class="header-info">
+      <div class="header-info mb-12">
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h1 class="name">Họ và Tên</h1>
       </div>
@@ -30,7 +30,6 @@ export default {
           <li><router-link to="/home/score">Điểm</router-link></li>
           <li><router-link to="/home/summary">Điểm tổng</router-link></li>
           <li><router-link to="/home/member">Thành viên</router-link></li>
-          <li><router-link to="/home/policy">Điều khoản</router-link></li>
         </ul>
       </nav>
     </section>

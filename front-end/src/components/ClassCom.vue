@@ -19,7 +19,7 @@
       <ButtonVue
         title="Thay đổi quy định lớp"
         primary="true"
-        @click="showModalRegulation = true"
+        @click="showEditRegulationModal()"
       />
     </div>
 
@@ -152,7 +152,6 @@
           v-model="editClass.className"
           type="text"
           placeholder="Lớp"
-          disabled
         />
         <input
           class="input"
@@ -217,6 +216,7 @@
 import ButtonVue from "./Button.vue";
 import ClassService from "../services/ClassService";
 import FacultyService from "../services/FacultyService";
+import RoleService from "../services/RoleService";
 import FormGroup from "./FormGroup.vue";
 
 export default {
@@ -239,6 +239,7 @@ export default {
         amount: 0,
         grade: 10,
       },
+      oldClass: "",
       editClass: {
         className: "",
         facultyId: "",
@@ -246,9 +247,9 @@ export default {
         grade: 0,
       },
       regulation: {
-        amountOfGrade10: 4,
-        amountOfGrade11: 3,
-        amountOfGrade12: 2,
+        amountOfGrade10: 0,
+        amountOfGrade11: 0,
+        amountOfGrade12: 0,
       },
       editedRegulation: {
         amountOfGrade10: 4,
@@ -295,6 +296,17 @@ export default {
       .catch((e) => console.log(e));
 
     //Call API for regulation
+    RoleService.getAllRole()
+      .then(({ data }) => {
+        if (data.status) {
+          this.regulation.amountOfGrade10 = data.roles.so_luong_lop_10;
+          this.regulation.amountOfGrade11 = data.roles.so_luong_lop_11;
+          this.regulation.amountOfGrade12 = data.roles.so_luong_lop_12;
+
+          this.editedRegulation = { ...this.regulation };
+        }
+      })
+      .catch((e) => console.log(e));
   },
   methods: {
     sortByGivenName(item) {
@@ -393,19 +405,17 @@ export default {
             }
           });
           console.log(numberOfCurrentClassInGrade);
-          if (currentGrade == 10) {
-            if (
-              numberOfCurrentClassInGrade <
-              this.regulation[`amountOfGrade${currentGrade}`]
-            ) {
-              result = true;
-            } else {
-              alert(
-                `Bạn sẽ không thể thêm / chỉnh sửa lớp này vì số lượng lớp trong khối ${currentGrade} đã đủ
+          if (
+            numberOfCurrentClassInGrade <
+            this.regulation[`amountOfGrade${currentGrade}`]
+          ) {
+            result = true;
+          } else {
+            alert(
+              `Bạn sẽ không thể thêm / chỉnh sửa lớp này vì số lượng lớp trong khối ${currentGrade} đã đủ
                 \nVui lòng chỉnh sửa quy định lớp nếu muốn thêm / thay đổi`
-              );
-              result = false;
-            }
+            );
+            result = false;
           }
         } else {
           alert("Tên lớp phải chứa khối. Ví dụ 10A1 thuộc khối 10");
@@ -469,6 +479,7 @@ export default {
     },
     showModalAndEdit(item) {
       this.showModal = true;
+      this.oldClass = item.className;
       this.editClass = { ...item };
     },
     edit() {
@@ -481,7 +492,8 @@ export default {
         )
       ) {
         ClassService.editClass({
-          id: this.editClass.className,
+          idOld: this.oldClass,
+          idNew: this.editClass.className,
           number: this.editClass.amount,
           grade: this.editClass.grade,
           idFaculty: this.editClass.facultyId,
@@ -491,7 +503,8 @@ export default {
               this.showModal = false;
               alert("Sửa thành công");
               this.list.forEach((e) => {
-                if (e.className == this.editClass.className) {
+                if (e.className == this.oldClass) {
+                  e.className = this.editClass.className;
                   e.amount = this.editClass.amount;
                   e.grade = this.editClass.grade;
                   e.facultyId = this.editClass.facultyId;
@@ -502,10 +515,61 @@ export default {
           .catch((e) => console.log(e));
       }
     },
+    showEditRegulationModal() {
+      this.showModalRegulation = true;
+      this.editedRegulation = { ...this.regulation };
+    },
+    validateAmountOfGrade(grade) {
+      let currentGrade = parseInt(grade);
+      let numberOfCurrentClassInGrade = 0;
+      let result = true;
+      this.list.forEach((e) => {
+        if (parseInt(e.grade) == currentGrade) {
+          numberOfCurrentClassInGrade++;
+        }
+      });
+      if (
+        parseInt(this.editedRegulation[`amountOfGrade${currentGrade}`]) >=
+        numberOfCurrentClassInGrade
+      ) {
+        result = true;
+      } else {
+        alert(
+          `Bạn sẽ không thể chỉnh số lượng lớp tối đa nhỏ hơn số lượng lớp đang có trong khối ${currentGrade}
+          `
+        );
+        result = false;
+      }
+      return result;
+    },
     editRegulation() {
-      this.regulation = { ...this.editedRegulation };
-      //Call API for updating
-      this.showModalRegulation = false;
+      //Validate
+      if (
+        this.validateAmountOfGrade(10) &&
+        this.validateAmountOfGrade(11) &&
+        this.validateAmountOfGrade(12)
+      ) {
+        this.regulation = { ...this.editedRegulation };
+        //Call API for updating
+        RoleService.updateAmountOfGrade({
+          grade: 10,
+          numberClass: this.editedRegulation.amountOfGrade10,
+        });
+        RoleService.updateAmountOfGrade({
+          grade: 11,
+          numberClass: this.editedRegulation.amountOfGrade11,
+        });
+        RoleService.updateAmountOfGrade({
+          grade: 12,
+          numberClass: this.editedRegulation.amountOfGrade12,
+        }).then(({ data }) => {
+          if (data.status) {
+            alert("Cập nhật qui định thành công");
+          }
+        });
+
+        this.showModalRegulation = false;
+      }
     },
     cancelEditRegulation() {
       //Reset regulation

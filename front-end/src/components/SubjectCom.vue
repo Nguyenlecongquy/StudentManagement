@@ -19,13 +19,13 @@
           type="text"
           placeholder="Tên môn học"
         />
-      
         <select class="input" v-model="addedSubject.facultyId">
           <option value="" disabled>Chọn khoa</option>
-          <option v-for="e in facultiesList" v-bind:key="e">
-            {{ e }}
+          <option v-for="facultyId in facultiesList" v-bind:key="facultyId">
+            {{ facultyId }}
           </option>
         </select>
+        
         <ButtonVue title="Thêm" @click="add()" primary="true" />
       </div>
       <table>
@@ -34,9 +34,45 @@
         </caption>
         <tr>
           <th width="10%">STT</th>
-          <th width="20%">Mã môn học</th>
-          <th width="30%">Tên môn học</th>
-          <th width="20%">Mã khoa</th>
+          <th width="20%">Mã môn học
+            <button @click="sortByGivenName('subjectId')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCSubjectId == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCSubjectId == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="30%">Tên môn học
+            <button @click="sortByGivenName('subjectName')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCSubjectName == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCSubjectName == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="20%">Mã khoa
+            <button @click="sortByGivenName('facultyId')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCFacultyId == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCFacultyId == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
           <th width="20%">
             <button class="btn-add">
               <font-awesome-icon icon="fa-solid fa-circle-plus" />
@@ -84,8 +120,8 @@
         />
         <select class="input" v-model="editSubject.facultyId">
           <option value="" disabled>Chọn khoa</option>
-          <option v-for="e in facultiesList" v-bind:key="e">
-            {{ e }}
+          <option v-for="facultyId in facultiesList" v-bind:key="facultyId">
+            {{ facultyId }}
           </option>
         </select>
       </div>
@@ -112,22 +148,21 @@ export default {
       editSubject: {
         subjectId: "",
         subjectName: "",
+        facultyId: "",
       },
       addedSubject: {
         subjectId: "",
         subjectName: "",
+        facultyId: "",
       },
       showModal: false,
-      list: [
-        
-      ],
-      searchValue: {
-        subjectId: "",
-        subjectName: "",
+      list: [],     
+      facultiesList: [],
+      sortBy: {
+        sortedByASCSubjectId: true,
+        sortedByASCSubjectName: undefined,
+        sortedByASCFacultyId: undefined,
       },
-      facultiesList: [
-
-      ],
     };
   },
   
@@ -158,7 +193,38 @@ export default {
   },
   
   methods: {
-    
+    sortByGivenName(item) {
+      let ASC;
+      if (item == "subjectId") {
+        this.sortBy.sortedByASCSubjectId = !this.sortBy.sortedByASCSubjectId;
+        ASC = this.sortBy.sortedByASCSubjectId;
+      } else if (item == "subjectName") {
+        if (this.sortBy.sortedByASCSubjectName == undefined) {
+          this.sortBy.sortedByASCSubjectName = false;
+        }    
+        this.sortBy.sortedByASCSubjectName = !this.sortBy.sortedByASCSubjectName;
+        ASC = this.sortBy.sortedByASCSubjectName;
+      } else if (item == "facultyId") {
+        if (this.sortBy.sortedByASCFacultyId == undefined) {
+          this.sortBy.sortedByASCFacultyId = false;
+        }
+        this.sortBy.sortedByASCFacultyId = !this.sortBy.sortedByASCFacultyId;
+        ASC = this.sortBy.sortedByASCFacultyId;
+      }
+      if (ASC) {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return -1;
+          if (a[item] > b[item]) return 1;
+          return 0;
+        });
+      } else {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return 1;
+          if (a[item] > b[item]) return -1;
+          return 0;
+        });
+      }
+    },
     convertData(rawData) {
       return rawData.map((e) => {
         return {
@@ -331,6 +397,10 @@ th:last-child {
 .remove-btn,
 .edit-btn {
   background-color: transparent;
+}
+.sort-btn svg {
+  color: green;
+  font-size: 16px;
 }
 .btn-add:hover,
 .remove-btn:hover,

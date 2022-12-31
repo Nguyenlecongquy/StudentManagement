@@ -25,9 +25,33 @@
         </caption>
         <tr>
           <th width="10%">STT</th>
-          <th width="20%">Lớp</th>
+          <th width="20%">Lớp
+            <button @click="sortByGivenName('classID')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCClassId == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCClassId == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
           <th width="25%">Sỉ số</th>
-          <th width="20%">Đạt</th>
+          <th width="20%">Đạt
+            <button @click="sortByGivenName('passNumber')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCPassAmount == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCPassAmount == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
           <th width="25%">Tỉ lệ</th>      
         </tr>
         <tr v-for="(item, index) in list" :key="item">
@@ -61,8 +85,8 @@ export default {
       
       ],
       searchValue: {
-        subjectName: "",
-        semester:"",
+        subjectName: "MH00001111",
+        semester:"HK1",
       },
       classesList: [
        
@@ -73,14 +97,23 @@ export default {
       semesters:[
         "HK1",
         "HK2",
-      ]
+      ],
+      sortBy: {
+        sortedByASCClassId: true,
+        sortedByASCPassAmount: undefined,
+      },
     };
   },
   
   mounted() {
     
     //API for list teachers
-    SummaryService.searchSummary()
+    SummaryService.searchSummary({
+      params: {
+        subjectId: "MH00001111",
+        semester: "HK1",
+      },
+    })
       .then(({ data }) => {
         console.log(data);
         if (data.status) {
@@ -101,6 +134,32 @@ export default {
   },
   
   methods: {
+    sortByGivenName(item) {
+      let ASC;
+      if (item == "classID") {
+        ASC = !this.sortBy.sortedByASCClassId;
+        this.sortBy.sortedByASCClassId = !this.sortBy.sortedByASCClassId;
+      } else if (item == "passNumber") {
+        if (this.sortBy.sortedByASCPassAmount == undefined) {
+          this.sortBy.sortedByASCPassAmount = false;
+        }
+        ASC = !this.sortBy.sortedByASCPassAmount;
+        this.sortBy.sortedByASCPassAmount = !this.sortBy.sortedByASCPassAmount;
+      }
+      if (ASC) {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return -1;
+          if (a[item] > b[item]) return 1;
+          return 0;
+        });
+      } else {
+        this.list = this.list.sort(function (a, b) {
+          if (a[item] < b[item]) return 1;
+          if (a[item] > b[item]) return -1;
+          return 0;
+        });
+      }
+    },
     convertData(rawData) {
       return rawData.map((e) => {
         return {
@@ -222,6 +281,10 @@ th:last-child {
 .remove-btn,
 .edit-btn {
   background-color: transparent;
+}
+.sort-btn svg {
+  color: green;
+  font-size: 16px;
 }
 .btn-add:hover,
 .remove-btn:hover,

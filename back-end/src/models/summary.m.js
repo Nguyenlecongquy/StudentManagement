@@ -25,7 +25,7 @@ const summaryModel = {
 			[semester, minMark]
 		);
 		const lopValue = await db.any(`SELECT * from lop where ma_lop = $1`, [classId]);
-		var lop = lopValue[0].ten_lop; //lớp
+		var lop = lopValue[0].ma_lop; //lớp
 		var siSo = lopValue[0].si_so_lop; //sĩ số
 		var soLuongDat = soLuongDatValue[0].number;
 		var tiLe = (soLuongDat / siSo) * 100; //tỉ lệ đơn vị là %

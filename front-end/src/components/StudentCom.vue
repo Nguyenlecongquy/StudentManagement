@@ -79,25 +79,37 @@
           <th width="10%">Mã HS
             <button @click="sortByGivenName('id')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCClassName == true"
+                v-if="sortBy.sortedByASCId == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCClassName == false"
+                v-else-if="sortBy.sortedByASCId == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
             </button>
           </th>
-          <th width="25%">Họ và tên</th>
-          <th width="5%">Lớp
-            <button @click="sortByGivenName('className')" className="sort-btn">
+          <th width="25%">Họ và tên
+            <button @click="sortByGivenName('fullName')" className="sort-btn">
               <font-awesome-icon
-                v-if="sortBy.sortedByASCClassName == true"
+                v-if="sortBy.sortedByASCFullName == false"
                 icon="fa-solid fa-arrow-down-a-z"
               />
               <font-awesome-icon
-                v-else-if="sortBy.sortedByASCClassName == false"
+                v-else-if="sortBy.sortedByASCFullName == true"
+                icon="fa-solid fa-arrow-down-z-a"
+              />
+              <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
+            </button>
+          </th>
+          <th width="5%">Lớp
+            <button @click="sortByGivenName('classID')" className="sort-btn">
+              <font-awesome-icon
+                v-if="sortBy.sortedByASCClassName == false"
+                icon="fa-solid fa-arrow-down-a-z"
+              />
+              <font-awesome-icon
+                v-else-if="sortBy.sortedByASCClassName == true"
                 icon="fa-solid fa-arrow-down-z-a"
               />
               <font-awesome-icon v-else icon="fa-solid fa-arrows-up-down" />
@@ -258,8 +270,9 @@ export default {
       classesList: [
     ],
     sortBy: {
-        sortedByASCClassName: true,
-        sortedByASCStudentId: undefined,
+        sortedByASCId: true,
+        sortedByASCClassName: undefined,
+        sortedByASCFullName: undefined,
       },
     };
   },
@@ -267,7 +280,12 @@ export default {
   mounted() {
     
     //API for list students
-    StudentService.searchStudent()
+    StudentService.searchStudent({
+      params: {
+        id: "",
+        fullName: "",      
+      },
+  })
         .then(({ data }) => {
           this.list = this.convertData(data.students);
         })
@@ -293,16 +311,22 @@ export default {
   methods: {
     sortByGivenName(item) {
       let ASC;
-      if (item == "className") {
+      if (item == "id") {
+        ASC = !this.sortBy.sortedByASCId;
+        this.sortBy.sortedByASCId = !this.sortBy.sortedByASCId;
+      } else if (item == "classID") {
+        if (this.sortBy.sortedByASCClassName == undefined) {
+          this.sortBy.sortedByASCClassName = false;
+        }
         ASC = !this.sortBy.sortedByASCClassName;
         this.sortBy.sortedByASCClassName = !this.sortBy.sortedByASCClassName;
-      } else if (item == "id") {
-        if (this.sortBy.sortedByASCStudentId == undefined) {
-          this.sortBy.sortedByASCStudentId = false;
+      } else if (item == "fullName") {
+        if (this.sortBy.sortedByASCFullName == undefined) {
+          this.sortBy.sortedByASCFullName = false;
         }
-        ASC = !this.sortBy.sortedByASCStudentId;
-        this.sortBy.sortedByASCStudentId = !this.sortBy.sortedByASCStudentId;
-      } 
+        this.sortBy.sortedByASCFullName = !this.sortBy.sortedByASCFullName;
+        ASC = this.sortBy.sortedByASCFullName;
+      }
       if (ASC) {
         this.list = this.list.sort(function (a, b) {
           if (a[item] < b[item]) return -1;
@@ -319,6 +343,7 @@ export default {
     },
     convertData(rawData) {
       return rawData.map((e) => {
+        console.log(e);
         let birthdayDate;
         let birthday;
         if (e.ngay_sinh_hs != null) {
@@ -339,7 +364,7 @@ export default {
         return {
           id: e.ma_hs,
           fullName: e.ten_hs,
-          classID: e.ma_lop.trim(),        
+          classID: e.ma_lop,        
           birthday,
           gender: e.gioi_tinh_hs,
           address: e.dia_chi_hs,
