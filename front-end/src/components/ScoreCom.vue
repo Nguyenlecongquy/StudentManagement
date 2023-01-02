@@ -23,7 +23,7 @@
         </option>
       </select>
 
-      <ButtonVue title="Reset" @click="reset()" />
+      <ButtonVue title="Reset" class="ml-12" @click="reset()" />
     </div>
     <div class="search">
       <h4>Nhập điểm</h4>
@@ -333,8 +333,6 @@ export default {
         }
       })
       .catch((e) => console.log(e));
-
-    
   },
 
   methods: {

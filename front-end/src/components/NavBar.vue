@@ -49,94 +49,15 @@ export default {
     <section>
       <nav>
         <ul>
-          <li>
-            <router-link to="/home/intro">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-house" />
-              </span>
-              Trang chủ
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/home/faculty">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-book-open" />
-              </span>
-              Khoa
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/home/class">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-users" />
-              </span>
-              Lớp
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/home/student">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-user" />
-              </span>
-              Học sinh
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/home/teacher">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-chalkboard-teacher" />
-              </span>
-              Giáo viên</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/subject">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-book" />
-              </span>
-              Môn học</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/score">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-medal" />
-              </span>
-              Điểm</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/summary">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-medal" />
-              </span>
-              Điểm tổng</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/member">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-users-gear" />
-              </span>
-              Thành viên</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/role">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-bookmark" />
-              </span>
-              Vai trò</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/policy">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-circle-question" />
-              </span>
-              Điều khoản</router-link
-            >
-          </li>
+          <li><router-link to="/home/intro">Trang chủ</router-link></li>
+          <li><router-link to="/home/faculty">Khoa</router-link></li>
+          <li><router-link to="/home/class">Lớp</router-link></li>
+          <li><router-link to="/home/student">Học sinh</router-link></li>
+          <li><router-link to="/home/teacher">Giáo viên</router-link></li>
+          <li><router-link to="/home/subject">Môn học</router-link></li>
+          <li><router-link to="/home/score">Điểm</router-link></li>
+          <li><router-link to="/home/summary">Điểm tổng</router-link></li>
+          <li><router-link to="/home/member">Thành viên</router-link></li>
         </ul>
       </nav>
     </section>
