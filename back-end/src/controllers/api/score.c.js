@@ -17,6 +17,7 @@ class scoreC {
 	async add(req, res) {
 		const response = { status: true, scores: [] };
 		const score = req.body;
+		console.log(score);
 		const result = await scoreM.addScoresIntoDatabaseReturnScores(
 			score.idStudent,
 			score.idSubject,
@@ -27,6 +28,7 @@ class scoreC {
 			score.mark_ck,
 			score.mark_tk
 		);
+		console.log(result);
 		if (result != [] && result != false) response.scores = result;
 		else response.status = false; // lỗi mã học sinh, mã môn học
 		res.status(200).json(response);

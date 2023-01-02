@@ -17,7 +17,6 @@ class RoleC {
       else response.status =false; // khi không thấy id (không bao giờ xảy ra)
       res.status(200).json(response);
    }
-   
    async searchRoleNumberClassOfGrade(req,res){
       const response = {status:true, roles: {} };
       const role = req.query;
@@ -54,8 +53,8 @@ class RoleC {
 
    async modifyPassScore(req, res) {
       const response = {status: true, roles: {}};
-      const result = await roleM.updatePassScore(score);
-      console.log('score', score);
+      const role = req.body;
+      const result = await roleM.updatePassScore(role.score);
 
       if(result != [] && result != false) response.roles = result;
       else response.status =false; 
