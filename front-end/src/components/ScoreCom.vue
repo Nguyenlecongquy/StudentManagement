@@ -73,10 +73,11 @@
       />
       <ButtonVue
         class="mt-12"
-        title="Điểm qua môn"
+        title="Điểm qua môn" 
         primary="true"
         @click="showModalRegulation = true"
       />
+      <p class="passScore" >: {{ passScore }}</p>
     </div>
     <div class="content">
       <table>
@@ -147,7 +148,7 @@
       classes="modal-container"
       content-class="modal-content"
     >
-      <span class="modal__title">Điểm qua môn</span>
+      <span class="modal__title">Điểm qua môn: </span>
       <div class="modal__content">
         <input
           class="input"
@@ -693,5 +694,10 @@ th:last-child {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+}
+.passScore{
+  display: inline;
+  color:green;
+  font-size: 1.3rem;
 }
 </style>

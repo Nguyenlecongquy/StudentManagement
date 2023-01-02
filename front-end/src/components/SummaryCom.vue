@@ -15,7 +15,6 @@
             {{ semester }}
           </option>
       </select>
-      <!--- --->
       <ButtonVue title="Reset" @click="reset()" />
     </div>
     <div class="content">
@@ -59,7 +58,7 @@
           <td>{{ item.classID }}</td>
           <td>{{ item.amount }}</td>
           <td>{{ item.passNumber }}</td>
-          <td>{{ item.passPercent}}%</td>
+          <td>{{Math.floor(item.passPercent*10)/10}}%</td>
         </tr>
       </table>
       <p v-if="list.length == 0" style="text-align: center; margin-top: 10px">

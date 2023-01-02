@@ -234,7 +234,7 @@
 import ButtonVue from "./Button.vue";
 import StudentService from "../services/StudentService";
 import ClassService from "../services/ClassService";
-import RegulationService from "../services/RegulationService";
+import RoleService from "../services/RoleService";
 export default {
   fullName: "StudentCom",
   components: { ButtonVue },
@@ -258,8 +258,8 @@ export default {
       },
       showModal: false,
       showModalRegulation: false,
-      minAge: 15,
-      maxAge: 20,
+      minAge: "",
+      maxAge: "",
       list: [
        
       ],
@@ -278,7 +278,14 @@ export default {
   },
   
   mounted() {
-    
+    RoleService.getAllRole()
+      .then(({ data }) => {
+        if (data.status) {
+          this.minAge = data.roles.tuoi_toi_thieu;
+          this.maxAge = data.roles.tuoi_toi_da;
+        }
+      })
+      .catch((e) => console.log(e));
     //API for list students
     StudentService.searchStudent({
       params: {
@@ -342,8 +349,7 @@ export default {
       }
     },
     convertData(rawData) {
-      return rawData.map((e) => {
-        console.log(e);
+      return rawData.map((e) => {      
         let birthdayDate;
         let birthday;
         if (e.ngay_sinh_hs != null) {
@@ -434,14 +440,16 @@ export default {
       if (day < 1 || day > daysOfMonth[month]) {
         return false;
       }
+
       return true;
     },
-    calculateAge(date) 
+    calculateAge(birthday) 
     {
+      const date = new Date(birthday);
       const now = new Date();
       const diff = Math.abs(now - date );
       const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365)); 
-      return age
+      return age;
     },
     validateAge(birthday) {
       if ( this.calculateAge(birthday)>=this.minAge && this.calculateAge(birthday)<=this.maxAge) {return true;}
@@ -456,7 +464,8 @@ export default {
         this.addedStudent.address 
         
       ) {
-        if (this.validateBirthday(this.addedStudent.birthday )) {
+        if (this.validateBirthday(this.addedStudent.birthday)&&this.validateAge(this.addedStudent.birthday)) {
+          console.log(this.addedStudent.birthday);
           const item = {
             id: this.addedStudent.id,
             fullName: this.addedStudent.fullName,
@@ -473,14 +482,7 @@ export default {
             .then(({ data }) => {
               if (data.status) {
                 //update result
-                this.list.push({
-                  id: this.addedStudent.id,
-                  fullName: this.addedStudent.fullName,
-                  gender: this.addedStudent.gender,
-                  birthday: this.addedStudent.birthday,
-                  address: this.addedStudent.address,
-                  classID: this.addedStudent.classID,
-                });
+                this.list = [...this.list, ...this.convertData(data.students)];
                 this.addedStudent.id = "";
                 this.addedStudent.fullName = "";
                 this.addedStudent.birthday = "";
@@ -519,7 +521,7 @@ export default {
             this.list.forEach((e) => {
               if (e.id == this.editStudent.id) {
                 e.fullName = this.editStudent.fullName;
-                e.birthday = this.editStudent.birthday;
+                e.birthday =this.convertBirthday(this.editStudent.birthday);
                 e.gender = this.editStudent.gender;
                 e.classID = this.editStudent.classID;
                 e.address = this.editStudent.address;
