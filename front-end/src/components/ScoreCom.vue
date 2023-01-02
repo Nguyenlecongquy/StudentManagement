@@ -75,7 +75,7 @@
         class="mt-12"
         title="Điểm qua môn" 
         primary="true"
-        @click="showModalRegulation = true"
+        @click="showEditRegulationModal()"
       />
       <p class="passScore" >: {{ passScore }}</p>
     </div>
@@ -152,14 +152,14 @@
       <div class="modal__content">
         <input
           class="input"
-          v-model="passScore"
+          v-model="editPassScore"
           type="number"
           placeholder="Điểm qua môn"
         />
       </div>
       <div class="modal__action">
         <ButtonVue title="Sửa" @click="editRegulation()" primary="true" />
-        <ButtonVue title="Hủy" @click="showModalRegulation = false" />
+        <ButtonVue title="Hủy" @click="cancelEditRegulation()" />
       </div>
     </vue-final-modal>
     <vue-final-modal
@@ -247,6 +247,7 @@ export default {
     return {
   
       passScore: "",
+      editPassScore: "",
       editScore: {
         id: "",
 
@@ -291,6 +292,7 @@ export default {
       .then(({ data }) => {
         if (data.status) {
           this.passScore = data.roles.diem_chuan_dat_mon;
+          this.editPassScore = this.passScore ;
         }
       })
       .catch((e) => console.log(e));
@@ -331,6 +333,7 @@ export default {
         }
       })
       .catch((e) => console.log(e));
+
     
   },
 
@@ -536,20 +539,37 @@ export default {
           .catch((e) => console.log(e));
       }
     },
+    showEditRegulationModal() {
+      this.showModalRegulation = true;
+      this.editPassScore = this.passScore;
+    },
     editRegulation() {
-      //Send API
-      RegulationService.editPassScore({
-        passScore: this.passScore,
-      })
-        .then(({ data }) => {
+      //Validate
+      if (
+        this.editPassScore 
+      ) {
+      
+        //Call API for updating
+        RoleService.updatePassScore({
+          score: this.editPassScore,
+        }).then(({ data }) => {
           if (data.status) {
-            this.showModal = false;
-            alert("Sửa thành công");
+            alert("Cập nhật qui định thành công");
+            this.passScore = this.editPassScore;
           }
-        })
-        .catch((e) => console.log(e));
+        });
+
+        this.showModalRegulation = false;
+      }
+    },
+    cancelEditRegulation() {
+      //Reset regulation
+      this.editPassScore = this.passScore;
+      //close modal
+      this.showModalRegulation = false;
     },
   },
+  
 };
 </script>
 

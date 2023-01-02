@@ -17,7 +17,7 @@
         placeholder="Họ tên"
       />
       <ButtonVue title="Reset" @click="reset()" />
-      <ButtonVue title="Tuổi hợp lệ" primary="true" @click="showModalRegulation=true" />      
+      <ButtonVue title="Tuổi hợp lệ" primary="true" @click="showEditRegulationModal()" />      
     </div>
     <div class="content">
       <div class="search">
@@ -155,20 +155,20 @@
       <div class="modal__content">
         <input
           class="input"
-          v-model="minAge"
+          v-model="editedRegulation.minAge"
           type="number"
           placeholder="Tối thiểu"
         />
         <input
           class="input"
-          v-model="maxAge"
+          v-model="editedRegulation.maxAge"
           type="number"
           placeholder="Tối đa"
         />
       </div>
       <div class="modal__action">
         <ButtonVue title="Sửa" @click="editRegulation()" primary="true" />
-        <ButtonVue title="Hủy" @click="showModalRegulation = false" />
+        <ButtonVue title="Hủy" @click="cancelEditRegulation()" />
       </div>
       
     </vue-final-modal>
@@ -192,6 +192,12 @@
           type="text"
           placeholder="Họ tên"
         />
+        <select class="input" v-model="editStudent.classID">
+          <option value="" disabled>Chọn lớp</option>
+          <option v-for="e in classesList" v-bind:key="e">
+            {{ e }}
+          </option>
+        </select>
         <input
           class="input"
           v-model="editStudent.birthday"
@@ -204,17 +210,7 @@
           <option>Nam</option>
           <option>Nữ</option>
           <option>Khác</option>
-        </select>
-        <select class="input" v-model="editStudent.classID">
-          <option value="">Chọn lớp</option>
-          <option
-            v-for="(item, index) in classesList"
-            :key="index"
-            :selected="item == editStudent.classID ? true : false"
-          >
-            {{ item }}
-          </option>
-        </select>
+        </select>    
         <input
           class="input"
           v-model="editStudent.address"
@@ -243,23 +239,30 @@ export default {
       addedStudent: {
         id: "",
         fullName: "",
+        classID: "",
         birthday: "",
         gender:"",
-        classID: "",
         address:"",
       },
       editStudent: {
         id: "",
         fullName: "",
+        classID: "",
         birthday: "",
         gender:"",
-        classID: "",
         address:"",
       },
       showModal: false,
       showModalRegulation: false,
-      minAge: "",
-      maxAge: "",
+      
+      regulation: {
+        minAge: "",
+        maxAge: "",
+      },
+      editedRegulation: {
+        minAge: "",
+        maxAge: "",
+      },
       list: [
        
       ],
@@ -268,8 +271,8 @@ export default {
         fullName: "",
       },     
       classesList: [
-    ],
-    sortBy: {
+      ],
+      sortBy: {
         sortedByASCId: true,
         sortedByASCClassName: undefined,
         sortedByASCFullName: undefined,
@@ -281,8 +284,10 @@ export default {
     RoleService.getAllRole()
       .then(({ data }) => {
         if (data.status) {
-          this.minAge = data.roles.tuoi_toi_thieu;
-          this.maxAge = data.roles.tuoi_toi_da;
+          this.regulation.minAge = data.roles.tuoi_toi_thieu;
+          this.regulation.maxAge = data.roles.tuoi_toi_da;
+
+          this.editedRegulation = { ...this.regulation };
         }
       })
       .catch((e) => console.log(e));
@@ -418,41 +423,22 @@ export default {
       }
     },
     
-    validateBirthday(birthday) {
-      const tokens = birthday.split("/");
-      let daysOfMonth = [-1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-      function isLeapYear(year) {
-        let result = year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
-        return result;
-      }
-      let year = parseInt(tokens[2]);
-      let month = parseInt(tokens[1]);
-      let day = parseInt(tokens[0]);
-      if (isLeapYear(year)) {
-        daysOfMonth[2] = 29;
-      }
-      if (year < 1900) {
-        return false;
-      }
-      if (month < 1 || month > 12) {
-        return false;
-      }
-      if (day < 1 || day > daysOfMonth[month]) {
-        return false;
-      }
-
-      return true;
+    
+    convertBirthday(birthday) {
+      let tokens = birthday.split("-");
+      return `${tokens[2]}/${tokens[1]}/${tokens[0]}`;
     },
     calculateAge(birthday) 
     {
-      const date = new Date(birthday);
+      let tokens = birthday.split("-");
+      const date = new Date(tokens[0],tokens[1],tokens[2]);
       const now = new Date();
       const diff = Math.abs(now - date );
       const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365)); 
       return age;
     },
     validateAge(birthday) {
-      if ( this.calculateAge(birthday)>=this.minAge && this.calculateAge(birthday)<=this.maxAge) {return true;}
+      if ( this.calculateAge(birthday)>=this.regulation.minAge && this.calculateAge(birthday)<=this.regulation.maxAge) {return true;}
       return false;
     },
     add() {
@@ -464,15 +450,16 @@ export default {
         this.addedStudent.address 
         
       ) {
-        if (this.validateBirthday(this.addedStudent.birthday)&&this.validateAge(this.addedStudent.birthday)) {
+        if (this.validateAge(this.addedStudent.birthday)) {
           console.log(this.addedStudent.birthday);
           const item = {
             id: this.addedStudent.id,
             fullName: this.addedStudent.fullName,
+            idClass: this.addedStudent.classID,
             sex: this.addedStudent.gender,
             birthDay: this.addedStudent.birthday,
             address: this.addedStudent.address,
-            idClass: this.addedStudent.classID,
+           
           };
           //Send API
           StudentService.addStudent({
@@ -485,8 +472,8 @@ export default {
                 this.list = [...this.list, ...this.convertData(data.students)];
                 this.addedStudent.id = "";
                 this.addedStudent.fullName = "";
-                this.addedStudent.birthday = "";
                 this.addedStudent.classID = "";
+                this.addedStudent.birthday = "";
                 this.addedStudent.gender = "";
                 this.addedStudent.address = "";
               } else {
@@ -505,54 +492,70 @@ export default {
     },
     
     edit() {
-      //Send API
-      StudentService.editStudent({
-        id: this.editStudent.id,
-        fullName: this.editStudent.fullName,
-        sex: this.editStudent.gender,
-        birthDay: this.editStudent.birthday,
-        idClass: this.editStudent.classID,
-        address: this.editStudent.address,
-      })
-        .then(({ data }) => {
-          if (data.status) {
-            this.showModal = false;
-            alert("Sửa thành công");
-            this.list.forEach((e) => {
-              if (e.id == this.editStudent.id) {
-                e.fullName = this.editStudent.fullName;
-                e.birthday =this.convertBirthday(this.editStudent.birthday);
-                e.gender = this.editStudent.gender;
-                e.classID = this.editStudent.classID;
-                e.address = this.editStudent.address;
-              }
-            });
-          }
+      if (this.validateAge(this.editStudent.birthday)) {
+        //Send API
+        
+        StudentService.editStudent({
+          id: this.editStudent.id,
+          fullName: this.editStudent.fullName,
+          idClass: this.editStudent.classID,
+          sex: this.editStudent.gender,
+          birthDay: this.editStudent.birthday,
+          address: this.editStudent.address,
         })
-        .catch((e) => console.log(e));
+          .then(({ data }) => {
+            if (data.status) {
+              this.showModal = false;
+              alert("Sửa thành công");
+              this.list.forEach((e) => {
+                if (e.id == this.editStudent.id) {
+                  e.fullName = this.editStudent.fullName;
+                  e.birthday =this.convertBirthday(this.editStudent.birthday);
+                  e.gender = this.editStudent.gender;
+                  e.classID = this.editStudent.classID;
+                  e.address = this.editStudent.address;
+                }
+              });
+            }
+          })
+          .catch((e) => console.log(e));
+      }
+      else alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
+    },
+    editRegulation() {
+      //Validate
+      if (
+        this.editedRegulation.minAge &&
+        this.editedRegulation.maxAge 
+      ) {
+        this.regulation = { ...this.editedRegulation };
+        //Call API for updating
+        RoleService.updateValidAge({
+          minAge: this.editedRegulation.minAge,
+          maxAge: this.editedRegulation.maxAge,
+        }).then(({ data }) => {
+          if (data.status) {
+            alert("Cập nhật qui định thành công");
+          }
+        });
+
+        this.showModalRegulation = false;
+      }
     },
     showModalAndEdit(item) {
       this.showModal=true;
       this.editStudent = {...item};
+      this.editStudent.classID = item.classID;
     },
-    showRegulationAndEdit() {
-      this.showModalRegulation=true;
-      
+    showEditRegulationModal() {
+      this.showModalRegulation = true;
+      this.editedRegulation = { ...this.regulation };
     },
-    editRegulation() {
-      //Send API
-      RegulationService.editValidAge({
-        minAge: this.minAge,
-        maxAge: this.maxAge,
-      })
-        .then(({ data }) => {
-          if (data.status) {
-            this.showModal = false;
-            alert("Sửa thành công");
-           
-          }
-        })
-        .catch((e) => console.log(e));
+    cancelEditRegulation() {
+      //Reset regulation
+      this.editedRegulation = { ...this.regulation };
+      //close modal
+      this.showModalRegulation = false;
     },
   },
 };

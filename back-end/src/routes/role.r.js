@@ -7,6 +7,8 @@ router.get('/search/grade/numberClass',roleC.searchRoleNumberClassOfGrade);
 router.get('/search/grade/countClass',roleC.countClassesByGrade);
 router.put('/modify/class/numberStudent',roleC.modifyRoleNumberStudentOfClass);
 router.put('/modify/grade/numberClass',roleC.modifyRoleNumberClassOfGrade);
+router.put('/modify/score/passScore',roleC.modifyPassScore);
+router.put('/modify/student/rangeOfAge',roleC.modifyRangeOfAgeStudent);
 
 
 

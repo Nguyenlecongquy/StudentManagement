@@ -58,3 +58,13 @@ II. Api Role
       - Put method
       - URL: http://localhost:3000/api/role/modify/grade/numberClass
       - Tham số:grade(require), numberClass(require) 
+
+   8. Thay đổi điểm qua môn
+      - PUT method
+      - URL: http://localhost:3000/api/role/modify/score/passScore
+      - Tham số: score
+
+   9. Thay đổi tuổi học sinh
+      - PUT method
+      - URL: http://localhost:3000/api/role/modify/student/rangeOfAge
+      - Tham số: minAge, maxAge

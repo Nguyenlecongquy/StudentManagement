@@ -35,7 +35,7 @@ export default {
 <template>
   <div class="sidebar">
     <header>
-      <div class="header-info">
+      <div class="header-info mb-12">
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h1 class="name">Họ và Tên</h1>
       </div>

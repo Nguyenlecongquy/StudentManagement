@@ -21,6 +21,7 @@ const scoreModel = {
          AND ${scoreModel.fieldSubjectId(subjectId)}
          AND ${scoreModel.fieldSemester(semester)} ;`,			
 		);
+		console.log(result);
 		return result;
 		
 	},
