@@ -17,6 +17,7 @@ class RoleC {
       else response.status =false; // khi không thấy id (không bao giờ xảy ra)
       res.status(200).json(response);
    }
+   
    async searchRoleNumberClassOfGrade(req,res){
       const response = {status:true, roles: {} };
       const role = req.query;
@@ -51,7 +52,25 @@ class RoleC {
       res.status(200).json(response);
    }
 
+   async modifyPassScore(req, res) {
+      const response = {status: true, roles: {}};
+      const result = await roleM.updatePassScore(score);
+      console.log('score', score);
 
+      if(result != [] && result != false) response.roles = result;
+      else response.status =false; 
+      res.status(200).json(response);
+   }
+   async modifyRangeOfAgeStudent(req, res) {
+      const response = {status: true, roles: {}};
+      const age = req.body;
+
+      const result = await roleM.updateRangOfAgeStudent(age.minAge, age.maxAge);
+
+      if(result != [] && result != false) response.roles = result;
+      else response.status =false; 
+      res.status(200).json(response);
+   }
 
 }
 
