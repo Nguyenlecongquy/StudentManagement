@@ -8,6 +8,7 @@ const scoreR = require('./score.r')
 const summaryR = require('./summary.r')
 const roleR = require('./role.r')
 
+
 function route(app) {
    app.use(`/user`,userR);
    app.use('/api/teacher',teacherR)

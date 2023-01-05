@@ -29,6 +29,7 @@ export default {
 
 .btn:hover {
   cursor: pointer;
+  opacity: 0.8;
   transition: all 0.4s ease;
 }
 </style>

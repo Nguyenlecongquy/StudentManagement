@@ -9,7 +9,7 @@ try {
 }
 
 const teacherModel = {
-   fieldId:(id) => (id == '') ? true : "ma_gv ='" + id + "'",
+   fieldId:(id) => (id == '') ? true : "ma_gv like '%" + id + "%'",
    fieldFullName:(fullName) => (fullName == '') ? true : "ten_gv like '%" + fullName + "%'",
 
    findGVs: async (id, fullName) => {

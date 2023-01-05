@@ -65,7 +65,26 @@ const roleModel = {
          return false;
       }
    },
-
+   updatePassScore: async (score) => {
+      try {
+         const result = await db.one(`update qui_dinh 
+               set  diem_chuan_dat_mon=${score}
+               where id=1 returning diem_chuan_dat_mon`);
+         return result;
+      } catch (error) {
+         return false;
+      }
+   },
+   updateRangOfAgeStudent: async (minAge, maxAge) => {
+      try {
+         const result = await db.one(`update qui_dinh 
+               set  tuoi_toi_thieu=${minAge}, tuoi_toi_da=${maxAge}
+               where id=1 returning tuoi_toi_thieu, tuoi_toi_da`);
+         return result;
+      } catch (error) {
+         return false;
+      }
+   },
 
 };
 

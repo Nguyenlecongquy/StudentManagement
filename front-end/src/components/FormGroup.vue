@@ -2,16 +2,32 @@
 <template>
   <div class="form-group">
     <label class="form-label">{{ label }}</label>
-    <input
-      class="form-control"
-      :placeholder="valueOfPlaceholder"
-      :type="typeOfInput"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      @blur="validate"
-      @focus="error = ''"
-      :name="nameOfInput"
-    />
+    <div class="form-inner">
+      <input
+        class="form-control"
+        :placeholder="valueOfPlaceholder"
+        :type="type"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+        @blur="validate"
+        @focus="error = ''"
+        :name="nameOfInput"
+      />
+      <button
+        v-show="typeOfInput == 'password'"
+        @click.stop.prevent="handleShowPassword()"
+      >
+        <font-awesome-icon
+          v-if="showPassword == false"
+          icon="fa-solid fa-eye"
+        />
+        <font-awesome-icon
+          v-else-if="showPassword == true"
+          icon="fa-solid fa-eye-slash"
+        />
+      </button>
+    </div>
+
     <span class="form-error">{{ error }}</span>
   </div>
 </template>
@@ -32,6 +48,8 @@ export default {
   data() {
     return {
       error: "",
+      type: this.typeOfInput,
+      showPassword: false,
     };
   },
   methods: {
@@ -54,12 +72,24 @@ export default {
         }
       }
     },
+    handleShowPassword() {
+      this.showPassword = !this.showPassword;
+      if (this.showPassword) {
+        this.type = "text";
+      } else {
+        this.type = "password";
+      }
+    },
   },
 };
 </script>
 <style scoped>
 .form-group {
-  display: block;
+  display: flex;
+  flex-direction: column;
+}
+.form-inner {
+  display: flex;
 }
 .form-label {
   color: #54616b;
@@ -69,10 +99,12 @@ export default {
   font-size: 12px;
   margin-bottom: 2px;
 }
-.form-control {
-  padding: 4px 8px;
+.form-inner {
   border: 1px solid #dce6ed;
   border-radius: 3px;
+}
+.form-control {
+  padding: 4px 8px;
   width: 100%;
   display: block;
 }

@@ -61,7 +61,7 @@ const classModel = {
    removeLopFromDatabase: async (id) => {
       try {
          await db.any(`update hoc_sinh 
-               set  ma_lop='null' 
+               set  ma_lop=null 
                where ma_lop=$1`, [id]);
          const result = await db.any('delete from lop where ma_lop=$1 returning *;', [id]);
          return result;

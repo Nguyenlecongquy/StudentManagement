@@ -4,6 +4,7 @@ class studentC {
    async search(req, res) {
       const response = {status:true, students: [] };
       const student = req.query;
+      console.log(student);
       const result = await studentM.findHSs(student.id, student.fullName);
       if(result!= [] && result!= false ) response.students = result;
       else response.status = false; // khi tìm sai id 

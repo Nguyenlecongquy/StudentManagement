@@ -8,8 +8,8 @@ try {
 }
 
 const studentModel = {
-	fieldId: (id) => (id == '' ? true : "ma_hs ='" + id + "'"),
-	fieldFullName: (fullName) => (fullName == '' ? true : "ten_hs ='" + fullName + "'"),
+	fieldId: (id) => (id == '' ? true : "ma_hs like '%" + id + "%'"),
+	fieldFullName: (fullName) => (fullName == '' ? true : "ten_hs like '%" + fullName + "%'"),
 
 	findHSs: async (id, fullName) => {
 		const result = await db.any(
@@ -17,6 +17,7 @@ const studentModel = {
          where ${studentModel.fieldId(id)} 
          and ${studentModel.fieldFullName(fullName)} ;`
 		);
+		console.log(id, fullName);
 		return result;
 	},
 	addHSIntoDatabaseReturnHS: async (id, fullName, sex, birthDay, address, idClass) => {

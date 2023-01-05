@@ -11,6 +11,7 @@ delete from khoa where ma_khoa = 'CNTT';
 select * from user_giaovien;
 delete from user_giaovien;
 
+
 select * from lop;
 delete from lop;
 delete from lop;

@@ -1,3 +1,31 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Codespaces
+Marketplace
+Explore
+ 
+@20120627 
+Nguyenlecongquy
+/
+StudentManagement
+Private
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security
+Insights
+StudentManagement/front-end/src/components/NavBar.vue
+@nxquan
+nxquan code UI class-teacher-faculty
+Latest commit 67e4ca1 2 weeks ago
+ History
+ 1 contributor
+198 lines (192 sloc)  4.51 KB
+
 <script>
 export default {
   name: "NavBar",
@@ -7,7 +35,7 @@ export default {
 <template>
   <div class="sidebar">
     <header>
-      <div class="header-info">
+      <div class="header-info mb-12">
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
         <h1 class="name">Họ và Tên</h1>
       </div>
@@ -30,7 +58,6 @@ export default {
           <li><router-link to="/home/score">Điểm</router-link></li>
           <li><router-link to="/home/summary">Điểm tổng</router-link></li>
           <li><router-link to="/home/member">Thành viên</router-link></li>
-          <li><router-link to="/home/policy">Điều khoản</router-link></li>
         </ul>
       </nav>
     </section>
@@ -44,7 +71,6 @@ export default {
   box-shadow: 1px 1px 20px rgb(204, 199, 199);
   width: var(--width-sidebar);
 }
-
 header {
   display: flex;
   flex-direction: column;
@@ -66,13 +92,11 @@ header {
   margin: 0 6px;
   text-transform: capitalize;
 }
-
 .header-control {
   display: flex;
   justify-content: flex-end;
   padding: 2px 14px;
 }
-
 section {
   background-color: var(--primary-color);
   border-radius: 4px;
@@ -82,7 +106,6 @@ a {
   color: white;
   text-align: left;
 }
-
 li {
   border-bottom: 1px solid blue;
 }
@@ -118,3 +141,18 @@ li {
   width: 24px;
 }
 </style>
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
+StudentManagement/NavBar.vue at feature/UI-class-teacher-faculty · Nguyenlecongquy/StudentManagement
