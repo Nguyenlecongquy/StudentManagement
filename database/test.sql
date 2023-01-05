@@ -11,7 +11,6 @@ delete from khoa where ma_khoa = 'CNTT';
 select * from user_giaovien;
 delete from user_giaovien;
 
-
 select * from lop;
 delete from lop;
 delete from lop;
@@ -25,3 +24,8 @@ select * from qui_dinh;
 select khoi,count(ma_lop) SL
 from lop where khoi =11
 group by khoi;
+
+
+update hoc_sinh 
+set  ma_lop=null
+where ma_lop='10A1';
