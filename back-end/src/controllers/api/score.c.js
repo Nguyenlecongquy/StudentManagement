@@ -4,6 +4,7 @@ class scoreC {
 	async search(req, res) {
 		const response = { status: true, scores: [] };
 		const score = req.query;
+		console.log()
 		const result = await scoreM.findScores(score.classId, score.subjectId, score.semester);
 		if (result != [] && result != false) response.scores = result;
 		else response.status = false; // khi tìm sai id

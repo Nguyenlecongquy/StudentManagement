@@ -8,8 +8,8 @@ try {
 }
 
 const studentModel = {
-	fieldId: (id) => (id == undefined ? true : "ma_hs ='" + id + "'"),
-	fieldFullName: (fullName) => (fullName == undefined ? true : "ten_hs ='" + fullName + "'"),
+	fieldId: (id) => (id == '' ? true : "ma_hs ='" + id + "'"),
+	fieldFullName: (fullName) => (fullName == '' ? true : "ten_hs ='" + fullName + "'"),
 
 	findHSs: async (id, fullName) => {
 		const result = await db.any(
