@@ -25,3 +25,8 @@ select * from qui_dinh;
 select khoi,count(ma_lop) SL
 from lop where khoi =11
 group by khoi;
+
+
+update hoc_sinh 
+set  ma_lop=null
+where ma_lop='10A1';
