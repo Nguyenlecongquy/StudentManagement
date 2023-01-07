@@ -34,7 +34,7 @@ II. Api Role
       - URL: http://localhost:3000/api/role/search
       - Tham số: Không
 
-   3. Tìm kiếm role sỉ số lớp
+   3. Tìm kiếm role sỉ số lớp tối đa
       - Get method
       - URL: http://localhost:3000/api/role/search/class/numberStudent
       - Tham số: Không
@@ -49,7 +49,7 @@ II. Api Role
       - URL: http://localhost:3000/api/role/search/grade/countClass
       - Tham số: grade(require)
    
-   6. Update role sỉ số lớp (nếu truyền maxNumber='' -> mặc định trả về maxNumber=40)
+   6. Update role sỉ số lớp tối đa (nếu truyền maxNumber='' -> mặc định trả về maxNumber=40)
       - Put method
       - URL: http://localhost:3000/api/role/modify/class/numberStudent
       - Tham số: maxNumber(require) 

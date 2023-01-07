@@ -102,7 +102,10 @@ export default {
         .then(({ data }) => {
           if (data.status) {
             window.localStorage.setItem("isLogin", "true");
-            this.$router.push("/home");
+            window.localStorage.setItem("email", this.emailValue);
+            window.localStorage.setItem("category", this.isTeacher);
+
+            this.$router.push("/home/infor");
           } else {
             this.error = data.message;
           }

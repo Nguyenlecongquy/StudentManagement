@@ -4,20 +4,14 @@
 
     <div class="members">
       <div class="member">
-        <img
-          class="img"
-          src="https://i.9mobi.vn/cf/Images/huy/2021/12/6/anh-gai-xinh-3.jpg"
-        />
+        <img class="img" src="../assets/images/Quan.jpg" />
         <h3 class="name">Nguyễn Xuân Quân</h3>
         <h3>ID: 20120555</h3>
         <span class="role">Frontend Developer</span>
         <span class="tech">Tech: VueJS</span>
       </div>
       <div class="member">
-        <img
-          class="img"
-          src="https://i.9mobi.vn/cf/Images/huy/2021/12/6/anh-gai-xinh-3.jpg"
-        />
+        <img class="img" src="../assets/images/Tri.jpg" />
         <h3 class="name">Trần Minh Trí</h3>
         <h3>ID: 20120603</h3>
         <span class="role">Backend Developer</span>
@@ -25,20 +19,15 @@
       </div>
 
       <div class="member">
-        <img
-          class="img"
-          src="https://i.9mobi.vn/cf/Images/huy/2021/12/6/anh-gai-xinh-3.jpg"
-        />
+        <img class="img" src="../assets/images/Quy.jpg" />
         <h3 class="name">Nguyễn Lê Công Quý</h3>
         <h3>ID: 20120563</h3>
         <span class="role">Backend Developer</span>
         <span class="tech">Tech: NodeJS, PostGreSQL</span>
       </div>
       <div class="member">
-        <img
-          class="img"
-          src="https://i.9mobi.vn/cf/Images/huy/2021/12/6/anh-gai-xinh-3.jpg"
-        />
+        <img class="img" src="../assets/images/Vinh.jpg" />
+
         <h3 class="name">Hoàng Vinh</h3>
         <h3>ID: 20120627</h3>
         <span class="role">Frontend Developer</span>
@@ -83,6 +72,7 @@ export default {
   height: 120px;
   border-radius: 50%;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 2px;
+  object-fit: contain;
 }
 h3 {
   font-size: 16px;

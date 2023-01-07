@@ -215,6 +215,8 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 ('GV00001114','TRAN MINH TOAN','KHXH');
 
 --value lop
+
+
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
 values('10A1',2,10,'KHTN'),('10A2',2,10,'KHXH'),
 ('10A3',0,11,'KHTN'),('10A4',0,12,'KHXH'),
@@ -249,5 +251,4 @@ values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
 ('HS20120555','MH00001111', 'HK1',7,7,7,7,7),
 ('HS20120627','MH00001111', 'HK1',5,5,5,5,5),
 ('HS20120563','MH00001111', 'HK1',3,3,3,3,3);
-
 

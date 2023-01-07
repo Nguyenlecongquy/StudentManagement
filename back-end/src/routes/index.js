@@ -7,6 +7,7 @@ const studentR = require('./student.r')
 const scoreR = require('./score.r')
 const summaryR = require('./summary.r')
 const roleR = require('./role.r')
+const inforR = require('./infor.r')
 
 
 function route(app) {
@@ -19,6 +20,7 @@ function route(app) {
    app.use('/api/score',scoreR)
    app.use('/api/summary',summaryR)
    app.use('/api/role',roleR)
+   app.use('/api/infor',inforR)
 
 }
 

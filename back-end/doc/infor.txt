@@ -1,0 +1,34 @@
+I.CẤU TRÚC TRẢ VỀ
+   + Thành công  
+      {
+         status: true,
+         infors: {
+            key:value // chỉ 1 key_value
+            //nhiều key_value nếu dùng hàm all(không dùng nếu thấy rối) 
+         }
+      }
+   + Thất bại
+      {
+         status: false,
+         infors: {}
+      }
+II.API Infor
+1. Search
+   - Get method
+   - URL: http://localhost:3000/api/infor/search
+   - Tham số: email(require), category(require)
+2. Modify
+   - Put method
+   - URL: http://localhost:3000/api/infor/modify
+   - Tham số: fullName,email(require),password,category
+III. API class
+   - api số 6 với số 3 trong file api-role.txt
+   
+3. Tìm kiếm role sỉ số lớp tối đa
+   - Get method
+   - URL: http://localhost:3000/api/role/search/class/numberStudent
+   - Tham số: Không
+6. Update role sỉ số lớp tối đa (nếu truyền maxNumber='' -> mặc định trả về maxNumber=40)
+   - Put method
+   - URL: http://localhost:3000/api/role/modify/class/numberStudent
+   - Tham số: maxNumber(require) 
