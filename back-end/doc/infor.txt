@@ -16,11 +16,11 @@ II.API Infor
 1. Search
    - Get method
    - URL: http://localhost:3000/api/infor/search
-   - Tham số: id(require), category(require)
+   - Tham số: email(require), category(require)
 2. Modify
    - Put method
    - URL: http://localhost:3000/api/infor/modify
-   - Tham số: id(require),email,password,category
+   - Tham số: email(require),password,category
 III. API class
    - api số 6 với số 3 trong file api-role.txt
    

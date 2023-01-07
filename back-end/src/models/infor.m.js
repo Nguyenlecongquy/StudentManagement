@@ -12,13 +12,13 @@ try {
 }
 
 const inforModel = {
-   findInfors: async (id,category) => {
+   findInfors: async (email,category) => {
       try {
          let result;
          if(JSON.parse(category)==true){
-            result = await db.one('select * from user_giaovien where magv = $1',id);
+            result = await db.one('select * from user_giaovien where email = $1',email);
          }else{
-            result = await db.one('select * from user_hocsinh where mahs = $1',id);
+            result = await db.one('select * from user_hocsinh where email = $1',email);
          }
          return result;
       } catch (error) {
@@ -27,20 +27,20 @@ const inforModel = {
    },
 
    
-   updateInfors: async (id,email,password,category) => {
+   updateInfors: async (email,password,category) => {
       try {
          let result;
          const hash = await bcrypt.hash(password, 10);
 
          if(JSON.parse(category)==true){
             result = await db.one(`update user_giaovien 
-            set  username=$2, email=$2,password=$3
-            where magv=$1 returning *`, [id,email,hash]);
+            set  username=$1, email=$1,password=$2
+            where username=$1 returning *`, [email,hash]);
          }else{
 
             result = await db.one(`update user_hocsinh 
-            set  username=$2, email=$2,password=$3
-            where mahs=$1 returning *`, [id,email,hash]);
+            set  username=$1, email=$1,password=$2
+            where username=$1 returning *`, [email,hash]);
          }
          return result;
       } catch (error) {

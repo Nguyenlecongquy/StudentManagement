@@ -1,6 +1,6 @@
 select * from giao_vien;
 select * from hoc_sinh;
-
+select * from qui_dinh;
 delete from giao_vien where ten_gv ='Nguyen Van M';
 
 select * from khoa;
@@ -9,6 +9,7 @@ delete from khoa where ma_khoa = 'CNTT';
 
 
 select * from user_giaovien;
+select * from user_hocsinh;
 delete from user_giaovien;
 
 select * from lop;
