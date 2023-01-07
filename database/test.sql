@@ -30,3 +30,7 @@ group by khoi;
 update hoc_sinh 
 set  ma_lop=null
 where ma_lop='10A1';
+
+select ma_gv,ten_gv,email,password
+from user_giaovien join giao_vien on ma_gv=magv
+where email ='tri@gmail.com'

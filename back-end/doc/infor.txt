@@ -20,7 +20,7 @@ II.API Infor
 2. Modify
    - Put method
    - URL: http://localhost:3000/api/infor/modify
-   - Tham số: email(require),password,category
+   - Tham số: fullName,email(require),password,category
 III. API class
    - api số 6 với số 3 trong file api-role.txt
    
