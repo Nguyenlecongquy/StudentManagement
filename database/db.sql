@@ -116,7 +116,6 @@ CREATE TABLE IF NOT EXISTS public.lop
 (
     ma_lop character(10)  NOT NULL,
     ten_lop text,
-    ten_lop text,
     si_so_lop integer,
 	khoi int,
     ma_khoa character(10),
@@ -130,7 +129,6 @@ CREATE TABLE IF NOT EXISTS public.mon_hoc
 (
     ma_mh character(10)  NOT NULL,
     ten_mh character varying(50),
-    ma_khoa character(10),
     ma_khoa character(10),
     CONSTRAINT mon_hoc_pkey PRIMARY KEY (ma_mh)
 );
@@ -218,14 +216,14 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 
 --value lop
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
-values('10A1',0,10,'KHTN'),('10A2',0,10,'KHXH'),
+values('10A1',2,10,'KHTN'),('10A2',2,10,'KHXH'),
 ('11A1',0,11,'KHTN'),('12A2',0,12,'KHXH');
 -- Values HOC_SINH
-INSERT INTO HOC_SINH(MA_HS,TEN_HS) VALUES
-('HS20120563','Nguyen Le Cong Quy'),
-('HS20120603','Tran Minh Tri'),
-('HS20120555','Nguyen Xuan Quan'),
-('HS20120627','Hoang Vinh');
+INSERT INTO HOC_SINH(MA_HS,TEN_HS,ma_lop) VALUES
+('HS20120563','Nguyen Le Cong Quy','10A1'),
+('HS20120603','Tran Minh Tri','10A1'),
+('HS20120555','Nguyen Xuan Quan','10A2'),
+('HS20120627','Hoang Vinh','10A2');
 
 
 --value mon
