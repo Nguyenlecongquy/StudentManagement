@@ -43,6 +43,7 @@ const classModel = {
    updateLopIntoDatabase: async (idOld, idNew, number, grade, facultyId) => {
       try {
          if (idNew != '') {
+
             await db.any(`update hoc_sinh 
             set  ma_lop=null 
             where ma_lop=$1`, [idOld]);
