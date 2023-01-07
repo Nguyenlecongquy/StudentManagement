@@ -392,7 +392,7 @@ export default {
       let result = true;
       if (
         className.length > 0 &&
-        parseInt(amount) > 0 &&
+        parseInt(amount) >= 0 &&
         this.listGrade.includes(parseInt(grade)) &&
         this.facultiesId.includes(facultyId)
       ) {
@@ -446,6 +446,7 @@ export default {
     add() {
       if (
         this.validate(
+          "",
           this.addedClass.className,
           this.addedClass.amount,
           this.addedClass.grade,
