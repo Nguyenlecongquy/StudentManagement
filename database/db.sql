@@ -217,7 +217,10 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 --value lop
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
 values('10A1',2,10,'KHTN'),('10A2',2,10,'KHXH'),
-('11A1',0,11,'KHTN'),('12A2',0,12,'KHXH');
+('10A3',0,11,'KHTN'),('10A4',0,12,'KHXH'),
+('11A1',0,11,'KHXH'),('11A2',0,12,'KHTN'),
+('11A3',0,11,'KHXH'),('12A1',0,12,'KHXH'),
+('12A2',0,11,'KHTN');
 -- Values HOC_SINH
 INSERT INTO HOC_SINH(MA_HS,TEN_HS,ma_lop) VALUES
 ('HS20120563','Nguyen Le Cong Quy','10A1'),
@@ -229,7 +232,15 @@ INSERT INTO HOC_SINH(MA_HS,TEN_HS,ma_lop) VALUES
 --value mon
 
 insert into mon_hoc(ma_mh,ten_mh,ma_khoa)
-values('MH00001111','Toan','KHTN');
+values('MH00001111','Toan','KHTN'),
+('MH00001112','Ly','KHTN'),
+('MH00001113','Hoa','KHTN'),
+('MH00001114','Van','KHXH'),
+('MH00001115','Su','KHXH'),
+('MH00001116','Dia','KHXH'),
+('MH00001117','Dao duc','KHXH'),
+('MH00001118','The duc','KHTN'),
+('MH00001119','Sinh','KHTN');
 
 --value diem
 
