@@ -1,49 +1,49 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
- 
-@20120627 
-Nguyenlecongquy
-/
-StudentManagement
-Private
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-StudentManagement/front-end/src/components/NavBar.vue
-@nxquan
-nxquan code UI class-teacher-faculty
-Latest commit 67e4ca1 2 weeks ago
- History
- 1 contributor
-198 lines (192 sloc)  4.51 KB
-
 <script>
+import InforService from "../services/InfoService";
+
 export default {
   name: "NavBar",
+  data() {
+    return {
+      username: "",
+    };
+  },
+  mounted() {
+    let email = window.localStorage.getItem("email");
+    let category = window.localStorage.getItem("category");
+
+    InforService.search({
+      params: {
+        email,
+        category,
+      },
+    })
+      .then(({ data }) => {
+        this.username = data.infors.ten_gv;
+      })
+      .catch((e) => console.log(e));
+  },
+  methods: {
+    logOut() {
+      window.localStorage.removeItem("email");
+      window.localStorage.removeItem("category");
+      this.$router.push("/");
+    },
+  },
 };
 </script>
-
 <template>
   <div class="sidebar">
     <header>
       <div class="header-info mb-12">
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
-        <h1 class="name">Họ và Tên</h1>
+        <h1 class="name">{{ username }}</h1>
       </div>
       <div class="header-control">
         <router-link to="/home/accountInfo" class="header-control-btn"
           >Thông tin cá nhân</router-link
         >
-        <router-link to="/" class="header-control-btn">Đăng xuất</router-link>
+        <a hre="#" class="header-control-btn" @click="logOut()">Đăng xuất</a>
       </div>
     </header>
     <section>
@@ -91,6 +91,8 @@ header {
   color: black;
   margin: 0 6px;
   text-transform: capitalize;
+  font-size: 22px;
+  text-align: center;
 }
 .header-control {
   display: flex;
@@ -141,18 +143,6 @@ li {
   width: 24px;
 }
 </style>
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-StudentManagement/NavBar.vue at feature/UI-class-teacher-faculty · Nguyenlecongquy/StudentManagement
+Footer © 2023 GitHub, Inc. Footer navigation Terms Privacy Security Status Docs
+Contact GitHub Pricing API Training Blog About StudentManagement/NavBar.vue at
+feature/UI-class-teacher-faculty · Nguyenlecongquy/StudentManagement

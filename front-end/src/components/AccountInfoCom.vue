@@ -117,8 +117,8 @@ export default {
       })
         .then(({ data }) => {
           if (data.status) {
-            this.user.id = data.infors.magv;
-            this.user.username = data.infors.username;
+            this.user.id = data.infors.ma_gv;
+            this.user.username = data.infors.ten_gv;
             this.user.password = data.infors.password;
             this.user.email = data.infors.email;
           }
@@ -138,6 +138,7 @@ export default {
       InforService.edit({
         email: this.editedUser.email,
         password: this.editedUser.password,
+        fullName: this.editedUser.username,
         category: true,
       })
         .then(({ data }) => {
@@ -146,6 +147,7 @@ export default {
           }
         })
         .catch((e) => console.log(e));
+      this.showModal = false;
     },
     cancel() {
       this.showModal = false;

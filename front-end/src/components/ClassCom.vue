@@ -24,7 +24,7 @@
     </div>
 
     <div class="content">
-      <h4 class="content__heading">Thêm giáo viên</h4>
+      <h4 class="content__heading">Thêm lớp</h4>
       <div class="content__adding">
         <input
           class="input"
@@ -37,6 +37,7 @@
           v-model="addedClass.amount"
           type="text"
           placeholder="Sĩ số"
+          disabled
         />
         <select class="input" v-model="addedClass.grade">
           <option value="" disabled>Chọn khối</option>
@@ -158,6 +159,7 @@
           v-model="editClass.amount"
           type="text"
           placeholder="Sĩ số"
+          disabled
         />
         <select class="input" v-model="editClass.grade">
           <option value="" disabled>Chọn khối</option>
@@ -386,7 +388,7 @@ export default {
         })
         .catch((e) => console.log(e));
     },
-    validate(className, amount, grade, facultyId) {
+    validate(oldClass, className, amount, grade, facultyId) {
       let result = true;
       if (
         className.length > 0 &&
@@ -404,18 +406,21 @@ export default {
               numberOfCurrentClassInGrade++;
             }
           });
-          console.log(numberOfCurrentClassInGrade);
-          if (
-            numberOfCurrentClassInGrade <
-            this.regulation[`amountOfGrade${currentGrade}`]
-          ) {
-            result = true;
-          } else {
-            alert(
-              `Bạn sẽ không thể thêm / chỉnh sửa lớp này vì số lượng lớp trong khối ${currentGrade} đã đủ
+          if (oldClass != className) {
+            if (
+              numberOfCurrentClassInGrade <
+              this.regulation[`amountOfGrade${currentGrade}`]
+            ) {
+              result = true;
+            } else {
+              alert(
+                `Bạn sẽ không thể thêm / chỉnh sửa lớp này vì số lượng lớp trong khối ${currentGrade} đã đủ
                 \nVui lòng chỉnh sửa quy định lớp nếu muốn thêm / thay đổi`
-            );
-            result = false;
+              );
+              result = false;
+            }
+          } else {
+            result = true;
           }
         } else {
           alert("Tên lớp phải chứa khối. Ví dụ 10A1 thuộc khối 10");
@@ -485,6 +490,7 @@ export default {
     edit() {
       if (
         this.validate(
+          this.oldClass,
           this.editClass.className,
           this.editClass.amount,
           this.editClass.grade,
@@ -496,7 +502,7 @@ export default {
           idNew: this.editClass.className,
           number: this.editClass.amount,
           grade: this.editClass.grade,
-          idFaculty: this.editClass.facultyId,
+          facultyId: this.editClass.facultyId,
         })
           .then(({ data }) => {
             if (data.status) {
