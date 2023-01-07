@@ -23,7 +23,7 @@
         </option>
       </select>
 
-      <ButtonVue title="Reset" class="ml-12" @click="reset()" />
+      <ButtonVue title="Reset" @click="reset()" />
     </div>
     <div class="search">
       <h4>Nhập điểm</h4>
@@ -47,7 +47,7 @@
         placeholder="1 tiết"
       />
       <input
-        class="input mt-12"
+        class="input mt-12 ml-0"
         v-model="addedScore.score_gk"
         type="text"
         placeholder="Giữa kì"
@@ -73,11 +73,11 @@
       />
       <ButtonVue
         class="mt-12"
-        title="Điểm qua môn"
+        title="Điểm qua môn" 
         primary="true"
         @click="showEditRegulationModal()"
       />
-      <p class="passScore">: {{ passScore }}</p>
+      <p class="passScore" >: {{ passScore }}</p>
     </div>
     <div class="content">
       <table>
@@ -86,8 +86,7 @@
         </caption>
         <tr>
           <th width="5%">STT</th>
-          <th width="20%">
-            Mã HS
+          <th width="15%">Mã HS
             <button @click="sortByGivenName('id')" className="sort-btn">
               <font-awesome-icon
                 v-if="sortBy.sortedByASCId == false"
@@ -104,8 +103,7 @@
           <th width="12%">1 tiết(20%)</th>
           <th width="12%">Giữa kỳ(30%)</th>
           <th width="12%">Cuối kỳ(40%)</th>
-          <th width="15%">
-            Tổng kết
+          <th width="15%">Tổng kết
             <button @click="sortByGivenName('score_tk')" className="sort-btn">
               <font-awesome-icon
                 v-if="sortBy.sortedByASCFinalScore == false"
@@ -119,6 +117,7 @@
             </button>
           </th>
           <th width="12%">Kết quả</th>
+          <th width="5%"></th>
         </tr>
         <tr v-for="(item, index) in list" :key="item">
           <td>{{ index + 1 }}</td>
@@ -129,10 +128,6 @@
           <td>{{ item.score_gk }}</td>
           <td>{{ item.score_ck }}</td>
           <td>{{ item.score_tk }}</td>
-          <td>
-            <h3 v-if="item.score_tk >= passScore" class="pass_result">Đạt</h3>
-            <h3 v-else class="not_pass_result">Không đạt</h3>
-          </td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -239,13 +234,14 @@ import ButtonVue from "./Button.vue";
 import ScoreService from "../services/ScoreService";
 import ClassService from "../services/ClassService";
 import SubjectService from "../services/SubjectService";
-import RoleService from "../services/RoleService";
+import RoleService from '../services/RoleService';
 
 export default {
   fullName: "ScoreCom",
   components: { ButtonVue },
   data() {
     return {
+  
       passScore: "",
       editPassScore: "",
       editScore: {
@@ -266,6 +262,7 @@ export default {
         score_gk: "",
         score_ck: "",
         score_tk: "",
+     
       },
       showModalRegulation: false,
       showModal: false,
@@ -291,7 +288,7 @@ export default {
       .then(({ data }) => {
         if (data.status) {
           this.passScore = data.roles.diem_chuan_dat_mon;
-          this.editPassScore = this.passScore;
+          this.editPassScore = this.passScore ;
         }
       })
       .catch((e) => console.log(e));
@@ -340,7 +337,7 @@ export default {
       if (item == "id") {
         ASC = !this.sortBy.sortedByASCId;
         this.sortBy.sortedByASCId = !this.sortBy.sortedByASCId;
-      } else if (item == "score_tk") {
+      }  else if (item == "score_tk") {
         if (this.sortBy.sortedByASCFinalScore == undefined) {
           this.sortBy.sortedByASCFinalScore = false;
         }
@@ -362,7 +359,9 @@ export default {
       }
     },
     convertData(rawData) {
+      
       return rawData.map((e) => {
+
         return {
           id: e.id,
           subjectName: e.subjectId,
@@ -370,7 +369,7 @@ export default {
           score_1t: e.mark_1t,
           score_gk: e.mark_gk,
           score_ck: e.mark_ck,
-          score_tk: e.mark_tk,
+          score_tk: e.mark_tk,      
         };
       });
     },
@@ -381,13 +380,7 @@ export default {
       this.searchValue.semester = "HK1";
       //Gọi API để reset lại list
 
-      ScoreService.searchScore({
-        params: {
-          classId: "10A1",
-          subjectId: "MH00001111",
-          semester: "HK1",
-        },
-      })
+      ScoreService.searchScore()
         .then(({ data }) => {
           this.list = this.convertData(data.scores);
         })
@@ -416,20 +409,12 @@ export default {
       }
       return true;
     },
-    checkScore(item) {
-      if (
-        item.score_15 >= 0 &&
-        item.score_15 <= 10 &&
-        item.score_15 >= 0 &&
-        item.score_15 <= 10 &&
-        item.score_1t >= 0 &&
-        item.score_1t <= 10 &&
-        item.score_gk >= 0 &&
-        item.score_gk <= 10 &&
-        item.score_ck >= 0 &&
-        item.score_ck <= 10
-      )
-        return true;
+    checkScore(item){
+      if (item.score_15>=0 && item.score_15 <=10 && 
+      item.score_15>=0 && item.score_15 <=10 && 
+      item.score_1t>=0 && item.score_1t <=10 && 
+      item.score_gk>=0 && item.score_gk <=10 &&
+      item.score_ck>=0 && item.score_ck <=10 ) return true;
       else return false;
     },
     add() {
@@ -440,24 +425,18 @@ export default {
         this.addedScore.score_15 &&
         this.addedScore.score_1t &&
         this.addedScore.score_gk &&
-        this.addedScore.score_ck
+        this.addedScore.score_ck 
+      
       ) {
         if (this.checkScore(this.addedScore)) {
-          this.addedScore.score_15 =
-            Math.floor(this.addedScore.score_15 * 100) / 100;
-          this.addedScore.score_1t =
-            Math.floor(this.addedScore.score_1t * 100) / 100;
-          this.addedScore.score_gk =
-            Math.floor(this.addedScore.score_gk * 100) / 100;
-          this.addedScore.score_ck =
-            Math.floor(this.addedScore.score_ck * 100) / 100;
-          this.addedScore.score_tk =
-            this.addedScore.score_15 * 0.1 +
-            this.addedScore.score_1t * 0.2 +
-            this.addedScore.score_gk * 0.3 +
-            this.addedScore.score_ck * 0.4;
-          this.addedScore.score_tk =
-            Math.floor(this.addedScore.score_tk * 100) / 100;
+
+          this.addedScore.score_15=Math.floor(this.addedScore.score_15*100)/100;
+          this.addedScore.score_1t=Math.floor(this.addedScore.score_1t*100)/100;
+          this.addedScore.score_gk=Math.floor(this.addedScore.score_gk*100)/100;
+          this.addedScore.score_ck=Math.floor(this.addedScore.score_ck*100)/100;
+          this.addedScore.score_tk=this.addedScore.score_15*0.1+this.addedScore.score_1t*0.2+this.addedScore.score_gk*0.3+this.addedScore.score_ck*0.4;
+          this.addedScore.score_tk = Math.floor(this.addedScore.score_tk*100)/100;
+        
 
           const item = {
             idStudent: this.addedScore.id,
@@ -478,13 +457,17 @@ export default {
                 //update result
                 this.list.push({
                   id: this.addedScore.id,
+                  subjectName: this.addedScore.subjectName,
+                  semester: this.addedScore.semester,
                   score_15: this.addedScore.score_15,
                   score_1t: this.addedScore.score_1t,
                   score_gk: this.addedScore.score_gk,
                   score_ck: this.addedScore.score_ck,
-                  score_tk: this.addedScore.score_tk,
+                  score_tk: this.addedScore.score_tk,     
                 });
                 this.addedScore.id = "";
+                this.addedScore.subjectName = "";
+                this.addedScore.semester = "";
                 this.addedScore.score_15 = "";
                 this.addedScore.score_1t = "";
                 this.addedScore.score_gk = "";
@@ -514,21 +497,12 @@ export default {
     edit() {
       //Send API
       if (this.checkScore(this.editScore)) {
-        this.editScore.score_15 =
-          Math.floor(this.editScore.score_15 * 100) / 100;
-        this.editScore.score_1t =
-          Math.floor(this.editScore.score_1t * 100) / 100;
-        this.editScore.score_gk =
-          Math.floor(this.editScore.score_gk * 100) / 100;
-        this.editScore.score_ck =
-          Math.floor(this.editScore.score_ck * 100) / 100;
-        this.editScore.score_tk =
-          this.editScore.score_15 * 0.1 +
-          this.editScore.score_1t * 0.2 +
-          this.editScore.score_gk * 0.3 +
-          this.editScore.score_ck * 0.4;
-        this.editScore.score_tk =
-          Math.floor(this.editScore.score_tk * 100) / 100;
+        this.editScore.score_15=Math.floor(this.editScore.score_15*100)/100;
+          this.editScore.score_1t=Math.floor(this.editScore.score_1t*100)/100;
+          this.editScore.score_gk=Math.floor(this.editScore.score_gk*100)/100;
+          this.editScore.score_ck=Math.floor(this.editScore.score_ck*100)/100;
+          this.editScore.score_tk=this.editScore.score_15*0.1+this.editScore.score_1t*0.2+this.editScore.score_gk*0.3+this.editScore.score_ck*0.4;
+          this.editScore.score_tk = Math.floor(this.editScore.score_tk*100)/100;
         ScoreService.editScore({
           idStudent: this.editScore.id,
           idSubject: this.editScore.subjectName,
@@ -539,9 +513,7 @@ export default {
           mark_ck: this.editScore.score_ck,
           mark_tk: this.editScore.score_tk,
         })
-          // eslint-disable-next-line no-unused-vars
           .then(({ data }) => {
-            // eslint-disable-next-line no-constant-condition
             if (true) {
               this.showModal = false;
               alert("Sửa thành công");
@@ -564,12 +536,11 @@ export default {
       this.editPassScore = this.passScore;
     },
     editRegulation() {
-      //Validate
-      if (this.editPassScore) {
-        //Call API for updating
-        RoleService.updatePassScore({
-          score: this.editPassScore,
-        }).then(({ data }) => {
+      //Send API
+      RegulationService.editPassScore({
+        passScore: this.passScore,
+      })
+        .then(({ data }) => {
           if (data.status) {
             alert("Cập nhật qui định thành công");
             this.passScore = this.editPassScore;
@@ -579,12 +550,11 @@ export default {
         this.showModalRegulation = false;
       }
     },
-    cancelEditRegulation() {
+  cancelEditRegulation() {
       //Reset regulation
       this.editPassScore = this.passScore;
       //close modal
       this.showModalRegulation = false;
-    },
   },
 };
 </script>
@@ -615,12 +585,6 @@ export default {
 .content__heading h4 {
   margin-left: 14px;
   margin-bottom: 8px;
-}
-.pass_result {
-  color: green;
-}
-.not_pass_result {
-  color: red;
 }
 .input {
   border: 1px solid rgba(0, 0, 0, 0.2);
@@ -730,11 +694,5 @@ th:last-child {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-}
-.passScore {
-  display: inline;
-  color: green;
-  font-size: 16px;
-  margin-left: 12px;
 }
 </style>

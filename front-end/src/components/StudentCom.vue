@@ -259,10 +259,13 @@ export default {
       regulation: {
         minAge: "",
         maxAge: "",
+        maxAmount: "",
       },
+      amount: 0,
       editedRegulation: {
         minAge: "",
         maxAge: "",
+        maxAmount: "",
       },
       list: [],
       searchValue: {
@@ -284,7 +287,7 @@ export default {
         if (data.status) {
           this.regulation.minAge = data.roles.tuoi_toi_thieu;
           this.regulation.maxAge = data.roles.tuoi_toi_da;
-
+          this.regulation.maxAmount= data.roles.si_so_toi_da;
           this.editedRegulation = { ...this.regulation };
         }
       })
@@ -444,50 +447,74 @@ export default {
       }
       return false;
     },
+    
+    checkClassAmount(classID)
+    {
+      ClassService.searchClass({
+        params: {
+          id: classID,
+          grade: "",
+        },
+      })
+      .then(({ data }) => {
+        if (data.status) {
+          this.amount = data.classes[0].si_so_lop;
+         
+        }
+      })
+      .catch((e) => console.log(e));
+      if(this.amount>=this.regulation.maxAmount) return false;
+       else return true;
+    },
     add() {
-      if (
-        this.addedStudent.fullName &&
+      if (this.addedStudent.fullName &&
         this.addedStudent.classID &&
         this.addedStudent.birthday &&
         this.addedStudent.gender &&
-        this.addedStudent.address
-      ) {
-        if (this.validateAge(this.addedStudent.birthday)) {
-          console.log(this.addedStudent.birthday);
-          const item = {
-            id: this.addedStudent.id,
-            fullName: this.addedStudent.fullName,
-            idClass: this.addedStudent.classID,
-            sex: this.addedStudent.gender,
-            birthDay: this.addedStudent.birthday,
-            address: this.addedStudent.address,
-          };
-          //Send API
-          StudentService.addStudent({
-            ...item,
-          })
-            .then(({ data }) => {
-              if (data.status) {
-                //update result
-                this.list = [...this.list, ...this.convertData(data.students)];
-                this.addedStudent.id = "";
-                this.addedStudent.fullName = "";
-                this.addedStudent.classID = "";
-                this.addedStudent.birthday = "";
-                this.addedStudent.gender = "";
-                this.addedStudent.address = "";
-              } else {
-                alert(
-                  "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
-                );
-              }
+        this.addedStudent.address) 
+        {
+          if(this.checkClassAmount(this.addedStudent.classID)){
+            if (this.validateAge(this.addedStudent.birthday)) {
+            console.log(this.addedStudent.birthday);
+            const item = {
+              id: this.addedStudent.id,
+              fullName: this.addedStudent.fullName,
+              idClass: this.addedStudent.classID,
+              sex: this.addedStudent.gender,
+              birthDay: this.addedStudent.birthday,
+              address: this.addedStudent.address,
+            };
+            //Send API
+            StudentService.addStudent({
+              ...item,
             })
-            .catch((e) => console.log(e));
+              .then(({ data }) => {
+                console.log(data.status);
+                if (data.status) {
+                  //update result
+                  this.list = [...this.list, ...this.convertData(data.students)];
+                  this.addedStudent.id = "";
+                  this.addedStudent.fullName = "";
+                  this.addedStudent.classID = "";
+                  this.addedStudent.birthday = "";
+                  this.addedStudent.gender = "";
+                  this.addedStudent.address = "";
+                } else {
+                  alert(
+                    "Thêm thất bại! Vui lòng kiểm tra xem dữ liệu bạn đã bị trùng hay chưa"
+                  );
+                }
+              })
+              .catch((e) => console.log(e));
+            } else {
+              alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
+            }
+          } else {
+            alert("Lớp tối đa!")
+          }
+
         } else {
-          alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
-        }
-      } else {
-        alert("Vui lòng điền đẩy đủ các thông tin");
+          alert("Vui lòng điền đẩy đủ các thông tin");
       }
     },
 

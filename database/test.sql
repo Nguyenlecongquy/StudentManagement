@@ -12,6 +12,7 @@ select * from user_giaovien;
 select * from user_hocsinh;
 delete from user_giaovien;
 
+
 select * from lop;
 delete from lop;
 delete from lop;
