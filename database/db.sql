@@ -217,19 +217,9 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 ('GV00001114','TRAN MINH TOAN','KHXH');
 
 --value lop
-
-
-<<<<<<< HEAD
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
 values('10A1',40,10,'KHTN'),('10A2',41,10,'KHXH'),
 ('11A1',40,11,'KHTN'),('12A2',41,12,'KHXH');
-
-=======
-insert into lop(ma_lop,si_so_lop,khoi,ma_khoa)
-values('10A1',40,10,'KHTN'),('10A2',41,10,'KHXH'),
-('11A1',40,11,'KHTN'),('12A2',41,12,'KHXH');
->>>>>>> 29e8613ea7dd5600f94896bf80e8fc128b4af31e
-
 -- Values HOC_SINH
 INSERT INTO HOC_SINH(MA_HS,TEN_HS) VALUES
 ('HS20120563','Nguyen Le Cong Quy'),
@@ -252,20 +242,3 @@ values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
 ('HS20120563','MH00001111', 'HK1',3,3,3,3,3);
 
 
-INSERT INTO HOC_SINH(MA_HS,TEN_HS,MA_LOP) VALUES
-('HS20120563','Nguyen Le Cong Quy','LOP0001111'),
-('HS20120603','Tran Minh Tri','LOP0001111'),
-('HS20120555','Nguyen Xuan Quan','LOP0001111'),
-('HS20120627','Hoang Vinh','LOP0001111');
-
---value mon
-
-insert into mon_hoc(ma_mh,ten_mh,ma_khoa)
-values('MH00001111','Toan','KHTN');
-
-
-insert into diem(ma_hs,ma_mh,hoc_ki,diem_15,diem_1t,diem_gk,diem_ck,diem_tk)
-values('HS20120603','MH00001111', 'HK1',9,9,9,9,9),
-('HS20120555','MH00001111', 'HK1',7,7,7,7,7),
-('HS20120627','MH00001111', 'HK1',5,5,5,5,5),
-('HS20120563','MH00001111', 'HK1',3,3,3,3,3);

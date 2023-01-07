@@ -550,12 +550,11 @@ export default {
         this.showModalRegulation = false;
       }
     },
-    cancelEditRegulation() {
+  cancelEditRegulation() {
       //Reset regulation
       this.editPassScore = this.passScore;
       //close modal
       this.showModalRegulation = false;
-    },
   },
 };
 </script>
