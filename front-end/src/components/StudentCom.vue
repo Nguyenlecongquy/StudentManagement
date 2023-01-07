@@ -37,7 +37,7 @@
           type="text"
           placeholder="Họ tên"
         />
-        <select class="input" v-model="addedStudent.classID">
+        <select class="input" v-model="addedStudent.classID" @change="checkClassAmount(addedStudent.classID)" >
           <option value="" disabled>Chọn lớp</option>
           <option v-for="classID in classesList" v-bind:key="classID">
             {{ classID }}
@@ -193,12 +193,17 @@
           type="text"
           placeholder="Họ tên"
         />
-        <select class="input" v-model="editStudent.classID">
+
+        <select class="input" v-model="editStudent.classID" @change="checkClassAmount(editStudent.classID)">
           <option value="" disabled>Chọn lớp</option>
-          <option v-for="e in classesList" v-bind:key="e">
-            {{ e }}
+          <option  v-for="(item, index) in classesList"
+            :key="index"
+            :selected="item == editStudent.classID ? true : false"
+          >
+            {{ item }}
           </option>
         </select>
+
         <input
           class="input"
           v-model="editStudent.birthday"
@@ -261,8 +266,9 @@ export default {
         minAge: "",
         maxAge: "",
         maxAmount: "",
+        amount: "",
       },
-      amount: 0,
+      amount: 5,
       editedRegulation: {
         minAge: "",
         maxAge: "",
@@ -381,7 +387,7 @@ export default {
         return {
           id: e.ma_hs,
           fullName: e.ten_hs,
-          classID: e.ma_lop,
+          classID: e.ma_lop.trim(),
           birthday,
           gender: e.gioi_tinh_hs,
           address: e.dia_chi_hs,
@@ -455,17 +461,14 @@ export default {
         params: {
           id: classID,
           grade: "",
-        },
-      })
+        },})
       .then(({ data }) => {
         if (data.status) {
-          this.amount = data.classes[0].si_so_lop;
-         
+          this.regulation.amount = data.classes[0].si_so_lop;
+          console.log(this.regulation.amount);
         }
       })
       .catch((e) => console.log(e));
-      if(this.amount>=this.regulation.maxAmount) return false;
-       else return true;
     },
     add() {
       if (this.addedStudent.fullName &&
@@ -474,9 +477,9 @@ export default {
         this.addedStudent.gender &&
         this.addedStudent.address) 
         {
-          if(this.checkClassAmount(this.addedStudent.classID)){
+          console.log(this.regulation.amount,this.regulation.maxAmount);
+          if(this.regulation.amount<this.regulation.maxAmount){
             if (this.validateAge(this.addedStudent.birthday)) {
-            console.log(this.addedStudent.birthday);
             const item = {
               id: this.addedStudent.id,
               fullName: this.addedStudent.fullName,
@@ -511,7 +514,7 @@ export default {
               alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
             }
           } else {
-            alert("Lớp tối đa!")
+            alert("Lớp đạt tối đa!")
           }
 
         } else {
@@ -520,35 +523,44 @@ export default {
     },
 
     edit() {
-      if (this.validateAge(this.editStudent.birthday)) {
-        //Send API
-
-        StudentService.editStudent({
-          id: this.editStudent.id,
-          fullName: this.editStudent.fullName,
-          idClass: this.editStudent.classID,
-          sex: this.editStudent.gender,
-          birthDay: this.editStudent.birthday,
-          address: this.editStudent.address,
-          oldIdClass: this.editStudent.oldClassID,
-        })
-          .then(({ data }) => {
-            if (data.status) {
-              this.showModal = false;
-              alert("Sửa thành công");
-              this.list.forEach((e) => {
-                if (e.id == this.editStudent.id) {
-                  e.fullName = this.editStudent.fullName;
-                  e.birthday = this.convertBirthday(this.editStudent.birthday);
-                  e.gender = this.editStudent.gender;
-                  e.classID = this.editStudent.classID;
-                  e.address = this.editStudent.address;
+      
+   
+        if (this.validateAge(this.editStudent.birthday)) {
+          console.log(this.editStudent.classID,this.editStudent.oldClassID.trim());
+          if (this.editStudent.oldClassID.trim() != this.editStudent.classID && this.regulation.amount>= this.regulation.maxAmount) {
+            alert("Lớp đã đạt sỉ số tối đa");
+            return;
+          }
+          //Send API
+            StudentService.editStudent({
+              id: this.editStudent.id,
+              fullName: this.editStudent.fullName,
+              idClass: this.editStudent.classID,
+              sex: this.editStudent.gender,
+              birthDay: this.editStudent.birthday,
+              address: this.editStudent.address,
+              oldIdClass: this.editStudent.oldClassID,
+            })
+              .then(({ data }) => {
+                if (data.status) {
+                  this.showModal = false;
+                  alert("Sửa thành công");
+                  this.list.forEach((e) => {
+                    if (e.id == this.editStudent.id) {
+                      e.fullName = this.editStudent.fullName;
+                      e.birthday = this.convertBirthday(this.editStudent.birthday);
+                      e.gender = this.editStudent.gender;
+                      e.classID = this.editStudent.classID;
+                      e.address = this.editStudent.address;
+                    }
+                  });
                 }
-              });
-            }
-          })
-          .catch((e) => console.log(e));
-      } else alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
+              })
+              .catch((e) => console.log(e));
+        
+        } else alert("Ngày sinh không hợp lệ! Vui lòng nhập lại");
+  
+      
     },
     editRegulation() {
       //Validate
@@ -576,6 +588,7 @@ export default {
     showEditRegulationModal() {
       this.showModalRegulation = true;
       this.editedRegulation = { ...this.regulation };
+    
     },
     cancelEditRegulation() {
       //Reset regulation
