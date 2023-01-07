@@ -353,7 +353,7 @@ export default {
           className: e.ma_lop.trim(),
           amount: e.si_so_lop,
           grade: e.khoi,
-          facultyId: e.ma_khoa.trim(),
+          facultyId: e.ma_khoa,
         };
       });
     },
@@ -496,7 +496,7 @@ export default {
           idNew: this.editClass.className,
           number: this.editClass.amount,
           grade: this.editClass.grade,
-          idFaculty: this.editClass.facultyId,
+          facultyId: this.editClass.facultyId,
         })
           .then(({ data }) => {
             if (data.status) {
