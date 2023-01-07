@@ -13,12 +13,20 @@ try {
 
 const inforModel = {
    findInfors: async (email,category) => {
+      console.log(email)
+
       try {
          let result;
          if(JSON.parse(category)==true){
-            result = await db.one('select * from user_giaovien where email = $1',email);
+            result = await db.one(`
+            select ma_gv,ten_gv,email,password
+            from user_giaovien join giao_vien on ma_gv=magv
+            where email = $1`,[email]);
          }else{
-            result = await db.one('select * from user_hocsinh where email = $1',email);
+            result = await db.one(`
+            select ma_hs,ten_hs,email,password
+            from user_hocsinh join hoc_sinh on ma_hs=magv
+            where email = $1`,[email]);
          }
          return result;
       } catch (error) {
@@ -27,20 +35,27 @@ const inforModel = {
    },
 
    
-   updateInfors: async (email,password,category) => {
+   updateInfors: async (fullName,email,password,category) => {
       try {
          let result;
          const hash = await bcrypt.hash(password, 10);
 
          if(JSON.parse(category)==true){
-            result = await db.one(`update user_giaovien 
+            const user = await db.one(`update user_giaovien 
             set  username=$1, email=$1,password=$2
             where username=$1 returning *`, [email,hash]);
+            const fullNameObj = await db.one(`update giao_vien 
+            set  ten_gv =$1
+            where ma_gv=$2 returning ten_gv`, [fullName,user.magv]);
+            result = {...user,...fullNameObj};
          }else{
-
-            result = await db.one(`update user_hocsinh 
+            const user = await db.one(`update user_hocsinh 
             set  username=$1, email=$1,password=$2
             where username=$1 returning *`, [email,hash]);
+            const fullNameObj = await db.one(`update hoc_sinh
+            set  ten_hs =$1
+            where ma_hs=$2 returning ten_gv`, [fullName,user.mahs]);
+            result = {...user,...fullNameObj};
          }
          return result;
       } catch (error) {
