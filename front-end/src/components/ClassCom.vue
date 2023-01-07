@@ -355,7 +355,7 @@ export default {
           className: e.ma_lop.trim(),
           amount: e.si_so_lop,
           grade: e.khoi,
-          facultyId: e.ma_khoa.trim(),
+          facultyId: e.ma_khoa,
         };
       });
     },

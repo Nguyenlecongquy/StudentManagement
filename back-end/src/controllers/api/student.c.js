@@ -27,7 +27,7 @@ class studentC {
       const response = {status:true, students: [] };
       const student = req.body;
       const result = await studentM.updateHSIntoDatabase(
-        student.id, student.fullName, student.sex, student.birthDay, student.address, student.idClass) ;
+        student.id, student.fullName, student.sex, student.birthDay, student.address, student.idClass, student.oldIdClass) ;
       if(result!= [] && result!= false ) response.students = result;
       else response.status = false;//không tìm thấy id || thông tin điền không chính xác
       res.status(200).json(response);

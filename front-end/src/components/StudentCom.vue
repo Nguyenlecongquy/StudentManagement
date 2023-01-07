@@ -252,6 +252,7 @@ export default {
         birthday: "",
         gender: "",
         address: "",
+        oldClassID:"",
       },
       showModal: false,
       showModalRegulation: false,
@@ -529,6 +530,7 @@ export default {
           sex: this.editStudent.gender,
           birthDay: this.editStudent.birthday,
           address: this.editStudent.address,
+          oldIdClass: this.editStudent.oldClassID,
         })
           .then(({ data }) => {
             if (data.status) {
@@ -569,6 +571,7 @@ export default {
       this.showModal = true;
       this.editStudent = { ...item };
       this.editStudent.classID = item.classID;
+      this.editStudent.oldClassID = this.editStudent.classID ;
     },
     showEditRegulationModal() {
       this.showModalRegulation = true;

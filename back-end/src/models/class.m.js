@@ -43,8 +43,11 @@ const classModel = {
    updateLopIntoDatabase: async (idOld, idNew, number, grade, facultyId) => {
       try {
          if (idNew != '') {
-            await classModel.removeLopFromDatabase(idOld);
             const result=await classModel.addLopIntoDatabaseReturnLop(idNew, number, grade, facultyId);
+            await db.any(`update hoc_sinh 
+               set  ma_lop=$1 
+               where ma_lop=$2`, [idNew, idOld]);
+            await classModel.removeLopFromDatabase(idOld);
             return result;
          }
          else {
@@ -58,6 +61,7 @@ const classModel = {
          return false;
       }
    },
+   
    removeLopFromDatabase: async (id) => {
       try {
          await db.any(`update hoc_sinh 
