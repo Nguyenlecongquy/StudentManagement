@@ -27,6 +27,7 @@ export default {
     logOut() {
       window.localStorage.removeItem("email");
       window.localStorage.removeItem("category");
+      window.localStorage.removeItem("isLogin");
       this.$router.push("/");
     },
   },

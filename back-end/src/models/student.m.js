@@ -42,7 +42,7 @@ const studentModel = {
 			);
 			const updateNumberHS = db.any(
 				`update lop 
-                set si_so_lop= si_so_lop+1
+                set si_so_lop = si_so_lop+1
                 where ma_lop=$1 returning *`,
 				[idClass]
 			);

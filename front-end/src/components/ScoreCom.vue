@@ -128,6 +128,10 @@
           <td>{{ item.score_gk }}</td>
           <td>{{ item.score_ck }}</td>
           <td>{{ item.score_tk }}</td>
+          <td> 
+            <h3 v-if = "item.score_tk>= passScore" class="resultPassed"> Đạt </h3>
+            <h3 v-else class="resultNotPassed">Không đạt</h3>
+           </td>
           <td>
             <button class="edit-btn" @click="showModalAndEdit(item)">
               <font-awesome-icon icon="fa-solid fa-pen-to-square" />
@@ -537,8 +541,8 @@ export default {
     },
     editRegulation() {
       //Send API
-      RegulationService.editPassScore({
-        passScore: this.passScore,
+      RoleService.updatePassScore({
+        score: this.editPassScore,
       })
         .then(({ data }) => {
           if (data.status) {
@@ -594,6 +598,11 @@ export default {
   font-size: 14px;
   outline: none;
   width: 130px;
+}
+.passScore{
+  display:inline-block;
+  color: green;
+  font-size: 18px;
 }
 .input:nth-last-child(2) {
   margin-right: 12px;
@@ -695,4 +704,5 @@ th:last-child {
   top: 0.5rem;
   right: 0.5rem;
 }
+
 </style>
