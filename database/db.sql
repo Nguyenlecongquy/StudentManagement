@@ -219,8 +219,8 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
 values('10A1',2,10,'KHTN'),('10A2',2,10,'KHXH'),
-('10A3',0,11,'KHTN'),('10A4',0,12,'KHXH'),
-('11A1',0,11,'KHXH'),('11A2',0,12,'KHTN'),
+('10A3',0,10,'KHTN'),('10A4',0,10,'KHXH'),
+('11A1',0,11,'KHXH'),('11A2',0,11,'KHTN'),
 ('11A3',0,11,'KHXH'),('12A1',0,12,'KHXH'),
 ('12A2',0,11,'KHTN');
 -- Values HOC_SINH
