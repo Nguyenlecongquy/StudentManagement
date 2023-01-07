@@ -48,12 +48,14 @@
           typeOfInput="text"
           v-model="editedUser.id"
           valueOfPlaceholder="Nhập ID"
+          disabled="true"
         />
         <FormGroup
           label="Email"
           typeOfInput="email"
           v-model="editedUser.email"
           valueOfPlaceholder="Nhập email"
+          disabled="true"
         />
         <FormGroup
           label="Mật khẩu"
@@ -79,6 +81,8 @@
 <script>
 import ButtonVue from "./Button.vue";
 import FormGroup from "./FormGroup.vue";
+import InforService from "../services/InfoService";
+
 export default {
   name: "AccountInfoCom",
   components: { ButtonVue, FormGroup },
@@ -86,19 +90,41 @@ export default {
     return {
       showModal: false,
       user: {
-        id: "GV001",
-        username: "GV 000000111",
-        email: "GV001@gmail.com",
-        password: "1231313123",
+        id: "",
+        username: " ",
+        email: "",
+        password: "",
       },
       editedUser: {
-        id: "GV001",
-        username: "GV 000000111",
-        email: "GV001@gmail.com",
-        password: "1231313123",
+        id: "",
+        username: "",
+        email: "",
+        password: "",
         confirmPassword: "",
       },
     };
+  },
+  mounted() {
+    let email = window.localStorage.getItem("email");
+    let category = window.localStorage.getItem("category");
+
+    if (email && category) {
+      InforService.search({
+        params: {
+          email,
+          category,
+        },
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            this.user.id = data.infors.magv;
+            this.user.username = data.infors.username;
+            this.user.password = data.infors.password;
+            this.user.email = data.infors.email;
+          }
+        })
+        .catch((e) => console.log(e));
+    }
   },
   methods: {
     showEditModal() {
@@ -109,6 +135,17 @@ export default {
       this.user = { ...this.editedUser };
 
       //Call API for updating
+      InforService.edit({
+        email: this.editedUser.email,
+        password: this.editedUser.password,
+        category: true,
+      })
+        .then(({ data }) => {
+          if (data.status) {
+            alert("Sửa thông tin thành công");
+          }
+        })
+        .catch((e) => console.log(e));
     },
     cancel() {
       this.showModal = false;
@@ -128,22 +165,27 @@ export default {
   border-radius: 8px;
   box-shadow: 1px 1px 20px rgb(204, 199, 199);
 }
+
 .content,
 .content-info {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .content-inner {
   margin: auto;
 }
+
 .form-field {
   display: flex;
   font-size: 18px;
 }
+
 .form-label {
   width: 120px;
 }
+
 .form-content {
   font-weight: 500;
 }
@@ -167,14 +209,17 @@ export default {
   border-radius: 0.25rem;
   background: #fff;
 }
+
 .modal__title {
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 10px;
 }
+
 .modal__content .input:first-child {
   margin-left: 0;
 }
+
 .modal__action {
   display: flex;
   justify-content: center;
@@ -182,6 +227,7 @@ export default {
   flex-shrink: 0;
   padding: 1rem 0 0;
 }
+
 .modal__close {
   position: absolute;
   top: 0.5rem;

@@ -12,6 +12,7 @@
         @blur="validate"
         @focus="error = ''"
         :name="nameOfInput"
+        :disabled="disabled"
       />
       <button
         v-show="typeOfInput == 'password'"
@@ -43,6 +44,7 @@ export default {
     "confirmPasswordValue",
     "valueOfPlaceholder",
     "isValid",
+    "disabled",
   ],
   emits: ["update:modelValue"],
   data() {
