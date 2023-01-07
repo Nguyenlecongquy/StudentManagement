@@ -704,14 +704,10 @@ th:last-child {
   top: 0.5rem;
   right: 0.5rem;
 }
-<<<<<<< HEAD
 .resultPassed{
   color: green;
 }
 .resultNotPassed{
   color: red;
 }
-=======
-
->>>>>>> e8bda3e0150a6ab00d6754ae3958ee9dcc57ccf8
 </style>

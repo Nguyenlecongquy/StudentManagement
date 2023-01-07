@@ -258,10 +258,6 @@ export default {
         gender: "",
         address: "",
         oldClassID:"",
-<<<<<<< HEAD
-        amount: "",
-=======
->>>>>>> e8bda3e0150a6ab00d6754ae3958ee9dcc57ccf8
       },
       showModal: false,
       showModalRegulation: false,
@@ -527,7 +523,6 @@ export default {
     },
 
     edit() {
-<<<<<<< HEAD
       
    
         if (this.validateAge(this.editStudent.birthday)) {
@@ -559,31 +554,6 @@ export default {
                       e.address = this.editStudent.address;
                     }
                   });
-=======
-      if (this.validateAge(this.editStudent.birthday)) {
-        //Send API
-
-        StudentService.editStudent({
-          id: this.editStudent.id,
-          fullName: this.editStudent.fullName,
-          idClass: this.editStudent.classID,
-          sex: this.editStudent.gender,
-          birthDay: this.editStudent.birthday,
-          address: this.editStudent.address,
-          oldIdClass: this.editStudent.oldClassID,
-        })
-          .then(({ data }) => {
-            if (data.status) {
-              this.showModal = false;
-              alert("Sửa thành công");
-              this.list.forEach((e) => {
-                if (e.id == this.editStudent.id) {
-                  e.fullName = this.editStudent.fullName;
-                  e.birthday = this.convertBirthday(this.editStudent.birthday);
-                  e.gender = this.editStudent.gender;
-                  e.classID = this.editStudent.classID;
-                  e.address = this.editStudent.address;
->>>>>>> e8bda3e0150a6ab00d6754ae3958ee9dcc57ccf8
                 }
               })
               .catch((e) => console.log(e));

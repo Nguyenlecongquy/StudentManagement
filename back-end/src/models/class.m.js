@@ -16,7 +16,6 @@ const classModel = {
    findEmpty: async () => {
       return true;
    },
-
    findLops: async (id, grade) => {
       const result = await db.any(
          `select * from lop 
@@ -26,10 +25,8 @@ const classModel = {
             and ${classModel.fieldGrade(grade)}
          )`);
       return result;
-
    },
-   addLopIntoDatabaseReturnLop: async (id, number, grade, facultyId) => {
-         
+   addLopIntoDatabaseReturnLop: async (id, number, grade, facultyId) => {  
       try {
          const result = await db.any(`insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
             values($1,$2,$3,$4) returning *`,
@@ -64,7 +61,6 @@ const classModel = {
          return false;
       }
    },
-   
    removeLopFromDatabase: async (id) => {
       try {
          await db.any(`update hoc_sinh 
@@ -76,7 +72,6 @@ const classModel = {
          return false;
       }
    },
-
 };
 
 module.exports = classModel;
