@@ -218,8 +218,8 @@ INSERT INTO GIAO_VIEN(MA_GV,TEN_GV,MA_KHOA) VALUES
 
 --value lop
 insert into lop(ma_lop,si_so_lop,khoi,ma_khoa) 
-values('10A1',40,10,'KHTN'),('10A2',41,10,'KHXH'),
-('11A1',40,11,'KHTN'),('12A2',41,12,'KHXH');
+values('10A1',0,10,'KHTN'),('10A2',0,10,'KHXH'),
+('11A1',0,11,'KHTN'),('12A2',0,12,'KHXH');
 -- Values HOC_SINH
 INSERT INTO HOC_SINH(MA_HS,TEN_HS) VALUES
 ('HS20120563','Nguyen Le Cong Quy'),
