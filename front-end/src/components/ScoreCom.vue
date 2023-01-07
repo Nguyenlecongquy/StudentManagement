@@ -47,7 +47,7 @@
         placeholder="1 tiết"
       />
       <input
-        class="input mt-12 ml-0"
+        class="input mt-12 ml-12"
         v-model="addedScore.score_gk"
         type="text"
         placeholder="Giữa kì"
@@ -704,5 +704,10 @@ th:last-child {
   top: 0.5rem;
   right: 0.5rem;
 }
-
+.resultPassed{
+  color: green;
+}
+.resultNotPassed{
+  color: red;
+}
 </style>
