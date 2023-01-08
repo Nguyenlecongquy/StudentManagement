@@ -24,13 +24,13 @@ Vì project chứa cả 2 folder front-end, back-end vì thế 2 bên có thể 
 
 **IV. Cấu hình để chạy local ứng dụng**
 
-*Bước 1*: Clone source từ github https://github.com/Nguyenlecongquy/StudentManagement và checkout dev để lấy source từ nhánh main
+*Bước 1*: Clone source từ github https://github.com/Nguyenlecongquy/StudentManagement 
 
 *Bước 2*: Vào trang chủ PostgreSQL để tải phần mềm PostgreSQL https://www.enterprisedb.com/downloads/postgres-postgresql-downloads và cấu hình như hướng dẫn của PostgreSQL
 
 *Bước 3*: Mở PostGresSQL và sử dụng file db.sql trong thư mục database để tạo cơ sở dữ liệu.
 
-    Khi tạo cơ sở dữ liệu đặt username = postgres và password= 123456
+    Khi tạo cơ sở dữ liệu đặt username = postgres và password= postgres
 
 *Bước 4*: Mở Visual Studio Code và import mã nguồn của StudentManagement.
 
