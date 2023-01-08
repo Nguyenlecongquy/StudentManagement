@@ -122,22 +122,7 @@ export default {
               Thành viên</router-link
             >
           </li>
-          <li>
-            <router-link to="/home/role">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-bookmark" />
-              </span>
-              Vai trò</router-link
-            >
-          </li>
-          <li>
-            <router-link to="/home/policy">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-circle-question" />
-              </span>
-              Điều khoản</router-link
-            >
-          </li>
+          
         </ul>
       </nav>
     </section>
