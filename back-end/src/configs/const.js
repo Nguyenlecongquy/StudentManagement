@@ -1,6 +1,6 @@
 const DB = {
   DB_USER :"postgres",
-  DB_PASSWORD :"Apurupie123@",
+  DB_PASSWORD :"postgres",
   DB_NAME:'QLHS',
   DB_HOST:'localhost'
 }

@@ -23,7 +23,8 @@
     "express-session": "^1.17.3",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pg-promise": "^10.15.4"
+    "pg-promise": "^10.15.4",
+    "connect-flash": "^0.1.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",
