@@ -115,7 +115,7 @@ export default {
       }
     },
     remove(item) {
-      let result = confirm(`Bạn chắc chắn muốn xóa lớp ${item.facultyName}`);
+      let result = confirm(`Bạn chắc chắn muốn xóa khoa ${item.facultyName}`);
       if (result == true) {
         this.list = this.list.filter((e) => e != item);
         //SendAPI

@@ -122,7 +122,7 @@ export default {
               Thành viên</router-link
             >
           </li>
-          <li>
+          <!-- <li>
             <router-link to="/home/role">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-bookmark" />
@@ -137,7 +137,7 @@ export default {
               </span>
               Điều khoản</router-link
             >
-          </li>
+          </li> -->
         </ul>
       </nav>
     </section>
