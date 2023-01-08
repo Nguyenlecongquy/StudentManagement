@@ -46,14 +46,18 @@ const summarySemesterModel = {
 		             AND hoc_ki = $1 ;`,
 					[semester]
 				);
+				if(diem[0]== undefined) continue;
+				console.log("diem",diem[0]);
 				diemTB[j] = diemTB[j] + diem[0].diem_tk;
+				
 			}
+		
 			diemTB[j] = diemTB[j] / subjects.length;
 			if (diemTB[j] >= diemChuan) {
 				soLuongDat++;
 			}
 		}
-		console.log('soLuongDat', soLuongDat);
+		//console.log('soLuongDat', soLuongDat);
 		const lopValue = await db.any(`SELECT * from lop where ma_lop = $1`, [classId]);
 		var lop = lopValue[0].ma_lop; //lớp
 		var siSo = lopValue[0].si_so_lop; //sĩ số
@@ -68,10 +72,6 @@ const summarySemesterModel = {
 			soLuongDat,
 			tiLe,
 		};
-		console.log(lop);
-		console.log(siSo);
-		console.log(soLuongDat);
-		console.log(tiLe);
 		return result;
 	},
 	findsummarySemester: async (semester) => {

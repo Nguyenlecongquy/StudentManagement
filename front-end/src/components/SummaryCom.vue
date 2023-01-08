@@ -73,7 +73,7 @@ import ButtonVue from "./Button.vue";
 
 import SubjectService from "../services/SubjectService";
 import SummaryService from "../services/SummaryService";
-
+import SummarySemesterService from "../services/SummarySemesterService";
 export default {
   fullName: "SummaryCom",
   components: { ButtonVue },
@@ -127,6 +127,7 @@ export default {
           this.subjectsList = Array.from(data.subjects).map((e) => {
             return e.ma_mh;
           });
+          this.subjectsList.push("Học kỳ");
         }
       })
       .catch((e) => console.log(e));
@@ -185,17 +186,30 @@ export default {
     
     search() {
       //Send API and get result
-      const data = {
-        params: {
-          subjectId: this.searchValue.subjectName,
-          semester: this.searchValue.semester,
-        },
-      };
-      SummaryService.searchSummary(data)
+      if(this.searchValue.subjectName == "Học kỳ"){
+        SummarySemesterService.searchSummarySemester({
+      params: {
+        semester: this.searchValue.semester,
+      },
+    })
         .then(({ data }) => {
-          this.list = this.convertData(data.summarys);
+          this.list = this.convertData(data.summarySemesters);
         })
         .catch((e) => console.log(e));
+      }
+      else{
+        const data = {
+          params: {
+            subjectId: this.searchValue.subjectName,
+            semester: this.searchValue.semester,
+          },
+        };
+        SummaryService.searchSummary(data)
+          .then(({ data }) => {
+            this.list = this.convertData(data.summarys);
+          })
+          .catch((e) => console.log(e));
+      }
     },
   },
 };

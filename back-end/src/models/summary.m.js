@@ -43,10 +43,6 @@ const summaryModel = {
 			soLuongDat,
 			tiLe,
 		};
-		console.log(lop);
-		console.log(siSo);
-		console.log(soLuongDat);
-		console.log(tiLe);
 		return result;
 	},
 

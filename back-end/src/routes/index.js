@@ -8,7 +8,7 @@ const scoreR = require('./score.r')
 const summaryR = require('./summary.r')
 const roleR = require('./role.r')
 const inforR = require('./infor.r')
-
+const summarySemesterR = require('./summarySemester.r')
 
 function route(app) {
    app.use(`/user`,userR);
@@ -21,7 +21,7 @@ function route(app) {
    app.use('/api/summary',summaryR)
    app.use('/api/role',roleR)
    app.use('/api/infor',inforR)
-
+   app.use('/api/summarySemester',summarySemesterR)
 }
 
 module.exports = route;
